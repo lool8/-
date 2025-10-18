@@ -892,70 +892,23 @@ Tab:AddToggle({
     end
 })
 
-Tab:AddToggle({
-    Name = "自动购买拳头",
-    Callback = function(v)
-        getgenv().autobuynextfist = v
-        while getgenv().autobuynextfist do
-            -- 获取玩家当前拳头等级（假设存储在玩家数据中）
-            local currentLevel = 0
-            local success, playerData = pcall(function()
-                return game:GetService("Players").LocalPlayer:WaitForChild("Data"):WaitForChild("FistLevel").Value
-            end)
-            
-            if success then
-                currentLevel = playerData
-            end
-            
-            -- 尝试购买下一级
-            local nextLevel = currentLevel + 1
-            if nextLevel <= 50 then  -- 假设最高50级
-                local args = {"Fist", nextLevel}
-                game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("RequestEquip"):FireServer(unpack(args))
-            end
-            
-            wait(1)  -- 每3秒检查一次
-        end
-    end
-})
-
-Tab:AddToggle({
-    Name = "自动购买胃",
-    Callback = function(v)
-        getgenv().AutoBuyStomach = v
-        while getgenv().AutoBuyStomach do
-            -- 安全获取当前胃等级
-            local currentLevel = 0
-            local player = game.Players.LocalPlayer
-            
-            -- 尝试从多个可能的位置获取等级
-            if player:FindFirstChild("leaderstats") and player.leaderstats:FindFirstChild("Stomach") then
-                currentLevel = player.leaderstats.Stomach.Value
-            elseif player:FindFirstChild("Data") and player.Data:FindFirstChild("Stomach") then
-                currentLevel = player.Data.Stomach.Value
-            elseif player:FindFirstChild("StomachLevel") then
-                currentLevel = player.StomachLevel.Value
-            end
-            
-            -- 计算下一等级（不超过33级）
-            local nextLevel = math.min(currentLevel + 1, 33)
-            
-            -- 如果当前不是最高级，则尝试购买
-            if currentLevel < 33 then
-                local args = {"Stomach", nextLevel}
-                game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("RequestEquip"):FireServer(unpack(args))
-                print("已尝试购买胃等级："..nextLevel)
-            else
-                print("已达到最大胃等级33")
-                getgenv().AutoBuyStomach = false -- 达到最高级后自动关闭
-                break
-            end
-            
-            -- 智能等待（可随时关闭）
-            for i = 1, 20 do  -- 总共等待2秒（20×0.1）
-                if not getgenv().AutoBuyStomach then break end
-                wait(0.1)
-            end
+Tab:AddButton({
+    Name = "自动解锁所有岛屿",
+    Callback = function()
+        local coordinates = {
+            {718.34, 1717.45, 2058.72},
+            {703.17, 3340.41, 2041.46},
+            {715.11, 5938.00, 2057.97},
+            {771.49, 9188.80, 2060.20},
+            {663.26, 12854.54, 2046.93},
+            {709.37, 16609.40, 2009.45},
+            {734.86, 21916.71, 2090.01},
+            {691.55, 30306.88, 2050.44}
+        }
+        
+        for i, coord in ipairs(coordinates) do
+            task.wait(2) -- 2 second delay
+            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(coord[1], coord[2], coord[3])
         end
     end
 })
