@@ -893,17 +893,21 @@ Tab:AddToggle({
 })
 
 Tab:AddToggle({
-    Name = "自动购买拳头",
+    Name = "自动购买最新拳头",
     Callback = function(v)
-        getgenv().autobuyfist = v
-        while getgenv().autobuyfist do
-            for i = 1, 50 do
-                if not getgenv().autobuyfist then break end -- 如果关闭开关则停止
-                local args = {"Fist", i}
-                game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("RequestEquip"):FireServer(unpack(args))
-                wait(0.2) -- 添加延迟防止过快执行
-            end
-            wait(1) -- 每轮循环结束后等待1秒
+        getgenv().autobuynewestfist = v
+        while getgenv().autobuynewestfist do
+            -- 先尝试获取当前可购买的最高等级拳头
+            local maxFistLevel = 50  -- 假设最高是50级，您可以根据游戏实际情况调整
+            
+            -- 直接尝试购买最高等级拳头
+            local args = {"Fist", maxFistLevel}
+            game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("RequestEquip"):FireServer(unpack(args))
+            
+            -- 检查是否还开启自动购买
+            if not getgenv().autobuynewestfist then break end
+            
+            wait(2)  -- 每2秒尝试一次，避免频繁请求
         end
     end
 })
