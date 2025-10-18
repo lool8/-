@@ -864,14 +864,25 @@ Tab:AddButton({
 
 Tab:AddToggle({
     Name ="自动吃东西",
-    Callback = function(AR)
-        if AR then
+    Callback = function(v)
+if v or not v then
+        getgenv().autoswing = v
+            while true do
+                if not getgenv().autoswing then return end
+                for _,v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
+                    if v:FindFirstChild("ninjitsuGain") then
+                        game.Players.LocalPlayer.Character.Humanoid:EquipTool(v)
+                        break
+                    end
+                end
+                local A_1 = "swingKatana"
+                local Event = local args = {
+	     "Food"
+           }
+ game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("UseTool"):FireServer(unpack(args))（A_1）
 
-	    local args = {
-	   "Food"
-     }  game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("UseTool"):FireServer(unpack(args))
-	
-   end
-
+                wait()
+            end
+        end
     end
 })
