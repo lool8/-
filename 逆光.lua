@@ -891,3 +891,19 @@ Tab:AddToggle({
         end
     end
 })
+
+Tab:AddToggle({
+    Name = "自动购买拳头",
+    Callback = function(v)
+        getgenv().autobuyfist = v
+        while getgenv().autobuyfist do
+            for i = 1, 50 do
+                if not getgenv().autobuyfist then break end -- 如果关闭开关则停止
+                local args = {"Fist", i}
+                game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("RequestEquip"):FireServer(unpack(args))
+                wait(0.2) -- 添加延迟防止过快执行
+            end
+            wait(1) -- 每轮循环结束后等待1秒
+        end
+    end
+})
