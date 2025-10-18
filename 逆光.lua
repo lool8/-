@@ -914,7 +914,41 @@ Tab:AddToggle({
                 game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("RequestEquip"):FireServer(unpack(args))
             end
             
-            wait(3)  -- 每3秒检查一次
+            wait(1)  -- 每3秒检查一次
+        end
+    end
+})
+
+Tab:AddToggle({
+    Name = "自动购买下一级胃",
+    Callback = function(v)
+        getgenv().autobuynextstomach = v
+        while getgenv().autobuynextstomach do
+            -- 安全获取当前胃等级
+            local currentLevel = 0
+            local player = game:GetService("Players").LocalPlayer
+            
+            -- 检查等级存储位置（根据实际游戏调整）
+            if player:FindFirstChild("leaderstats") and player.leaderstats:FindFirstChild("Stomach") then
+                currentLevel = player.leaderstats.Stomach.Value
+            elseif player:FindFirstChild("Data") and player.Data:FindFirstChild("StomachLevel") then
+                currentLevel = player.Data.StomachLevel.Value
+            end
+            
+            -- 计算下一等级（最高33级）
+            local nextLevel = math.min(currentLevel + 1, 33)
+            
+            -- 只有当前不是最高级时才购买
+            if currentLevel < 33 then
+                local args = {"Stomach", nextLevel}
+                game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("RequestEquip"):FireServer(unpack(args))
+            end
+            
+            -- 可中断的等待（3秒）
+            for _ = 1, 30 do
+                if not getgenv().autobuynextstomach then break end
+                wait(0.1)
+            end
         end
     end
 })
