@@ -892,6 +892,17 @@ Tab:AddToggle({
     end
 })
 
+Tab:AddToggle({
+    Name = "自动挥拳",
+    Callback = function(state)
+        while state do
+            local args = {"Punch"}
+            game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("UseTool"):FireServer(unpack(args))
+            task.wait(0.1) -- Adjust this delay as needed (0.1 seconds between punches)
+        end
+    end
+})
+
 Tab:AddButton({
     Name = "自动解锁所有岛屿",
     Callback = function()
