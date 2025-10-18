@@ -880,3 +880,14 @@ Tab:AddToggle({
         end
     end
 })
+
+Tab:AddToggle({
+    Name = "自动售出",
+    Callback = function(v)
+        getgenv().autosell = v
+        while getgenv().autosell do
+            game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("YieldSell"):InvokeServer()
+            wait(1) -- 添加1秒延迟防止过快执行
+        end
+    end
+})
