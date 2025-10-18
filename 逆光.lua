@@ -920,33 +920,40 @@ Tab:AddToggle({
 })
 
 Tab:AddToggle({
-    Name = "自动购买下一级胃",
+    Name = "自动购买胃",
     Callback = function(v)
-        getgenv().autobuynextstomach = v
-        while getgenv().autobuynextstomach do
+        getgenv().AutoBuyStomach = v
+        while getgenv().AutoBuyStomach do
             -- 安全获取当前胃等级
             local currentLevel = 0
-            local player = game:GetService("Players").LocalPlayer
+            local player = game.Players.LocalPlayer
             
-            -- 检查等级存储位置（根据实际游戏调整）
+            -- 尝试从多个可能的位置获取等级
             if player:FindFirstChild("leaderstats") and player.leaderstats:FindFirstChild("Stomach") then
                 currentLevel = player.leaderstats.Stomach.Value
-            elseif player:FindFirstChild("Data") and player.Data:FindFirstChild("StomachLevel") then
-                currentLevel = player.Data.StomachLevel.Value
+            elseif player:FindFirstChild("Data") and player.Data:FindFirstChild("Stomach") then
+                currentLevel = player.Data.Stomach.Value
+            elseif player:FindFirstChild("StomachLevel") then
+                currentLevel = player.StomachLevel.Value
             end
             
-            -- 计算下一等级（最高33级）
+            -- 计算下一等级（不超过33级）
             local nextLevel = math.min(currentLevel + 1, 33)
             
-            -- 只有当前不是最高级时才购买
+            -- 如果当前不是最高级，则尝试购买
             if currentLevel < 33 then
                 local args = {"Stomach", nextLevel}
                 game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("RequestEquip"):FireServer(unpack(args))
+                print("已尝试购买胃等级："..nextLevel)
+            else
+                print("已达到最大胃等级33")
+                getgenv().AutoBuyStomach = false -- 达到最高级后自动关闭
+                break
             end
             
-            -- 可中断的等待（3秒）
-            for _ = 1, 30 do
-                if not getgenv().autobuynextstomach then break end
+            -- 智能等待（可随时关闭）
+            for i = 1, 20 do  -- 总共等待2秒（20×0.1）
+                if not getgenv().AutoBuyStomach then break end
                 wait(0.1)
             end
         end
