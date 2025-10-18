@@ -893,21 +893,28 @@ Tab:AddToggle({
 })
 
 Tab:AddToggle({
-    Name = "自动购买最新拳头",
+    Name = "自动购买拳头",
     Callback = function(v)
-        getgenv().autobuynewestfist = v
-        while getgenv().autobuynewestfist do
-            -- 先尝试获取当前可购买的最高等级拳头
-            local maxFistLevel = 50  -- 假设最高是50级，您可以根据游戏实际情况调整
+        getgenv().autobuynextfist = v
+        while getgenv().autobuynextfist do
+            -- 获取玩家当前拳头等级（假设存储在玩家数据中）
+            local currentLevel = 0
+            local success, playerData = pcall(function()
+                return game:GetService("Players").LocalPlayer:WaitForChild("Data"):WaitForChild("FistLevel").Value
+            end)
             
-            -- 直接尝试购买最高等级拳头
-            local args = {"Fist", maxFistLevel}
-            game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("RequestEquip"):FireServer(unpack(args))
+            if success then
+                currentLevel = playerData
+            end
             
-            -- 检查是否还开启自动购买
-            if not getgenv().autobuynewestfist then break end
+            -- 尝试购买下一级
+            local nextLevel = currentLevel + 1
+            if nextLevel <= 50 then  -- 假设最高50级
+                local args = {"Fist", nextLevel}
+                game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("RequestEquip"):FireServer(unpack(args))
+            end
             
-            wait(2)  -- 每2秒尝试一次，避免频繁请求
+            wait(3)  -- 每3秒检查一次
         end
     end
 })
