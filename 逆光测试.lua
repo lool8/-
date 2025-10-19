@@ -1087,3 +1087,124 @@ Tab:AddToggle({
         end
     end
 })
+
+Tab:AddToggle({
+    Name = "自动打石头400000",
+    Callback = function(Value)
+        if game.Players.LocalPlayer.Durability.Value >= 100 then
+            getgenv().rock = Value
+            while getgenv().rock do
+                wait()
+                -- 装备背包中的Punch工具
+                for _,v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
+                    if v:IsA("Tool") and v.Name == "Punch" then
+                        game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):EquipTool(v)
+                    end
+                end
+                -- 激活已装备的Punch工具
+                for _,h in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+                    if h:IsA("Tool") and h.Name == "Punch" then
+                        h:Activate()
+                    end
+                end
+                -- 传送到指定坐标位置
+                game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame = CFrame.new(2220.94, 12.67, 1252.67)
+            end
+            -- 关闭时卸下所有工具
+            if not getgenv().rock then
+                game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):UnequipTools()
+            end
+        end
+    end
+})
+
+Tab:AddToggle({
+    Name = "自动打石头500万",
+    Callback = function(Value)
+        if game.Players.LocalPlayer.Durability.Value >= 100 then
+            getgenv().rock = Value
+            while getgenv().rock do
+                task.wait()
+                -- 自动装备背包中的Punch工具
+                for _, tool in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
+                    if tool:IsA("Tool") and tool.Name == "Punch" then
+                        game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):EquipTool(tool)
+                    end
+                end
+                
+                -- 自动使用已装备的Punch工具
+                for _, tool in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+                    if tool:IsA("Tool") and tool.Name == "Punch" then
+                        tool:Activate()
+                    end
+                end
+                
+                -- 传送到指定坐标位置
+                local character = game.Players.LocalPlayer.Character
+                if character then
+                    local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
+                    if humanoidRootPart then
+                        humanoidRootPart.CFrame = CFrame.new(-8919.20, 40.01, -6014.81)
+                    end
+                end
+            end
+            
+            -- 当关闭功能时卸下所有工具
+            if not getgenv().rock then
+                game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):UnequipTools()
+            end
+        end
+    end
+})
+
+Tab:AddToggle({
+    Name = "自动打石头1000万",
+    Callback = function(Value)
+        if game.Players.LocalPlayer.Durability.Value >= 100 then
+            getgenv().rock = Value
+            while getgenv().rock and task.wait() do
+                -- 自动装备Punch工具
+                local character = game.Players.LocalPlayer.Character
+                local backpack = game.Players.LocalPlayer.Backpack
+                
+                -- 从背包装备工具
+                for _, tool in ipairs(backpack:GetChildren()) do
+                    if tool:IsA("Tool") and tool.Name == "Punch" then
+                        if character then
+                            local humanoid = character:FindFirstChildOfClass("Humanoid")
+                            if humanoid then
+                                humanoid:EquipTool(tool)
+                            end
+                        end
+                    end
+                end
+                
+                -- 使用已装备的工具
+                if character then
+                    for _, tool in ipairs(character:GetChildren()) do
+                        if tool:IsA("Tool") and tool.Name == "Punch" then
+                            tool:Activate()
+                        end
+                    end
+                    
+                    -- 传送到新坐标位置
+                    local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
+                    if humanoidRootPart then
+                        humanoidRootPart.CFrame = CFrame.new(-7689.18, 61.99, 2869.29)
+                    end
+                end
+            end
+            
+            -- 关闭功能时卸下工具
+            if not getgenv().rock then
+                local character = game.Players.LocalPlayer.Character
+                if character then
+                    local humanoid = character:FindFirstChildOfClass("Humanoid")
+                    if humanoid then
+                        humanoid:UnequipTools()
+                    end
+                end
+            end
+        end
+    end
+})
