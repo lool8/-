@@ -931,6 +931,237 @@ local Tab = Window:MakeTab({
 })
 
 local Section = Tab:AddSection({
+	Name = "实用功能"
+})
+
+-- 自动比赛开关
+Tab:AddToggle({
+    Name = "自动比赛开关",
+    Callback = function(Value)
+        while Value do
+            task.wait(2)
+            game:GetService("ReplicatedStorage").rEvents.brawlEvent:FireServer("joinBrawl")
+        end
+    end
+})
+
+-- 自动举哑铃
+Tab:AddToggle({
+    Name = "自动举哑铃",
+    Callback = function(Value)
+        local part = Instance.new('Part', workspace)
+        part.Size = Vector3.new(500, 20, 530.1)
+        part.Position = Vector3.new(0, 100000, 133.15)
+        part.CanCollide = true
+        part.Anchored = true
+        
+        while Value do
+            task.wait()
+            local character = game.Players.LocalPlayer.Character
+            if character then
+                local rootPart = character:FindFirstChild("HumanoidRootPart")
+                if rootPart then
+                    rootPart.CFrame = part.CFrame + Vector3.new(0, 50, 0)
+                end
+                
+                -- Equip weight tool
+                for _,v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
+                    if v:IsA("Tool") and v.Name == "Weight" then
+                        v.Parent = character
+                    end
+                end
+                
+                game:GetService("Players").LocalPlayer.muscleEvent:FireServer("rep")
+            end
+        end
+        
+        -- Clean up part when toggled off
+        if not Value and part then
+            part:Destroy()
+        end
+    end
+})
+
+-- 自动俯卧撑
+Tab:AddToggle({
+    Name = "自动俯卧撑",
+    Callback = function(Value)
+        local part = Instance.new('Part', workspace)
+        part.Size = Vector3.new(500, 20, 530.1)
+        part.Position = Vector3.new(0, 100000, 133.15)
+        part.CanCollide = true
+        part.Anchored = true
+        
+        while Value do
+            task.wait()
+            local character = game.Players.LocalPlayer.Character
+            if character then
+                local rootPart = character:FindFirstChild("HumanoidRootPart")
+                if rootPart then
+                    rootPart.CFrame = part.CFrame + Vector3.new(0, 50, 0)
+                end
+                
+                -- Equip pushups tool
+                for _,v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
+                    if v:IsA("Tool") and v.Name == "Pushups" then
+                        v.Parent = character
+                    end
+                end
+                
+                game:GetService("Players").LocalPlayer.muscleEvent:FireServer("rep")
+            end
+        end
+        
+        -- Clean up part when toggled off
+        if not Value and part then
+            part:Destroy()
+        end
+    end
+})
+
+-- 自动仰卧起坐
+Tab:AddToggle({
+    Name = "自动仰卧起坐",
+    Callback = function(Value)
+        local part = Instance.new('Part', workspace)
+        part.Size = Vector3.new(500, 20, 530.1)
+        part.Position = Vector3.new(0, 100000, 133.15)
+        part.CanCollide = true
+        part.Anchored = true
+        
+        while Value do
+            task.wait()
+            local character = game.Players.LocalPlayer.Character
+            if character then
+                local rootPart = character:FindFirstChild("HumanoidRootPart")
+                if rootPart then
+                    rootPart.CFrame = part.CFrame + Vector3.new(0, 50, 0)
+                end
+                
+                -- Equip situps tool
+                for _,v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
+                    if v:IsA("Tool") and v.Name == "Situps" then
+                        v.Parent = character
+                    end
+                end
+                
+                game:GetService("Players").LocalPlayer.muscleEvent:FireServer("rep")
+            end
+        end
+        
+        -- Clean up part when toggled off
+        if not Value and part then
+            part:Destroy()
+        end
+    end
+})
+
+-- 自动倒立身体
+Tab:AddToggle({
+    Name = "自动倒立身体",
+    Callback = function(Value)
+        local part = Instance.new('Part', workspace)
+        part.Size = Vector3.new(500, 20, 530.1)
+        part.Position = Vector3.new(0, 100000, 133.15)
+        part.CanCollide = true
+        part.Anchored = true
+        
+        while Value do
+            task.wait()
+            local character = game.Players.LocalPlayer.Character
+            if character then
+                local rootPart = character:FindFirstChild("HumanoidRootPart")
+                if rootPart then
+                    rootPart.CFrame = part.CFrame + Vector3.new(0, 50, 0)
+                end
+                
+                -- Equip handstands tool
+                for _,v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
+                    if v:IsA("Tool") and v.Name == "Handstands" then
+                        v.Parent = character
+                    end
+                end
+                
+                game:GetService("Players").LocalPlayer.muscleEvent:FireServer("rep")
+            end
+        end
+        
+        -- Clean up part when toggled off
+        if not Value and part then
+            part:Destroy()
+        end
+    end
+})
+
+-- 自动锻炼
+Tab:AddToggle({
+    Name = "自动锻炼",
+    Callback = function(Value)
+        local part = Instance.new('Part', workspace)
+        part.Size = Vector3.new(500, 20, 530.1)
+        part.Position = Vector3.new(0, 100000, 133.15)
+        part.CanCollide = true
+        part.Anchored = true
+        
+        while Value do
+            task.wait()
+            local character = game.Players.LocalPlayer.Character
+            if character then
+                local rootPart = character:FindFirstChild("HumanoidRootPart")
+                if rootPart then
+                    rootPart.CFrame = part.CFrame + Vector3.new(0, 50, 0)
+                end
+                
+                -- Equip all exercise tools
+                for _,v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
+                    if v:IsA("Tool") and (v.Name == "Handstands" or v.Name == "Situps" or v.Name == "Pushups" or v.Name == "Weight") then
+                        local numberValue = v:FindFirstChildOfClass("NumberValue")
+                        if numberValue then
+                            numberValue.Value = 0
+                        end
+                        character:WaitForChild("Humanoid"):EquipTool(v)
+                        game:GetService("Players").LocalPlayer.muscleEvent:FireServer("rep")
+                    end
+                end
+            end
+        end
+        
+        -- Clean up part when toggled off
+        if not Value and part then
+            part:Destroy()
+        end
+    end
+})
+
+-- 自动重生
+Tab:AddToggle({
+    Name = "自动重生",
+    Callback = function(Value)
+        while Value do
+            task.wait()
+            game:GetService("ReplicatedStorage").rEvents.rebirthRemote:InvokeServer("rebirthRequest")
+        end
+    end
+})
+
+-- 收集宝石 (Button)
+Tab:AddButton({
+    Name = "收集宝石",
+    Callback = function()
+        local jk = {}
+        for _, v in pairs(game:GetService("ReplicatedStorage").chestRewards:GetDescendants()) do
+            if v.Name ~= "Light Karma Chest" and v.Name ~= "Evil Karma Chest" then
+                table.insert(jk, v.Name)
+            end
+        end
+        for i = 1, #jk do
+            task.wait(2)
+            game:GetService("ReplicatedStorage").rEvents.checkChestRemote:InvokeServer(jk[i])
+        end
+    end
+})
+
+local Section = Tab:AddSection({
 	Name = "主要功能"
 })
 
@@ -947,6 +1178,104 @@ Tab:AddToggle({
             getgenv().place = false
             wait()
             game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame = CFrame.new(-34.1635208, 3.67689133, 219.640869, 0.599920511, -2.24152163e-09, 0.800059617, 4.46125981e-09, 1, -5.43559087e-10, -0.800059617, 3.89536625e-09, 0.599920511)
+        end
+    end
+})
+
+-- 传送到幸运抽奖区域
+Tab:AddButton({
+    Name = "传送到幸运抽奖区域",
+    Callback = function()
+        local character = game.Players.LocalPlayer.Character
+        if character then
+            local rootPart = character:FindFirstChild("HumanoidRootPart")
+            if rootPart then
+                rootPart.CFrame = CFrame.new(-2606, -2, 5753)
+            end
+        end
+    end
+})
+
+-- 传送到肌肉之王健身房
+Tab:AddButton({
+    Name = "传送到肌肉之王健身房",
+    Callback = function()
+        local character = game.Players.LocalPlayer.Character
+        if character then
+            local rootPart = character:FindFirstChild("HumanoidRootPart")
+            if rootPart then
+                rootPart.CFrame = CFrame.new(-8554, 22, -5642)
+            end
+        end
+    end
+})
+
+-- 传送到传说健身房
+Tab:AddButton({
+    Name = "传送到传说健身房",
+    Callback = function()
+        local character = game.Players.LocalPlayer.Character
+        if character then
+            local rootPart = character:FindFirstChild("HumanoidRootPart")
+            if rootPart then
+                rootPart.CFrame = CFrame.new(4676, 997, -3915)
+            end
+        end
+    end
+})
+
+-- 传送到永恒健身房
+Tab:AddButton({
+    Name = "传送到永恒健身房",
+    Callback = function()
+        local character = game.Players.LocalPlayer.Character
+        if character then
+            local rootPart = character:FindFirstChild("HumanoidRootPart")
+            if rootPart then
+                rootPart.CFrame = CFrame.new(-6686, 13, -1284)
+            end
+        end
+    end
+})
+
+-- 传送到神话健身房
+Tab:AddButton({
+    Name = "传送到神话健身房",
+    Callback = function()
+        local character = game.Players.LocalPlayer.Character
+        if character then
+            local rootPart = character:FindFirstChild("HumanoidRootPart")
+            if rootPart then
+                rootPart.CFrame = CFrame.new(2177, 13, 1070)
+            end
+        end
+    end
+})
+
+-- 传送到冰霜健身房
+Tab:AddButton({
+    Name = "传送到冰霜健身房",
+    Callback = function()
+        local character = game.Players.LocalPlayer.Character
+        if character then
+            local rootPart = character:FindFirstChild("HumanoidRootPart")
+            if rootPart then
+                rootPart.CFrame = CFrame.new(-2543, 13, -410)
+            end
+        end
+    end
+})
+
+-- 传送到丛林健身房
+Tab:AddButton({
+    Name = "传送到丛林健身房",
+    Callback = function()
+        local character = game.Players.LocalPlayer.Character
+        if character then
+            local rootPart = character:FindFirstChild("HumanoidRootPart")
+            if rootPart then
+                rootPart.CFrame = CFrame.new(-8760.79, 46.58, 2394.51)
+            end
         end
     end
 })
