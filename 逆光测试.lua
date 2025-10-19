@@ -1023,202 +1023,35 @@ Tab:AddToggle({
     end
 })
 
--- Auto mine stone with 5000 durability requirement
 Tab:AddToggle({
-    Name = "石头5000",
-    Default = false,
+    Name = "自动打石头5000",
     Callback = function(Value)
-        if game.Players.LocalPlayer.Durability.Value >= 5000 then
-            getgenv().RK5000 = Value
-            while getgenv().RK5000 do
+        if game.Players.LocalPlayer.Durability.Value >= 100 then
+            getgenv().rock = Value
+            while getgenv().rock do
                 wait()
-                -- Equip Punch tool
+                -- Equip Punch tool from backpack
                 for _,v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
                     if v:IsA("Tool") and v.Name == "Punch" then
                         game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):EquipTool(v)
                     end
                 end
-                -- Activate Punch tool
+                -- Activate Punch tool if equipped
                 for _,h in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
                     if h:IsA("Tool") and h.Name == "Punch" then
                         h:Activate()
                     end
                 end
-                -- Teleport to mining spot
+                -- Teleport to new mining location
                 game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame = CFrame.new(
-                    329.831482, 3.66450214, -618.48407, 
-                    -0.806075394, -8.67358096e-08, 0.591812849, 
-                    -1.05715522e-07, 1, 2.57029176e-09, 
-                    -0.591812849, -6.04919563e-08, -0.806075394
+                    283.42, 3.71, -590.84,
+                    -0.921312928, -1.80826774e-07, -0.38882193,
+                    -9.13036544e-08, 1, -2.48719346e-07,
+                    0.38882193, -1.93647494e-07, -0.921312928
                 )
             end
-            -- Unequip when toggled off
-            if not getgenv().RK5000 then
-                game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):UnequipTools()
-            end
-        end
-    end
-})
-
--- Auto mine stone with 150000 durability requirement
-Tab:AddToggle({
-    Name = "石头150000",
-    Default = false,
-    Callback = function(Value)
-        if game.Players.LocalPlayer.Durability.Value >= 150000 then
-            getgenv().RK150000 = Value
-            while getgenv().RK150000 do
-                wait()
-                for _,v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
-                    if v:IsA("Tool") and v.Name == "Punch" then
-                        game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):EquipTool(v)
-                    end
-                end
-                for _,h in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
-                    if h:IsA("Tool") and h.Name == "Punch" then
-                        h:Activate()
-                    end
-                end
-                game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame = CFrame.new(
-                    -2566.78076, 3.97019577, -277.503235, 
-                    -0.923934579, -4.11600105e-08, -0.382550538, 
-                    -3.38838042e-08, 1, -2.57576183e-08, 
-                    0.382550538, -1.08360858e-08, -0.923934579
-                )
-            end
-            if not getgenv().RK150000 then
-                game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):UnequipTools()
-            end
-        end
-    end
-})
-
--- Auto mine stone with 400000 durability requirement
-Tab:AddToggle({
-    Name = "石头400000",
-    Default = false,
-    Callback = function(Value)
-        if game.Players.LocalPlayer.Durability.Value >= 400000 then
-            getgenv().RK400000 = Value
-            while getgenv().RK400000 do
-                wait()
-                for _,v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
-                    if v:IsA("Tool") and v.Name == "Punch" then
-                        game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):EquipTool(v)
-                    end
-                end
-                for _,h in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
-                    if h:IsA("Tool") and h.Name == "Punch" then
-                        h:Activate()
-                    end
-                end
-                game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame = CFrame.new(
-                    2155.61743, 3.79830337, 1227.06482, 
-                    -0.551303148, -9.16796949e-09, -0.834304988, 
-                    -5.61318245e-08, 1, 2.61027839e-08, 
-                    0.834304988, 6.12216127e-08, -0.551303148
-                )
-            end
-            if not getgenv().RK400000 then
-                game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):UnequipTools()
-            end
-        end
-    end
-})
-
--- Auto mine stone with 750000 durability requirement
-Tab:AddToggle({
-    Name = "石头750000",
-    Default = false,
-    Callback = function(Value)
-        if game.Players.LocalPlayer.Durability.Value >= 750000 then
-            getgenv().RK750000 = Value
-            while getgenv().RK750000 do
-                wait()
-                for _,v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
-                    if v:IsA("Tool") and v.Name == "Punch" then
-                        game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):EquipTool(v)
-                    end
-                end
-                for _,h in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
-                    if h:IsA("Tool") and h.Name == "Punch" then
-                        h:Activate()
-                    end
-                end
-                game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame = CFrame.new(
-                    -7285.6499, 3.66624784, -1228.27417, 
-                    0.857643783, -1.58175091e-08, -0.514244199, 
-                    -1.22581563e-08, 1, -5.12025977e-08, 
-                    0.514244199, 5.02172774e-08, 0.857643783
-                )
-            end
-            if not getgenv().RK750000 then
-                game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):UnequipTools()
-            end
-        end
-    end
-})
-
--- Auto mine stone with 1M durability requirement
-Tab:AddToggle({
-    Name = "石头100万",
-    Default = false,
-    Callback = function(Value)
-        if game.Players.LocalPlayer.Durability.Value >= 1000000 then
-            getgenv().RK1M = Value
-            while getgenv().RK1M do
-                wait()
-                for _,v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
-                    if v:IsA("Tool") and v.Name == "Punch" then
-                        game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):EquipTool(v)
-                    end
-                end
-                for _,h in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
-                    if h:IsA("Tool") and h.Name == "Punch" then
-                        h:Activate()
-                    end
-                end
-                game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame = CFrame.new(
-                    4160.87109, 987.829102, -4136.64502, 
-                    -0.893115997, 1.25481356e-05, 0.44982639, 
-                    5.02490684e-06, 1, -1.79187136e-05, 
-                    -0.44982639, -1.37431543e-05, -0.893115997
-                )
-            end
-            if not getgenv().RK1M then
-                game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):UnequipTools()
-            end
-        end
-    end
-})
-
--- Auto mine stone with 5M durability requirement
-Tab:AddToggle({
-    Name = "石头500万",
-    Default = false,
-    Callback = function(Value)
-        if game.Players.LocalPlayer.Durability.Value >= 5000000 then
-            getgenv().RK5M = Value
-            while getgenv().RK5M do
-                wait()
-                for _,v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
-                    if v:IsA("Tool") and v.Name == "Punch" then
-                        game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):EquipTool(v)
-                    end
-                end
-                for _,h in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
-                    if h:IsA("Tool") and h.Name == "Punch" then
-                        h:Activate()
-                    end
-                end
-                game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame = CFrame.new(
-                    -8957.54395, 5.53625107, -6126.90186, 
-                    -0.803919137, 6.6065212e-08, 0.594738603, 
-                    -8.93136143e-09, 1, -1.23155459e-07, 
-                    -0.594738603, -1.04318865e-07, -0.803919137
-                )
-            end
-            if not getgenv().RK5M then
+            -- Unequip tools when toggled off
+            if not getgenv().rock then
                 game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):UnequipTools()
             end
         end
