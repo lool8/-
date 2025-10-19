@@ -1269,6 +1269,10 @@ Tab:AddToggle({
     end
 })
 
+local Section = Tab:AddSection({
+	Name = "建议把体型调成1再跑"
+})
+
 -- Beach Treadmill (10 Agility)
 Tab:AddToggle({
     Name = "沙滩跑步机10",
@@ -1308,14 +1312,15 @@ Tab:AddToggle({
     end
 })
 
--- Gym Treadmill (2000 Agility)
 Tab:AddToggle({
-    Name = "健身房跑步机2000",
-    Default = false,
+    Name = "健身房跑步机1000",
     Callback = function(Value)
-        if game.Players.LocalPlayer.Agility.Value >= 2000 then
-            getgenv().PPJ2000 = Value
-            while getgenv().PPJ2000 and task.wait() do
+        getgenv().PPJ10 = Value
+        
+        -- 启动跑步机功能
+        if Value then
+            -- 设置移动速度并传送到指定位置
+            local function setupTreadmill()
                 local character = game.Players.LocalPlayer.Character
                 if character then
                     local humanoid = character:FindFirstChild("Humanoid")
@@ -1326,12 +1331,16 @@ Tab:AddToggle({
                     end
                     
                     if rootPart then
-                        rootPart.CFrame = CFrame.new(-3005.37866, 14.3221855, -464.697876, -0.015773816, -1.38508964e-08, 0.999875605, -5.13225586e-08, 1, 1.30429667e-08, -0.999875605, -5.11104332e-08, -0.015773816)
+                        -- 使用新坐标 (-394.19, 13.23, -262.74)
+                        rootPart.CFrame = CFrame.new(-394.19, 13.23, -262.74)
                     end
                 end
-                
-                local RunService = game:GetService("RunService")
-                RunService:BindToRenderStep("PPJ2000_move", Enum.RenderPriority.Character.Value + 1, function()
+            end
+            
+            -- 绑定每帧移动逻辑
+            game:GetService("RunService"):BindToRenderStep("PPJ10_move", 
+                Enum.RenderPriority.Character.Value + 1, 
+                function()
                     local character = game.Players.LocalPlayer.Character
                     if character then
                         local humanoid = character:FindFirstChild("Humanoid")
@@ -1340,23 +1349,27 @@ Tab:AddToggle({
                         end
                     end
                 end)
-            end
             
-            if not getgenv().PPJ2000 then
-                game:GetService("RunService"):UnbindFromRenderStep("PPJ2000_move")
+            -- 主循环
+            while getgenv().PPJ10 and task.wait() do
+                setupTreadmill()
             end
+        else
+            -- 关闭时解除绑定
+            game:GetService("RunService"):UnbindFromRenderStep("PPJ10_move")
         end
     end
 })
 
--- Mythical Gym Treadmill (2000 Agility)
 Tab:AddToggle({
-    Name = "神话健身房跑步机2000",
-    Default = false,
+    Name = "冰霜跑步机2000",
     Callback = function(Value)
-        if game.Players.LocalPlayer.Agility.Value >= 2000 then
-            getgenv().SHPPJ2000 = Value
-            while getgenv().SHPPJ2000 and task.wait() do
+        getgenv().PPJ10 = Value
+        
+        -- 启动跑步机功能
+        if Value then
+            -- 设置移动速度并传送到指定位置
+            local function setupTreadmill()
                 local character = game.Players.LocalPlayer.Character
                 if character then
                     local humanoid = character:FindFirstChild("Humanoid")
@@ -1367,12 +1380,16 @@ Tab:AddToggle({
                     end
                     
                     if rootPart then
-                        rootPart.CFrame = CFrame.new(2571.23706, 15.6896839, 898.650391, 0.999968231, 2.23868635e-09, -0.00797206629, -1.73198844e-09, 1, 6.35660768e-08, 0.00797206629, -6.3550246e-08, 0.999968231)
+                        -- 使用新坐标 (-2994.07, 14.33, -467.44)
+                        rootPart.CFrame = CFrame.new(-2994.07, 14.33, -467.44)
                     end
                 end
-                
-                local RunService = game:GetService("RunService")
-                RunService:BindToRenderStep("SHPPJ2000_move", Enum.RenderPriority.Character.Value + 1, function()
+            end
+            
+            -- 绑定每帧移动逻辑
+            game:GetService("RunService"):BindToRenderStep("PPJ10_move", 
+                Enum.RenderPriority.Character.Value + 1, 
+                function()
                     local character = game.Players.LocalPlayer.Character
                     if character then
                         local humanoid = character:FindFirstChild("Humanoid")
@@ -1381,23 +1398,27 @@ Tab:AddToggle({
                         end
                     end
                 end)
-            end
             
-            if not getgenv().SHPPJ2000 then
-                game:GetService("RunService"):UnbindFromRenderStep("SHPPJ2000_move")
+            -- 主循环
+            while getgenv().PPJ10 and task.wait() do
+                setupTreadmill()
             end
+        else
+            -- 关闭时解除绑定
+            game:GetService("RunService"):UnbindFromRenderStep("PPJ10_move")
         end
     end
 })
 
--- Eternal Gym Treadmill (3500 Agility)
 Tab:AddToggle({
-    Name = "永恒健身房跑步机3500",
-    Default = false,
+    Name = "神话健身房跑步机3000",
     Callback = function(Value)
-        if game.Players.LocalPlayer.Agility.Value >= 3500 then
-            getgenv().YHPPJ3500 = Value
-            while getgenv().YHPPJ3500 and task.wait() do
+        getgenv().PPJ10 = Value
+        
+        -- 启动跑步机功能
+        if Value then
+            -- 设置移动速度并传送到指定位置
+            local function setupTreadmill()
                 local character = game.Players.LocalPlayer.Character
                 if character then
                     local humanoid = character:FindFirstChild("Humanoid")
@@ -1408,12 +1429,16 @@ Tab:AddToggle({
                     end
                     
                     if rootPart then
-                        rootPart.CFrame = CFrame.new(-7077.79102, 29.6702118, -1457.59961, -0.0322036594, -3.31122768e-10, 0.99948132, -6.44344267e-09, 1, 1.23684493e-10, -0.99948132, -6.43611742e-09, -0.0322036594)
+                        -- 使用新坐标 (2659.45, 21.64, 951.18)
+                        rootPart.CFrame = CFrame.new(2659.45, 21.64, 951.18)
                     end
                 end
-                
-                local RunService = game:GetService("RunService")
-                RunService:BindToRenderStep("YHPPJ3500_move", Enum.RenderPriority.Character.Value + 1, function()
+            end
+            
+            -- 绑定每帧移动逻辑
+            game:GetService("RunService"):BindToRenderStep("PPJ10_move", 
+                Enum.RenderPriority.Character.Value + 1, 
+                function()
                     local character = game.Players.LocalPlayer.Character
                     if character then
                         local humanoid = character:FindFirstChild("Humanoid")
@@ -1422,23 +1447,27 @@ Tab:AddToggle({
                         end
                     end
                 end)
-            end
             
-            if not getgenv().YHPPJ3500 then
-                game:GetService("RunService"):UnbindFromRenderStep("YHPPJ3500_move")
+            -- 主循环
+            while getgenv().PPJ10 and task.wait() do
+                setupTreadmill()
             end
+        else
+            -- 关闭时解除绑定
+            game:GetService("RunService"):UnbindFromRenderStep("PPJ10_move")
         end
     end
 })
 
--- Legendary Gym Treadmill (3000 Agility)
 Tab:AddToggle({
-    Name = "传奇健身房跑步机3000",
-    Default = false,
+    Name = "传奇跑步机10",
     Callback = function(Value)
-        if game.Players.LocalPlayer.Agility.Value >= 3000 then
-            getgenv().CQPPJ3000 = Value
-            while getgenv().CQPPJ3000 and task.wait() do
+        getgenv().PPJ10 = Value
+        
+        -- 启动跑步机功能
+        if Value then
+            -- 设置移动速度并传送到指定位置
+            local function setupTreadmill()
                 local character = game.Players.LocalPlayer.Character
                 if character then
                     local humanoid = character:FindFirstChild("Humanoid")
@@ -1449,12 +1478,16 @@ Tab:AddToggle({
                     end
                     
                     if rootPart then
-                        rootPart.CFrame = CFrame.new(4370.82812, 999.358704, -3621.42773, -0.960604727, -8.41949266e-09, -0.27791819, -6.12478646e-09, 1, -9.12496567e-09, 0.27791819, -7.06329528e-09, -0.960604727)
+                        -- 使用新坐标 (4362.67, 999.36, -3650.33)
+                        rootPart.CFrame = CFrame.new(4362.67, 999.36, -3650.33)
                     end
                 end
-                
-                local RunService = game:GetService("RunService")
-                RunService:BindToRenderStep("CQPPJ3000_move", Enum.RenderPriority.Character.Value + 1, function()
+            end
+            
+            -- 绑定每帧移动逻辑
+            game:GetService("RunService"):BindToRenderStep("PPJ10_move", 
+                Enum.RenderPriority.Character.Value + 1, 
+                function()
                     local character = game.Players.LocalPlayer.Character
                     if character then
                         local humanoid = character:FindFirstChild("Humanoid")
@@ -1463,11 +1496,63 @@ Tab:AddToggle({
                         end
                     end
                 end)
+            
+            -- 主循环
+            while getgenv().PPJ10 and task.wait() do
+                setupTreadmill()
+            end
+        else
+            -- 关闭时解除绑定
+            game:GetService("RunService"):UnbindFromRenderStep("PPJ10_move")
+        end
+    end
+})
+
+Tab:AddToggle({
+    Name = "丛林跑步机20000",
+    Callback = function(Value)
+        getgenv().PPJ10 = Value
+        
+        -- 启动跑步机功能
+        if Value then
+            -- 设置移动速度并传送到指定位置
+            local function setupTreadmill()
+                local character = game.Players.LocalPlayer.Character
+                if character then
+                    local humanoid = character:FindFirstChild("Humanoid")
+                    local rootPart = character:FindFirstChild("HumanoidRootPart")
+                    
+                    if humanoid then
+                        humanoid.WalkSpeed = 10
+                    end
+                    
+                    if rootPart then
+                        -- 使用新坐标 (-8133.48, 27.98, 2814.74)
+                        rootPart.CFrame = CFrame.new(-8133.48, 27.98, 2814.74)
+                    end
+                end
             end
             
-            if not getgenv().CQPPJ3000 then
-                game:GetService("RunService"):UnbindFromRenderStep("CQPPJ3000_move")
+            -- 绑定每帧移动逻辑
+            game:GetService("RunService"):BindToRenderStep("PPJ10_move", 
+                Enum.RenderPriority.Character.Value + 1, 
+                function()
+                    local character = game.Players.LocalPlayer.Character
+                    if character then
+                        local humanoid = character:FindFirstChild("Humanoid")
+                        if humanoid then
+                            humanoid:Move(Vector3.new(10000, 0, -1), true)
+                        end
+                    end
+                end)
+            
+            -- 主循环
+            while getgenv().PPJ10 and task.wait() do
+                setupTreadmill()
             end
+        else
+            -- 关闭时解除绑定
+            game:GetService("RunService"):UnbindFromRenderStep("PPJ10_move")
         end
     end
 })
