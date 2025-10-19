@@ -930,6 +930,10 @@ local Tab = Window:MakeTab({
     PremiumOnly = false
 })
 
+local Section = Tab:AddSection({
+	Name = "主要功能"
+})
+
 Tab:AddToggle({
     Name = "传送安全地方",
     Callback = function(Value)
@@ -945,6 +949,10 @@ Tab:AddToggle({
             game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame = CFrame.new(-34.1635208, 3.67689133, 219.640869, 0.599920511, -2.24152163e-09, 0.800059617, 4.46125981e-09, 1, -5.43559087e-10, -0.800059617, 3.89536625e-09, 0.599920511)
         end
     end
+})
+
+local Section = Tab:AddSection({
+	Name = "温馨提示建议把体型调成2"
 })
 
 Tab:AddToggle({
@@ -1119,6 +1127,58 @@ Tab:AddToggle({
 })
 
 Tab:AddToggle({
+    Name = "自动打石头100万",
+    Callback = function(Value)
+        if game.Players.LocalPlayer.Durability.Value >= 100 then
+            getgenv().rock = Value
+            while getgenv().rock and task.wait() do
+                -- 自动装备Punch工具
+                local character = game.Players.LocalPlayer.Character
+                local backpack = game.Players.LocalPlayer.Backpack
+                
+                -- 从背包装备工具
+                for _, tool in ipairs(backpack:GetChildren()) do
+                    if tool:IsA("Tool") and tool.Name == "Punch" then
+                        if character then
+                            local humanoid = character:FindFirstChildOfClass("Humanoid")
+                            if humanoid then
+                                humanoid:EquipTool(tool)
+                            end
+                        end
+                    end
+                end
+                
+                -- 使用已装备的工具
+                if character then
+                    for _, tool in ipairs(character:GetChildren()) do
+                        if tool:IsA("Tool") and tool.Name == "Punch" then
+                            tool:Activate()
+                        end
+                    end
+                    
+                    -- 传送到新坐标位置
+                    local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
+                    if humanoidRootPart then
+                        humanoidRootPart.CFrame = CFrame.new(4178.57, 1012.66, -4062.21)
+                    end
+                end
+            end
+            
+            -- 关闭功能时卸下工具
+            if not getgenv().rock then
+                local character = game.Players.LocalPlayer.Character
+                if character then
+                    local humanoid = character:FindFirstChildOfClass("Humanoid")
+                    if humanoid then
+                        humanoid:UnequipTools()
+                    end
+                end
+            end
+        end
+    end
+})
+
+Tab:AddToggle({
     Name = "自动打石头500万",
     Callback = function(Value)
         if game.Players.LocalPlayer.Durability.Value >= 100 then
@@ -1204,6 +1264,209 @@ Tab:AddToggle({
                         humanoid:UnequipTools()
                     end
                 end
+            end
+        end
+    end
+})
+
+-- Beach Treadmill (10 Agility)
+Tab:AddToggle({
+    Name = "沙滩跑步机10",
+    Default = false,
+    Callback = function(Value)
+        getgenv().PPJ10 = Value
+        while getgenv().PPJ10 and task.wait() do
+            local character = game.Players.LocalPlayer.Character
+            if character then
+                local humanoid = character:FindFirstChild("Humanoid")
+                local rootPart = character:FindFirstChild("HumanoidRootPart")
+                
+                if humanoid then
+                    humanoid.WalkSpeed = 10
+                end
+                
+                if rootPart then
+                    rootPart.CFrame = CFrame.new(238.671112, 5.40315914, 387.713165, -0.0160072874, -2.90710176e-08, -0.99987185, -3.3434191e-09, 1, -2.90212157e-08, 0.99987185, 2.87843993e-09, -0.0160072874)
+                end
+            end
+            
+            local RunService = game:GetService("RunService")
+            RunService:BindToRenderStep("PPJ10_move", Enum.RenderPriority.Character.Value + 1, function()
+                local character = game.Players.LocalPlayer.Character
+                if character then
+                    local humanoid = character:FindFirstChild("Humanoid")
+                    if humanoid then
+                        humanoid:Move(Vector3.new(10000, 0, -1), true)
+                    end
+                end
+            end)
+        end
+        
+        if not getgenv().PPJ10 then
+            game:GetService("RunService"):UnbindFromRenderStep("PPJ10_move")
+        end
+    end
+})
+
+-- Gym Treadmill (2000 Agility)
+Tab:AddToggle({
+    Name = "健身房跑步机2000",
+    Default = false,
+    Callback = function(Value)
+        if game.Players.LocalPlayer.Agility.Value >= 2000 then
+            getgenv().PPJ2000 = Value
+            while getgenv().PPJ2000 and task.wait() do
+                local character = game.Players.LocalPlayer.Character
+                if character then
+                    local humanoid = character:FindFirstChild("Humanoid")
+                    local rootPart = character:FindFirstChild("HumanoidRootPart")
+                    
+                    if humanoid then
+                        humanoid.WalkSpeed = 10
+                    end
+                    
+                    if rootPart then
+                        rootPart.CFrame = CFrame.new(-3005.37866, 14.3221855, -464.697876, -0.015773816, -1.38508964e-08, 0.999875605, -5.13225586e-08, 1, 1.30429667e-08, -0.999875605, -5.11104332e-08, -0.015773816)
+                    end
+                end
+                
+                local RunService = game:GetService("RunService")
+                RunService:BindToRenderStep("PPJ2000_move", Enum.RenderPriority.Character.Value + 1, function()
+                    local character = game.Players.LocalPlayer.Character
+                    if character then
+                        local humanoid = character:FindFirstChild("Humanoid")
+                        if humanoid then
+                            humanoid:Move(Vector3.new(10000, 0, -1), true)
+                        end
+                    end
+                end)
+            end
+            
+            if not getgenv().PPJ2000 then
+                game:GetService("RunService"):UnbindFromRenderStep("PPJ2000_move")
+            end
+        end
+    end
+})
+
+-- Mythical Gym Treadmill (2000 Agility)
+Tab:AddToggle({
+    Name = "神话健身房跑步机2000",
+    Default = false,
+    Callback = function(Value)
+        if game.Players.LocalPlayer.Agility.Value >= 2000 then
+            getgenv().SHPPJ2000 = Value
+            while getgenv().SHPPJ2000 and task.wait() do
+                local character = game.Players.LocalPlayer.Character
+                if character then
+                    local humanoid = character:FindFirstChild("Humanoid")
+                    local rootPart = character:FindFirstChild("HumanoidRootPart")
+                    
+                    if humanoid then
+                        humanoid.WalkSpeed = 10
+                    end
+                    
+                    if rootPart then
+                        rootPart.CFrame = CFrame.new(2571.23706, 15.6896839, 898.650391, 0.999968231, 2.23868635e-09, -0.00797206629, -1.73198844e-09, 1, 6.35660768e-08, 0.00797206629, -6.3550246e-08, 0.999968231)
+                    end
+                end
+                
+                local RunService = game:GetService("RunService")
+                RunService:BindToRenderStep("SHPPJ2000_move", Enum.RenderPriority.Character.Value + 1, function()
+                    local character = game.Players.LocalPlayer.Character
+                    if character then
+                        local humanoid = character:FindFirstChild("Humanoid")
+                        if humanoid then
+                            humanoid:Move(Vector3.new(10000, 0, -1), true)
+                        end
+                    end
+                end)
+            end
+            
+            if not getgenv().SHPPJ2000 then
+                game:GetService("RunService"):UnbindFromRenderStep("SHPPJ2000_move")
+            end
+        end
+    end
+})
+
+-- Eternal Gym Treadmill (3500 Agility)
+Tab:AddToggle({
+    Name = "永恒健身房跑步机3500",
+    Default = false,
+    Callback = function(Value)
+        if game.Players.LocalPlayer.Agility.Value >= 3500 then
+            getgenv().YHPPJ3500 = Value
+            while getgenv().YHPPJ3500 and task.wait() do
+                local character = game.Players.LocalPlayer.Character
+                if character then
+                    local humanoid = character:FindFirstChild("Humanoid")
+                    local rootPart = character:FindFirstChild("HumanoidRootPart")
+                    
+                    if humanoid then
+                        humanoid.WalkSpeed = 10
+                    end
+                    
+                    if rootPart then
+                        rootPart.CFrame = CFrame.new(-7077.79102, 29.6702118, -1457.59961, -0.0322036594, -3.31122768e-10, 0.99948132, -6.44344267e-09, 1, 1.23684493e-10, -0.99948132, -6.43611742e-09, -0.0322036594)
+                    end
+                end
+                
+                local RunService = game:GetService("RunService")
+                RunService:BindToRenderStep("YHPPJ3500_move", Enum.RenderPriority.Character.Value + 1, function()
+                    local character = game.Players.LocalPlayer.Character
+                    if character then
+                        local humanoid = character:FindFirstChild("Humanoid")
+                        if humanoid then
+                            humanoid:Move(Vector3.new(10000, 0, -1), true)
+                        end
+                    end
+                end)
+            end
+            
+            if not getgenv().YHPPJ3500 then
+                game:GetService("RunService"):UnbindFromRenderStep("YHPPJ3500_move")
+            end
+        end
+    end
+})
+
+-- Legendary Gym Treadmill (3000 Agility)
+Tab:AddToggle({
+    Name = "传奇健身房跑步机3000",
+    Default = false,
+    Callback = function(Value)
+        if game.Players.LocalPlayer.Agility.Value >= 3000 then
+            getgenv().CQPPJ3000 = Value
+            while getgenv().CQPPJ3000 and task.wait() do
+                local character = game.Players.LocalPlayer.Character
+                if character then
+                    local humanoid = character:FindFirstChild("Humanoid")
+                    local rootPart = character:FindFirstChild("HumanoidRootPart")
+                    
+                    if humanoid then
+                        humanoid.WalkSpeed = 10
+                    end
+                    
+                    if rootPart then
+                        rootPart.CFrame = CFrame.new(4370.82812, 999.358704, -3621.42773, -0.960604727, -8.41949266e-09, -0.27791819, -6.12478646e-09, 1, -9.12496567e-09, 0.27791819, -7.06329528e-09, -0.960604727)
+                    end
+                end
+                
+                local RunService = game:GetService("RunService")
+                RunService:BindToRenderStep("CQPPJ3000_move", Enum.RenderPriority.Character.Value + 1, function()
+                    local character = game.Players.LocalPlayer.Character
+                    if character then
+                        local humanoid = character:FindFirstChild("Humanoid")
+                        if humanoid then
+                            humanoid:Move(Vector3.new(10000, 0, -1), true)
+                        end
+                    end
+                end)
+            end
+            
+            if not getgenv().CQPPJ3000 then
+                game:GetService("RunService"):UnbindFromRenderStep("CQPPJ3000_move")
             end
         end
     end
