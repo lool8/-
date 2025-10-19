@@ -923,3 +923,26 @@ Tab:AddButton({
         end
     end
 })
+
+local Tab = Window:MakeTab({
+    Name = "力量传奇",
+    Icon = "rbxassetid://4483345998",
+    PremiumOnly = false
+})
+
+Tab:AddToggle({
+    Name = "传送安全地方",
+    Callback = function(Value)
+        if Value then
+            getgenv().place = true
+            while getgenv().place do
+                wait()
+                game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame = CFrame.new(-51.6716728, 32.2157211, 1290.41211, 0.9945544, 1.23613528e-08, -0.104218982, -7.58742402e-09, 1, 4.62031657e-08, 0.104218982, -4.51608102e-08, 0.9945544)
+            end
+        else
+            getgenv().place = false
+            wait()
+            game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame = CFrame.new(-34.1635208, 3.67689133, 219.640869, 0.599920511, -2.24152163e-09, 0.800059617, 4.46125981e-09, 1, -5.43559087e-10, -0.800059617, 3.89536625e-09, 0.599920511)
+        end
+    end
+})
