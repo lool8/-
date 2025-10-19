@@ -946,3 +946,244 @@ Tab:AddToggle({
         end
     end
 })
+
+Tab:AddToggle({
+    Name = "自动打石头0",
+    Callback = function(Value)
+        getgenv().rock = Value
+        while getgenv().rock do
+            wait()
+            for i,v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
+                if v:IsA("Tool") and v.Name == "Punch" then
+                    game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):EquipTool(v)
+                end
+            end
+            for i,h in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+                if h:IsA("Tool") and h.Name == "Punch" then
+                    h:Activate()
+                end
+            end
+            game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame = CFrame.new(7.60643005, 4.02632904, 2104.54004, -0.23040159, -8.53662385e-08, -0.973095655, -4.68743764e-08, 1, -7.66279342e-08, 0.973095655, 2.79580536e-08, -0.23040159)
+        end
+        if not getgenv().rock then
+            game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):UnequipTools()
+        end
+    end
+})
+
+Tab:AddToggle({
+    Name = "自动打石头10",
+    Callback = function(Value)
+        if game.Players.LocalPlayer.Durability.Value >= 10 then
+            getgenv().rock = Value
+            while getgenv().rock do
+                wait()
+                for i,v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
+                    if v:IsA("Tool") and v.Name == "Punch" then
+                        game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):EquipTool(v)
+                    end
+                end
+                for i,h in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+                    if h:IsA("Tool") and h.Name == "Punch" then
+                        h:Activate()
+                    end
+                end
+                game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame = CFrame.new(-157.680908, 3.72453046, 434.871185, 0.923298299, -1.81774684e-09, -0.384083599, 3.45247031e-09, 1, 3.56670582e-09, 0.384083599, -4.61917082e-09, 0.923298299)
+            end
+            if not getgenv().rock then
+                game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):UnequipTools()
+            end
+        end
+    end
+})
+
+Tab:AddToggle({
+    Name = "自动打石头100",
+    Callback = function(Value)
+        if game.Players.LocalPlayer.Durability.Value >= 100 then
+            getgenv().rock = Value
+            while getgenv().rock do
+                wait()
+                for i,v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
+                    if v:IsA("Tool") and v.Name == "Punch" then
+                        game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):EquipTool(v)
+                    end
+                end
+                for i,h in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+                    if h:IsA("Tool") and h.Name == "Punch" then
+                        h:Activate()
+                    end
+                end
+                game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame = CFrame.new(162.233673, 3.66615629, -164.686783, -0.921312928, -1.80826774e-07, -0.38882193, -9.13036544e-08, 1, -2.48719346e-07, 0.38882193, -1.93647494e-07, -0.921312928)
+            end
+            if not getgenv().rock then
+                game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):UnequipTools()
+            end
+        end
+    end
+})
+
+Tab:AddToggle({
+    Name = "自动打石头5000",
+    Callback = function(Value)
+        if game.Players.LocalPlayer.Durability.Value >= 5000 then
+            getgenv().rock = Value
+            while getgenv().rock do
+                wait()
+                for i,v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
+                    if v:IsA("Tool") and v.Name == "Punch" then
+                        game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):EquipTool(v)
+                    end
+                end
+                for i,h in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+                    if h:IsA("Tool") and h.Name == "Punch" then
+                        h:Activate()
+                    end
+                end
+                game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame = CFrame.new(329.831482, 3.66450214, -618.48407, -0.806075394, -8.67358096e-08, 0.591812849, -1.05715522e-07, 1, 2.57029176e-09, -0.591812849, -6.04919563e-08, -0.806075394)
+            end
+            if not getgenv().rock then
+                game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):UnequipTools()
+            end
+        end
+    end
+})
+
+Tab:AddToggle({
+    Name = "自动打石头150000",
+    Callback = function(Value)
+        if game.Players.LocalPlayer.Durability.Value >= 150000 then
+            getgenv().rock = Value
+            while getgenv().rock do
+                wait()
+                for i,v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
+                    if v:IsA("Tool") and v.Name == "Punch" then
+                        game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):EquipTool(v)
+                    end
+                end
+                for i,h in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+                    if h:IsA("Tool") and h.Name == "Punch" then
+                        h:Activate()
+                    end
+                end
+                game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame = CFrame.new(-2566.78076, 3.97019577, -277.503235, -0.923934579, -4.11600105e-08, -0.382550538, -3.38838042e-08, 1, -2.57576183e-08, 0.382550538, -1.08360858e-08, -0.923934579)
+            end
+            if not getgenv().rock then
+                game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):UnequipTools()
+            end
+        end
+    end
+})
+
+Tab:AddToggle({
+    Name = "自动打石头400000",
+    Callback = function(Value)
+        if game.Players.LocalPlayer.Durability.Value >= 400000 then
+            getgenv().rock = Value
+            while getgenv().rock do
+                wait()
+                for i,v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
+                    if v:IsA("Tool") and v.Name == "Punch" then
+                        game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):EquipTool(v)
+                    end
+                end
+                for i,h in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+                    if h:IsA("Tool") and h.Name == "Punch" then
+                        h:Activate()
+                    end
+                end
+                game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame = CFrame.new(2155.61743, 3.79830337, 1227.06482, -0.551303148, -9.16796949e-09, -0.834304988, -5.61318245e-08, 1, 2.61027839e-08, 0.834304988, 6.12216127e-08, -0.551303148)
+            end
+            if not getgenv().rock then
+                game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):UnequipTools()
+            end
+        end
+    end
+})
+
+Tab:AddToggle({
+    Name = "自动打石头750000",
+    Callback = function(Value)
+        if game.Players.LocalPlayer.Durability.Value >= 750000 then
+            getgenv().rock = Value
+            while getgenv().rock do
+                wait()
+                for i,v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
+                    if v:IsA("Tool") and v.Name == "Punch" then
+                        game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):EquipTool(v)
+                    end
+                end
+                for i,h in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+                    if h:IsA("Tool") and h.Name == "Punch" then
+                        h:Activate()
+                    end
+                end
+                game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame = CFrame.new(-7285.6499, 3.66624784, -1228.27417, 0.857643783, -1.58175091e-08, -0.514244199, -1.22581563e-08, 1, -5.12025977e-08, 0.514244199, 5.02172774e-08, 0.857643783)
+            end
+            if not getgenv().rock then
+                game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):UnequipTools()
+            end
+        end
+    end
+})
+
+Tab:AddToggle({
+    Name = "自动打石头100万",
+    Callback = function(Value)
+        if game.Players.LocalPlayer.Durability.Value >= 1000000 then
+            getgenv().rock = Value
+            while getgenv().rock do
+                wait()
+                for i,v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
+                    if v:IsA("Tool") and v.Name == "Punch" then
+                        game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):EquipTool(v)
+                    end
+                end
+                for i,h in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+                    if h:IsA("Tool") and h.Name == "Punch" then
+                        h:Activate()
+                    end
+                end
+                game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame = CFrame.new(4160.87109, 987.829102, -4136.64502, -0.893115997, 1.25481356e-05, 0.44982639, 5.02490684e-06, 1, -1.79187136e-05, -0.44982639, -1.37431543e-05, -0.893115997)
+            end
+            if not getgenv().rock then
+                game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):UnequipTools()
+            end
+        end
+    end
+})
+
+Tab:AddToggle({
+    Name = "自动打石头500万",
+    Callback = function(Value)
+        if game.Players.LocalPlayer.Durability.Value >= 5000000 then
+            getgenv().rock = Value
+            while getgenv().rock do
+                wait()
+                -- Equip Punch tool if found in backpack
+                for _,v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
+                    if v:IsA("Tool") and v.Name == "Punch" then
+                        game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):EquipTool(v)
+                    end
+                end
+                -- Activate Punch tool if equipped
+                for _,h in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+                    if h:IsA("Tool") and h.Name == "Punch" then
+                        h:Activate()
+                    end
+                end
+                -- Teleport to mining location
+                game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame = CFrame.new(
+                    -8957.54395, 5.53625107, -6126.90186, 
+                    -0.803919137, 6.6065212e-08, 0.594738603, 
+                    -8.93136143e-09, 1, -1.23155459e-07, 
+                    -0.594738603, -1.04318865e-07, -0.803919137
+                )
+            end
+            -- Unequip tools when toggled off
+            if not getgenv().rock then
+                game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):UnequipTools()
+            end
+        end
+    end
+})
