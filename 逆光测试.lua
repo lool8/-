@@ -1057,3 +1057,33 @@ Tab:AddToggle({
         end
     end
 })
+
+Tab:AddToggle({
+    Name = "自动打石头150000",
+    Callback = function(Value)
+        if game.Players.LocalPlayer.Durability.Value >= 100 then
+            getgenv().rock = Value
+            while getgenv().rock do
+                wait()
+                -- Equip Punch tool from backpack
+                for _,v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
+                    if v:IsA("Tool") and v.Name == "Punch" then
+                        game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):EquipTool(v)
+                    end
+                end
+                -- Activate Punch tool if equipped
+                for _,h in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+                    if h:IsA("Tool") and h.Name == "Punch" then
+                        h:Activate()
+                    end
+                end
+                -- Teleport to new position (only X,Y,Z coordinates)
+                game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame = CFrame.new(-2585.99, 17.38, -249.59)
+            end
+            -- Unequip tools when toggled off
+            if not getgenv().rock then
+                game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):UnequipTools()
+            end
+        end
+    end
+})
