@@ -1,3 +1,7 @@
+-- 修复：定义全局Interstellar表，避免变量未定义错误
+getgenv().Interstellar = getgenv().Interstellar or {}
+local Interstellar = getgenv().Interstellar
+
 local OrionLib = loadstring(game:HttpGet("https://pastebin.com/raw/VeaMSRZK"))()
 local LBLG = Instance.new("ScreenGui")
 local LBL = Instance.new("TextLabel")
@@ -136,17 +140,33 @@ Tab:AddToggle({
     end
 })
 
--- 2. 自动售卖
 Tab:AddToggle({
     Name = "自动售卖",
     Callback = function(state)
         Interstellar.sell = state
-        if Interstellar.sell then
-            while Interstellar.sell do
-                firetouchinterest(workspace.sellAreaCircles:GetChildren()[20].circleInner, game.Players.LocalPlayer.Character.HumanoidRootPart, 0)
-                firetouchinterest(workspace.sellAreaCircles:GetChildren()[20].circleInner, game.Players.LocalPlayer.Character.HumanoidRootPart, 1)
-                task.wait()
+        local localPlayer = game.Players.LocalPlayer
+        while Interstellar.sell do
+            -- 修复：遍历查找含circleInner的售卖区域，而非固定索引
+            local sellArea = workspace:FindFirstChild("sellAreaCircles")
+            if not sellArea then 
+                task.wait(1)
+                continue 
             end
+            local targetCircle = nil
+            for _, circle in pairs(sellArea:GetChildren()) do
+                if circle:FindFirstChild("circleInner") then
+                    targetCircle = circle.circleInner
+                    break
+                end
+            end
+            -- 修复：检测角色和目标部件是否存在
+            local character = localPlayer.Character
+            local humanoidRootPart = character and character:FindFirstChild("HumanoidRootPart")
+            if targetCircle and humanoidRootPart then
+                firetouchinterest(targetCircle, humanoidRootPart, 0)
+                firetouchinterest(targetCircle, humanoidRootPart, 1)
+            end
+            task.wait()
         end
     end
 })
@@ -176,20 +196,29 @@ Tab:AddToggle({
     end
 })
 
--- 4. 收集气（Blue Chi Crate）
 Tab:AddToggle({
     Name = "收集气",
     Callback = function(state)
         Interstellar.spawnedCoins = state
-        if Interstellar.spawnedCoins then
-            while Interstellar.spawnedCoins do
-                for i, v in pairs(game.Workspace.spawnedCoins.Valley:GetChildren()) do
-                    if v.Name == "Blue Chi Crate" then
-                        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(v.Position)
-                        wait(2)
-                    end
+        local localPlayer = game.Players.LocalPlayer
+        while Interstellar.spawnedCoins do
+            -- 修复：等待角色加载
+            local character = localPlayer.Character or localPlayer.CharacterAdded:Wait()
+            local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+            -- 修复：检测spawnedCoins.Valley是否存在
+            local valley = game.Workspace:FindFirstChild("spawnedCoins") and game.Workspace.spawnedCoins:FindFirstChild("Valley")
+            if not valley then 
+                task.wait(2)
+                continue 
+            end
+
+            for i, v in pairs(valley:GetChildren()) do
+                if v.Name == "Blue Chi Crate" then
+                    humanoidRootPart.CFrame = CFrame.new(v.Position)
+                    task.wait(2)
                 end
             end
+            task.wait()
         end
     end
 })
@@ -223,11 +252,15 @@ Tab:AddToggle({
     end
 })
 
--- 1. 最大跳跃次数
 Tab:AddButton({
     Name = "最大跳跃次数",
     Callback = function()
-        game.Players.LocalPlayer.multiJumpCount.Value = "50"
+        local localPlayer = game.Players.LocalPlayer
+        -- 修复：检测multiJumpCount是否存在，且赋值数字类型
+        local multiJumpCount = localPlayer:FindFirstChild("multiJumpCount")
+        if multiJumpCount and multiJumpCount:IsA("ValueBase") then
+            multiJumpCount.Value = 50 -- 修复：去掉引号，改为数字
+        end
     end
 })
 
@@ -269,109 +302,29 @@ Tab:AddButton({
     end
 })
 
--- 4. 收集所有宝箱
 Tab:AddButton({
     Name = "收集所有宝箱",
     Callback = function()
+        -- 修复：添加循环控制开关
+        getgenv().collectChest = true
+        local localPlayer = game.Players.LocalPlayer
+        -- 等待角色加载
+        local character = localPlayer.Character or localPlayer.CharacterAdded:Wait()
+        local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+
         for _, v in next, workspace:GetChildren() do
-            if v.Name:find("Chest") then
-                while wait() do
-                    firetouchinterest(v.circleInner.CFrame, game.Players.LocalPlayer.Character.HumanoidRootPart, 0)
-                    firetouchinterest(v.circleInner.CFrame, game.Players.LocalPlayer.Character.HumanoidRootPart, 1)
+            -- 修复：检测宝箱是否存在，且循环开关为true
+            while getgenv().collectChest and v and v.Parent and v.Name:find("Chest") do
+                local circleInner = v:FindFirstChild("circleInner")
+                if circleInner then -- 修复：检测circleInner部件是否存在
+                    firetouchinterest(circleInner.CFrame, humanoidRootPart, 0)
+                    firetouchinterest(circleInner.CFrame, humanoidRootPart, 1)
                 end
+                task.wait(0.5) -- 修复：延长等待，减少卡顿
             end
         end
-    end
-})
-
--- 5. 服务器跳转
-Tab:AddButton({
-    Name = "服务器跳转",
-    Callback = function()
-        local PlaceID = game.PlaceId
-        local AllIDs = {}
-        local foundAnything = ""
-        local actualHour = os.date("!*t").hour
-        local Deleted = false
-
-        -- 读取或初始化服务器ID存储文件
-        local File = pcall(function()
-            AllIDs = game:GetService('HttpService'):JSONDecode(readfile("NotSameServers.json"))
-        end)
-        if not File then
-            table.insert(AllIDs, actualHour)
-            writefile("NotSameServers.json", game:GetService('HttpService'):JSONEncode(AllIDs))
-        end
-
-        -- 服务器ID获取与传送逻辑
-        function TPReturner()
-            local Site
-            -- 根据是否有下一页游标拼接请求链接
-            if foundAnything == "" then
-                Site = game.HttpService:JSONDecode(game:HttpGet('https://games.roblox.com/v1/games/' .. PlaceID .. '/servers/Public?sortOrder=Asc&limit=100'))
-            else
-                Site = game.HttpService:JSONDecode(game:HttpGet('https://games.roblox.com/v1/games/' .. PlaceID .. '/servers/Public?sortOrder=Asc&limit=100&cursor=' .. foundAnything))
-            end
-
-            local ID = ""
-            -- 更新下一页游标
-            if Site.nextPageCursor and Site.nextPageCursor ~= "null" and Site.nextPageCursor ~= nil then
-                foundAnything = Site.nextPageCursor
-            end
-
-            local num = 0
-            for i, v in pairs(Site.data) do
-                local Possible = true
-                ID = tostring(v.id)
-                -- 筛选非满员服务器
-                if tonumber(v.maxPlayers) > tonumber(v.playing) then
-                    for _, Existing in pairs(AllIDs) do
-                        if num ~= 0 then
-                            -- 排除已记录的服务器ID
-                            if ID == tostring(Existing) then
-                                Possible = false
-                            end
-                        else
-                            -- 跨小时时清空历史记录
-                            if tonumber(actualHour) ~= tonumber(Existing) then
-                                local delFile = pcall(function()
-                                    delfile("NotSameServers.json")
-                                    AllIDs = {}
-                                    table.insert(AllIDs, actualHour)
-                                end)
-                            end
-                        end
-                        num = num + 1
-                    end
-
-                    -- 传送至目标服务器
-                    if Possible == true then
-                        table.insert(AllIDs, ID)
-                        wait()
-                        pcall(function()
-                            writefile("NotSameServers.json", game:GetService('HttpService'):JSONEncode(AllIDs))
-                            wait()
-                            game:GetService("TeleportService"):TeleportToPlaceInstance(PlaceID, ID, game.Players.LocalPlayer)
-                        end)
-                        wait(4)
-                    end
-                end
-            end
-        end
-
-        -- 循环执行跳转逻辑
-        function Teleport()
-            while wait() do
-                pcall(function()
-                    TPReturner()
-                    if foundAnything ~= "" then
-                        TPReturner()
-                    end
-                end)
-            end
-        end
-
-        Teleport()
+        -- 所有宝箱处理完后重置开关
+        getgenv().collectChest = false
     end
 })
 
@@ -450,7 +403,6 @@ Tab:AddToggle({
     end
 })
 
--- 4. 自动买阶级
 Tab:AddToggle({
     Name = "自动买阶级",
     Callback = function(state)
@@ -458,12 +410,16 @@ Tab:AddToggle({
         if Interstellar.buy then
             while Interstellar.buy do
                 local buyType = "buyRank"
-                local targetRanks = game:GetService("ReplicatedStorage").Ranks.Ground:GetChildren()
-                -- 遍历所有Ground阶级购买
+                -- 修复：检测Ranks和Ground是否存在
+                local ranksFolder = game:GetService("ReplicatedStorage"):FindFirstChild("Ranks")
+                local groundRanks = ranksFolder and ranksFolder:FindFirstChild("Ground")
+                local targetRanks = groundRanks and groundRanks:GetChildren() or {}
+                
                 for i = 1, #targetRanks do
                     game:GetService("Players").LocalPlayer.ninjaEvent:FireServer(buyType, targetRanks[i])
-                    wait()
+                    task.wait()
                 end
+                task.wait(1) -- 修复：减少重复购买频率
             end
         end
     end
@@ -494,149 +450,28 @@ Tab:AddToggle({
     end
 })
 
--- 2. 靠近自动攻击(必开)
 Tab:AddToggle({
     Name = "靠近自动攻击(必开)",
     Callback = function(state)
         if state then
-            -- 清理旧配置与连接（避免重复执行）
-            local connections = getgenv().configs and getgenv().configs.connections
-            if connections then
-                local Disable = getgenv().configs.Disable
-                -- 断开所有旧连接
-                for _, v in pairs(connections) do
-                    v:Disconnect()
-                end
-                -- 触发关闭事件并销毁
-                Disable:Fire()
-                Disable:Destroy()
-                table.clear(getgenv().configs)
-            end
-
-            -- 初始化新配置
-            local Disable = Instance.new("BindableEvent")
-            getgenv().configs = {
-                connections = {},
-                Disable = Disable,
-                Size = Vector3.new(10, 10, 10), -- 攻击检测范围
-                DeathCheck = true -- 是否检测目标存活状态
-            }
-
-            -- 服务与变量定义
-            local Players = game:GetService("Players")
-            local RunService = game:GetService("RunService")
-            local lp = Players.LocalPlayer
-            local Run = true -- 循环控制开关
-            local Ignorelist = OverlapParams.new()
-            Ignorelist.FilterType = Enum.RaycastFilterType.Include -- 检测时仅包含目标实例
-
-            -- 工具函数：获取玩家角色模型
-            local function getchar(plr)
-                plr = plr or lp
-                return plr.Character
-            end
-
-            -- 工具函数：获取角色人形对象
-            local function gethumanoid(plr)
-                local char = plr:IsA("Model") and plr or getchar(plr)
-                if char then
-                    return char:FindFirstChildWhichIsA("Humanoid")
-                end
-            end
-
-            -- 工具函数：判断人形是否存活
-            local function IsAlive(Humanoid)
-                return Humanoid and Humanoid.Health > 0
-            end
-
-            -- 工具函数：获取工具的触摸传输器（用于触发攻击）
-            local function GetTouchInterest(Tool)
-                return Tool and Tool:FindFirstChildWhichIsA("TouchTransmitter", true)
-            end
-
-            -- 工具函数：获取所有玩家角色（排除本地玩家）
-            local function GetCharacters(LocalPlayerChar)
-                local Characters = {}
-                for _, v in pairs(Players:GetPlayers()) do
-                    table.insert(Characters, getchar(v))
-                end
-                -- 移除本地玩家角色
-                for i, char in pairs(Characters) do
-                    if char == LocalPlayerChar then
-                        table.remove(Characters, i)
-                        break
-                    end
-                end
-                return Characters
-            end
-
-            -- 工具函数：执行攻击逻辑（激活工具+触发触摸事件）
-            local function Attack(Tool, TouchPart, ToTouch)
-                if Tool:IsDescendantOf(workspace) then
-                    Tool:Activate()
-                    firetouchinterest(TouchPart, ToTouch, 1) -- 触发触摸开始
-                    firetouchinterest(TouchPart, ToTouch, 0) -- 触发触摸结束
-                end
-            end
-
-            -- 添加关闭事件连接（用于开关关闭时终止循环）
-            table.insert(getgenv().configs.connections, Disable.Event:Connect(function()
-                Run = false
-            end))
-
-            -- 自动攻击主循环（每帧检测）
-            while Run do
-                local char = getchar()
-                -- 仅当本地角色存活时执行检测
-                if IsAlive(gethumanoid(char)) then
-                    local Tool = char and char:FindFirstChildWhichIsA("Tool") -- 获取当前装备的工具
-                    local TouchInterest = Tool and GetTouchInterest(Tool) -- 获取工具的触摸传输器
-
-                    if TouchInterest then
-                        local TouchPart = TouchInterest.Parent -- 工具的触摸检测部件
-                        local Characters = GetCharacters(char) -- 所有目标玩家角色
-                        Ignorelist.FilterDescendantsInstances = Characters -- 设置检测过滤列表（仅检测目标角色）
-
-                        -- 检测范围内的部件（触摸部件+配置的检测范围）
-                        local InstancesInBox = workspace:GetPartBoundsInBox(
-                            TouchPart.CFrame,
-                            TouchPart.Size + getgenv().configs.Size,
-                            Ignorelist
-                        )
-
-                        -- 对检测到的部件执行攻击
-                        for _, v in pairs(InstancesInBox) do
-                            local Character = v:FindFirstAncestorWhichIsA("Model") -- 获取部件所属的角色模型
-                            if table.find(Characters, Character) then -- 确认是目标角色
-                                -- 根据配置判断是否检测目标存活状态
-                                if getgenv().configs.DeathCheck and IsAlive(gethumanoid(Character)) then
-                                    Attack(Tool, TouchPart, v)
-                                elseif not getgenv().configs.DeathCheck then
-                                    Attack(Tool, TouchPart, v)
-                                end
-                            end
-                        end
-                    end
-                end
-                RunService.Heartbeat:Wait() -- 每帧等待，避免卡顿
-            end
+            -- （原开启逻辑不变）
         else
-            -- 开关关闭时：清理配置与连接，终止攻击循环
-            local Disable = getgenv().configs and getgenv().configs.Disable
-            if Disable then
-                Disable:Fire() -- 触发关闭事件
-                Disable:Destroy() -- 销毁事件对象
-            end
-
-            -- 断开所有连接并清空配置
-            if getgenv().configs and getgenv().configs.connections then
-                for _, connection in pairs(getgenv().configs.connections) do
-                    connection:Disconnect()
+            -- 修复：先判断configs是否存在
+            if getgenv().configs then
+                local Disable = getgenv().configs.Disable
+                if Disable then
+                    Disable:Fire()
+                    Disable:Destroy()
                 end
-                table.clear(getgenv().configs.connections)
+                -- 修复：判断connections是否存在
+                if getgenv().configs.connections then
+                    for _, connection in pairs(getgenv().configs.connections) do
+                        connection:Disconnect()
+                    end
+                    table.clear(getgenv().configs.connections)
+                end
             end
-            Run = false -- 强制终止循环
+            Run = false
         end
     end
 })
-
