@@ -903,6 +903,27 @@ Tab:AddToggle({
     end
 })
 
+Tab:AddButton({
+    Name = "自动解锁所有岛屿",
+    Callback = function()
+        local coordinates = {
+            {718.34, 1717.45, 2058.72},
+            {703.17, 3340.41, 2041.46},
+            {715.11, 5938.00, 2057.97},
+            {771.49, 9188.80, 2060.20},
+            {663.26, 12854.54, 2046.93},
+            {709.37, 16609.40, 2009.45},
+            {734.86, 21916.71, 2090.01},
+            {691.55, 30306.88, 2050.44}
+        }
+        
+        for i, coord in ipairs(coordinates) do
+            task.wait(2) -- 2 second delay
+            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(coord[1], coord[2], coord[3])
+        end
+    end
+})
+
 local Tab = Window:MakeTab({
     Name = "力量传奇",
     Icon = "rbxassetid://4483345998",
@@ -1144,22 +1165,6 @@ local Section = Tab:AddSection({
 	Name = "主要功能"
 })
 
-Tab:AddToggle({
-    Name = "传送安全地方",
-    Callback = function(Value)
-        if Value then
-            getgenv().place = true
-            while getgenv().place do
-                wait()
-                game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame = CFrame.new(-51.6716728, 32.2157211, 1290.41211, 0.9945544, 1.23613528e-08, -0.104218982, -7.58742402e-09, 1, 4.62031657e-08, 0.104218982, -4.51608102e-08, 0.9945544)
-            end
-        else
-            getgenv().place = false
-            wait()
-            game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame = CFrame.new(-34.1635208, 3.67689133, 219.640869, 0.599920511, -2.24152163e-09, 0.800059617, 4.46125981e-09, 1, -5.43559087e-10, -0.800059617, 3.89536625e-09, 0.599920511)
-        end
-    end
-})
 
 -- 传送到幸运抽奖区域
 Tab:AddButton({
