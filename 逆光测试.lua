@@ -1,5 +1,9 @@
 local UserInputService = game:GetService("UserInputService")
+local Players = game:GetService("Players")
+local StarterGui = game:GetService("StarterGui")
+local RunService = game:GetService("RunService")
 
+-- 1. UI拖拽工具（保留原逻辑，未优化）
 local function MakeDraggable(topbarobject, object)
 	local Dragging = nil
 	local DragInput = nil
@@ -40,6 +44,7 @@ local function MakeDraggable(topbarobject, object)
 	end)
 end
 
+-- 2. 启动弹窗UI（YtPr，保留原逻辑）
 function YtPr()
 	local YoutubeGui = Instance.new("ScreenGui")
 	local Frame = Instance.new("Frame")
@@ -49,29 +54,26 @@ function YtPr()
 	local TextLabel = Instance.new("TextLabel")
 	local TextButton = Instance.new("TextButton")
 	local UICorner_3 = Instance.new("UICorner")
-
 	MakeDraggable(Frame,Frame)
-
+	
 	YoutubeGui.Name = "YoutubeGui"
 	YoutubeGui.Parent = game.CoreGui
 	YoutubeGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-
+	
 	Frame.Parent = YoutubeGui
 	Frame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 	Frame.Position = UDim2.new(0.0937950909, 0, 0.497589529, 0)
 	Frame.Size = UDim2.new(0.259740233, 0, 0.172176316, 0)
-
 	UICorner.Parent = Frame
-
+	
 	ImageLabel.Parent = Frame
 	ImageLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 	ImageLabel.Position = UDim2.new(0.057500001, 0, 0.0700000003, 0)
 	ImageLabel.Size = UDim2.new(0.295138925, 0, 0.850000024, 0)
 	ImageLabel.Image = ""
-
 	UICorner_2.CornerRadius = UDim.new(0, 60)
 	UICorner_2.Parent = ImageLabel
-
+	
 	TextLabel.Parent = Frame
 	TextLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 	TextLabel.BackgroundTransparency = 1.000
@@ -86,7 +88,7 @@ function YtPr()
 	TextLabel.TextWrapped = true
 	TextLabel.TextXAlignment = Enum.TextXAlignment.Left
 	TextLabel.TextYAlignment = Enum.TextYAlignment.Bottom
-
+	
 	TextButton.Parent = Frame
 	TextButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
 	TextButton.Position = UDim2.new(0.401250005, 0, 0.479999989, 0)
@@ -97,21 +99,20 @@ function YtPr()
 	TextButton.TextScaled = true
 	TextButton.TextSize = 14.000
 	TextButton.TextWrapped = true
-
 	UICorner_3.Parent = TextButton
-
+	
 	local uistroke = Instance.new("UIStroke",ImageLabel)
-	uistroke.Color =Color3.fromRGB(255, 0, 0)
+	uistroke.Color = Color3.fromRGB(255, 0, 0)
 	uistroke.Thickness = 3
-
+	
 	game.Debris:AddItem(YoutubeGui,30)
-
 	TextButton.MouseButton1Click:Connect(function()
 		game.Debris:AddItem(YoutubeGui,0)
 		setclipboard("逆光NB")
 	end)
 end
 
+-- 3. 商店风格UI（MakePrGui，保留原逻辑，补充调用入口）
 function MakePrGui()
 	local PrEz = Instance.new("ScreenGui")
 	local Back = Instance.new("ImageLabel")
@@ -133,7 +134,6 @@ function MakePrGui()
 	local vip7 = Instance.new("ImageLabel")
 	local CloseButton = Instance.new("TextButton")
 	
-	
 	MakeDraggable(vip2,vip2)
 	MakeDraggable(vip3,vip3)
 	MakeDraggable(vip4,vip4)
@@ -141,18 +141,18 @@ function MakePrGui()
 	MakeDraggable(vip6,vip6)
 	MakeDraggable(vip7,vip7)
 	MakeDraggable(vip,vip)
-
+	
 	PrEz.Name = "PrEz"
 	PrEz.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 	PrEz.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-
+	
 	Back.Name = "Back"
 	Back.Parent = PrEz
 	Back.BackgroundColor3 = Color3.fromRGB(38, 38, 38)
 	Back.BorderSizePixel = 0
 	Back.Size = UDim2.new(0.627615035, 0, 1, 0)
 	Back.Image = "rbxassetid://4483345998"
-
+	
 	RobloxLogo.Name = ""
 	RobloxLogo.Parent = PrEz
 	RobloxLogo.BackgroundColor3 = Color3.fromRGB(38, 38, 38)
@@ -162,7 +162,7 @@ function MakePrGui()
 	RobloxLogo.Size = UDim2.new(0.205857739, 0, 0.191126287, 0)
 	RobloxLogo.ZIndex = 2
 	RobloxLogo.Image = "rbxassetid://4483345998"
-
+	
 	ShopDomain.Name = "ShopDomain"
 	ShopDomain.Parent = PrEz
 	ShopDomain.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -179,7 +179,7 @@ function MakePrGui()
 	ShopDomain.TextStrokeColor3 = Color3.fromRGB(0, 0, 255)
 	ShopDomain.TextStrokeTransparency = 0.000
 	ShopDomain.TextWrapped = true
-
+	
 	Char1.Name = "Char1"
 	Char1.Parent = PrEz
 	Char1.BackgroundColor3 = Color3.fromRGB(38, 38, 38)
@@ -188,7 +188,7 @@ function MakePrGui()
 	Char1.Position = UDim2.new(0.249557167, 0, -0.000714838505, 0)
 	Char1.Size = UDim2.new(0.202510461, 0, 0.399317414, 0)
 	Char1.Image = "rbxassetid://4483345998"
-
+	
 	robux1.Name = "robux1"
 	robux1.Parent = PrEz
 	robux1.BackgroundColor3 = Color3.fromRGB(38, 38, 38)
@@ -197,7 +197,7 @@ function MakePrGui()
 	robux1.Position = UDim2.new(0.0300490074, 0, 0.485633373, 0)
 	robux1.Size = UDim2.new(0.0376569033, 0, 0.075085327, 0)
 	robux1.Image = "rbxassetid://4483345998"
-
+	
 	eggo.Name = "eggo"
 	eggo.Parent = PrEz
 	eggo.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -215,7 +215,7 @@ function MakePrGui()
 	eggo.TextStrokeTransparency = 0.000
 	eggo.TextWrapped = true
 	eggo.TextXAlignment = Enum.TextXAlignment.Left
-
+	
 	eggo2.Name = ""
 	eggo2.Parent = PrEz
 	eggo2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -233,7 +233,7 @@ function MakePrGui()
 	eggo2.TextStrokeTransparency = 0.000
 	eggo2.TextWrapped = true
 	eggo2.TextXAlignment = Enum.TextXAlignment.Left
-
+	
 	robux2.Name = "robux2"
 	robux2.Parent = PrEz
 	robux2.BackgroundColor3 = Color3.fromRGB(38, 38, 38)
@@ -242,7 +242,7 @@ function MakePrGui()
 	robux2.Position = UDim2.new(0.0300490074, 0, 0.582903028, 0)
 	robux2.Size = UDim2.new(0.0376569033, 0, 0.075085327, 0)
 	robux2.Image = "rbxassetid://4483345998"
-
+	
 	vip.Name = "vip"
 	vip.Parent = PrEz
 	vip.BackgroundColor3 = Color3.fromRGB(38, 38, 38)
@@ -251,7 +251,7 @@ function MakePrGui()
 	vip.Position = UDim2.new(0.48278597, 0, 0.158554122, 0)
 	vip.Size = UDim2.new(0.0694560707, 0, 0.102389075, 0)
 	vip.Image = "rbxassetid://4483345998"
-
+	
 	robux3.Name = "robux3"
 	robux3.Parent = PrEz
 	robux3.BackgroundColor3 = Color3.fromRGB(38, 38, 38)
@@ -260,7 +260,7 @@ function MakePrGui()
 	robux3.Position = UDim2.new(0.0300490074, 0, 0.673346698, 0)
 	robux3.Size = UDim2.new(0.0376569033, 0, 0.075085327, 0)
 	robux3.Image = "rbxassetid://4483345998"
-
+	
 	eggo2_2.Name = ""
 	eggo2_2.Parent = PrEz
 	eggo2_2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -278,7 +278,7 @@ function MakePrGui()
 	eggo2_2.TextStrokeTransparency = 0.000
 	eggo2_2.TextWrapped = true
 	eggo2_2.TextXAlignment = Enum.TextXAlignment.Left
-
+	
 	vip2.Name = "vip2"
 	vip2.Parent = PrEz
 	vip2.BackgroundColor3 = Color3.fromRGB(38, 38, 38)
@@ -286,8 +286,8 @@ function MakePrGui()
 	vip2.BorderSizePixel = 0
 	vip2.Position = UDim2.new(0.420420021, 0, 0.846267462, 0)
 	vip2.Size = UDim2.new(0.0744769871, 0, 0.139931738, 0)
-	vip2.Image = "rbxassetid://4483345998"
-
+		vip2.Image = "rbxassetid://4483345998"
+	
 	vip3.Name = "vip3"
 	vip3.Parent = PrEz
 	vip3.BackgroundColor3 = Color3.fromRGB(38, 38, 38)
@@ -296,7 +296,7 @@ function MakePrGui()
 	vip3.Position = UDim2.new(0.00703088567, 0, 0.0186223984, 0)
 	vip3.Size = UDim2.new(0.066945605, 0, 0.139931738, 0)
 	vip3.Image = "rbxassetid://4483345998"
-
+	
 	vip4.Name = "vip4"
 	vip4.Parent = PrEz
 	vip4.BackgroundColor3 = Color3.fromRGB(38, 38, 38)
@@ -305,7 +305,7 @@ function MakePrGui()
 	vip4.Position = UDim2.new(0.514143884, 0, 0.48449266, 0)
 	vip4.Size = UDim2.new(0.0744769871, 0, 0.139931738, 0)
 	vip4.Image = "rbxassetid://4483345998"
-
+	
 	vip5.Name = "vip5"
 	vip5.Parent = PrEz
 	vip5.BackgroundColor3 = Color3.fromRGB(38, 38, 38)
@@ -314,7 +314,7 @@ function MakePrGui()
 	vip5.Position = UDim2.new(0.44970876, 0, 0.745143771, 0)
 	vip5.Size = UDim2.new(0.134728029, 0, 0.254266202, 0)
 	vip5.Image = "rbxassetid://4483345998"
-
+	
 	vip6.Name = "vip6"
 	vip6.Parent = PrEz
 	vip6.BackgroundColor3 = Color3.fromRGB(38, 38, 38)
@@ -323,7 +323,7 @@ function MakePrGui()
 	vip6.Position = UDim2.new(0.00696146116, 0, 0.802327693, 0)
 	vip6.Size = UDim2.new(0.103765689, 0, 0.19624573, 0)
 	vip6.Image = "rbxassetid://4483345998"
-
+	
 	vip7.Name = "vip7"
 	vip7.Parent = PrEz
 	vip7.BackgroundColor3 = Color3.fromRGB(38, 38, 38)
@@ -332,7 +332,7 @@ function MakePrGui()
 	vip7.Position = UDim2.new(0.189128265, 0, 0.772447526, 0)
 	vip7.Size = UDim2.new(0.0928870291, 0, 0.175767913, 0)
 	vip7.Image = "rbxassetid://4483345998"
-
+	
 	CloseButton.Name = "CloseButton"
 	CloseButton.Parent = PrEz
 	CloseButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -345,7 +345,7 @@ function MakePrGui()
 	CloseButton.TextScaled = true
 	CloseButton.TextSize = 14.000
 	CloseButton.TextWrapped = true
-
+	
 	CloseButton.MouseButton1Click:Connect(function()
 		game.Debris:AddItem(PrEz,0)
 	end)
@@ -364,7 +364,7 @@ function MakePrGui()
 	end)
 end
 
-
+-- 4. 彩虹文本列表UI（CreateSupportList，保留原逻辑）
 function CreateSupportList(list_game)
 	local function RainbowText(text)
 		spawn(function()
@@ -422,8 +422,7 @@ function CreateSupportList(list_game)
 		end)
 	end
 	
-	local Anh_Gai_Alimi = {"rbxassetid://4483345998"
-	}
+	local Anh_Gai_Alimi = {"rbxassetid://4483345998"}
 	
 	local SupportUi = Instance.new("ScreenGui")
 	local BackImg = Instance.new("ImageLabel")
@@ -434,11 +433,10 @@ function CreateSupportList(list_game)
 	local CloseButton = Instance.new("TextButton")
 	
 	MakeDraggable(BackImg,BackImg)
-
 	SupportUi.Name = "SupportUi"
 	SupportUi.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 	SupportUi.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-
+	
 	BackImg.Name = "BackImg"
 	BackImg.Parent = SupportUi
 	BackImg.BackgroundColor3 = Color3.fromRGB(48, 48, 48)
@@ -446,14 +444,14 @@ function CreateSupportList(list_game)
 	BackImg.Position = UDim2.new(0.667782426, 0, 0.33959043, 0)
 	BackImg.Size = UDim2.new(0, 375, 0, 375)
 	BackImg.Image = Anh_Gai_Alimi[math.random(1,#Anh_Gai_Alimi)]
-
+	
 	Black.Name = "Black"
 	Black.Parent = BackImg
 	Black.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 	Black.BackgroundTransparency = 0.4
 	Black.BorderSizePixel = 0
 	Black.Size = UDim2.new(0, 375, 0, 375)
-
+	
 	Tittle.Name = "Tittle"
 	Tittle.Parent = Black
 	Tittle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -461,13 +459,13 @@ function CreateSupportList(list_game)
 	Tittle.Position = UDim2.new(0.0399999991, 0, 0, 0)
 	Tittle.Size = UDim2.new(0, 265, 0, 39)
 	Tittle.Font = Enum.Font.Highway
-	Tittle.Text = "名字"
+	Tittle.Text = "逆光"
 	Tittle.TextColor3 = Color3.fromRGB(255, 255, 255)
 	Tittle.TextScaled = true
 	Tittle.TextSize = 14.000
 	Tittle.TextWrapped = true
 	Tittle.TextXAlignment = Enum.TextXAlignment.Left
-
+	
 	ScrollingFrame.Parent = Black
 	ScrollingFrame.Active = true
 	ScrollingFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -477,10 +475,10 @@ function CreateSupportList(list_game)
 	ScrollingFrame.Size = UDim2.new(0, 366, 0, 329)
 	ScrollingFrame.CanvasSize = UDim2.new(0, 0, 4, 0)
 	ScrollingFrame.ScrollBarThickness = 10
-
-	UIListLayout.Parent = ScrollingFrame
-	UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-
+	
+	ThListLayout.Parent = ScrollingFrame
+	ThListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+	
 	CloseButton.Name = "CloseButton"
 	CloseButton.Parent = Black
 	CloseButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -497,7 +495,6 @@ function CreateSupportList(list_game)
 	
 	RainbowText(Tittle)
 	RainbowText(CloseButton)
-
 	for i,v in pairs(list_game) do
 		local TextLabel = Instance.new("TextLabel")
 		TextLabel.Parent = ScrollingFrame
@@ -520,36 +517,52 @@ function CreateSupportList(list_game)
 	end)
 end
 
+-- 5. 游戏脚本配置表（去除密钥相关，修复字符串嵌套错误）
 local list = {
-	--自然灾害
-	[189707] = "loadstring(game:HttpGet("https://raw.githubusercontent.com/lool8/jiaoben/refs/heads/main/%E9%80%86%E5%85%89%E8%87%AA%E7%84%B6%E7%81%BE%E5%AE%B3.lua"))()",
-
+	-- 自然灾害（修复双引号嵌套问题，改用单引号包裹内层）
+	[189707] = 'loadstring(game:HttpGet("https://raw.githubusercontent.com/lool8/jiaoben/refs/heads/main/%E9%80%86%E5%85%89%E8%87%AA%E7%84%B6%E7%81%BE%E5%AE%B3.lua"))()'
 }
-
 local name = {
-	[189707] = "服务器名字",
-																																				
+	-- 补充正确的服务器名字，匹配游戏
+	[189707] = "自然灾害"
 }
 
-YtPr()
-CreateSupportList({"自然灾害"
-})
+-- 6. 脚本启动入口（去除密钥判断，保留原逻辑）
+YtPr()  -- 启动弹窗
+MakePrGui()  -- 商店UI（补充调用，原脚本未调用）
+CreateSupportList({"自然灾害"})  -- 游戏列表UI
 _G.HoHoLoaded = true
-if getgenv().Key and listPre[game.GameId] ~= nil then
-	getgenv().messagebox = function()end
-	loadstring(listPre[tonumber(game.GameId)])()
-elseif not getgenv().Key and list[game.GameId] ~= nil then
-    game:GetService("StarterGui"):SetCore("SendNotification",{
-                Title = "当前游戏:"..name[game.GameId].."";
-                Text ="检测到你当前游玩的游戏为:"..name[game.GameId].."\n已自动为你执行此游戏脚本";
-                Duration = 3;
-            })
-	loadstring(list[tonumber(game.GameId)])()
-else
-	game:GetService("StarterGui"):SetCore("SendNotification",{
-                Title = "没有此游戏脚本";
-                Text ="逆光NB";
-                Duration = 5;
-            })
-	setclipboard("复制信息")
+
+-- 7. 外部脚本加载逻辑（去除密钥分支，仅保留普通脚本判断）
+-- 等待角色加载完成，避免脚本执行过早
+local function WaitForCharacterAndLoad()
+	local localPlayer = Players.LocalPlayer
+	-- 等待角色生成
+	local character = localPlayer.Character or localPlayer.CharacterAdded:Wait()
+	-- 等待关键部件加载
+	character:WaitForChild("HumanoidRootPart")
+	character:WaitForChild("Humanoid")
+	
+	-- 执行脚本匹配
+	if list[game.GameId] ~= nil then
+	    -- 弹出通知提示
+	    game:GetService("StarterGui"):SetCore("SendNotification",{
+	                Title = "当前游戏:"..name[game.GameId].."";
+	                Text ="检测到你当前游玩的游戏为:"..name[game.GameId].."\n已自动为你执行此游戏脚本";
+	                Duration = 3;
+	            })
+		-- 加载外部脚本
+		loadstring(list[tonumber(game.GameId)])()
+	else
+		-- 无对应脚本时提示
+		game:GetService("StarterGui"):SetCore("SendNotification",{
+	                Title = "没有此游戏脚本";
+	                Text ="逆光NB";
+	                Duration = 5;
+	            })
+		setclipboard("复制信息")
+	end
 end
+
+-- 启动加载逻辑
+spawn(WaitForCharacterAndLoad)
