@@ -379,7 +379,7 @@ end
 -- 3.1 游戏脚本配置表（修复GitHub Raw链接）
 local GameScriptConfig = {
     list = {  -- 无密钥脚本列表（修复链接）
-        [189707] = "loadstring(game:HttpGet('https://raw.githubusercontent.com/lool8/jiaoben/main/%E9%80%86%E5%85%89%E8%87%AA%E7%84%B6%E7%81%BE%E5%AE%B3.lua'))()"
+        [189707] = "loadstring(game:HttpGet('https://raw.githubusercontent.com/lool8/jiaoben/refs/heads/main/%E9%80%86%E5%85%89%E8%87%AA%E7%84%B6%E7%81%BE%E5%AE%B3.lua'))()"
     },
     name = {  -- 游戏ID→游戏名称
         [189707] = "自然灾害"
@@ -442,8 +442,7 @@ end
 -- ===================== 4. 脚本启动入口 =====================
 -- 4.1 初始化UI（按需启用MakePrGui）
 YtPr()  -- 启动弹窗
-CreateSupportList({"自然灾害"})  -- 支持游戏列表
--- MakePrGui()  -- 商店窗口（取消注释即可启用）
+CreateSupportList({"自然灾害"})
 
 -- 4.2 等待角色加载后执行脚本匹配
 table.insert(getgenv().ScriptConfig.ScriptConnections, RunService.Heartbeat:ConnectOnce(function()
