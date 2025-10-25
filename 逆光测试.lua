@@ -850,19 +850,6 @@ Tab:AddButton({
 })
 
 local Tab = Window:MakeTab({
-    Name = "自然灾害",
-    Icon = "rbxassetid://4483345998",
-    PremiumOnly = false
-})
-
-Tab:AddButton({
-    Name ="传送到安全位置",
-    Callback = function()
-    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new( -261.54,  194.76,  301.28)
-    end
-})
-
-local Tab = Window:MakeTab({
     Name = "强壮传奇",
     Icon = "rbxassetid://4483345998",
     PremiumOnly = false
