@@ -1,4 +1,4 @@
--- 逆光脚本 - Roblox平台专用（优化版）
+-- 逆光脚本 - Roblox平台专用（修复完整版）
 -- 核心：UI交互+游戏脚本自动匹配+稳定性增强
 local UserInputService = game:GetService("UserInputService")
 local Players = game:GetService("Players")
@@ -66,7 +66,7 @@ local function ShowNotification(title, text, duration)
             Title = title,
             Text = text,
             Duration = duration or 5,
-            Icon = getgenv().ScriptConfig.DefaultImages.VipIcon
+            Icon = getgenv().ScriptConfig and getgenv().ScriptConfig.DefaultImages.VipIcon or ""
         })
     end)
 end
@@ -81,13 +81,13 @@ local function GetLocalCharacter()
     return localPlayer.Character or localPlayer.CharacterAdded:Wait()
 end
 
--- 1.5 彩虹文本效果（优化性能：固定刷新间隔）
+-- 1.5 彩虹文本效果（优化性能+空值检测）
 local function RainbowText(textObject)
     spawn(function()
         local colorStep = 10  -- 颜色步进值
         local currentValue = 1
-        -- 循环刷新颜色（红→黄→绿→蓝→紫→红）
-        while textObject and textObject.Parent and getgenv().ScriptConfig.ScriptEnabled do
+        -- 循环刷新颜色（红→黄→绿→蓝→紫→红），添加ScriptConfig存在性检测
+        while textObject and textObject.Parent and getgenv().ScriptConfig and getgenv().ScriptConfig.ScriptEnabled do
             if currentValue <= 255 then
                 textObject.TextColor3 = Color3.new(currentValue/255, 0, 0)
             elseif currentValue <= 510 then
@@ -109,17 +109,22 @@ local function RainbowText(textObject)
     end)
 end
 
--- 1.6 全局清理函数（避免内存泄漏）
+-- 1.6 全局清理函数（避免内存泄漏+空值检测）
 local function CleanupScript()
+    -- 检测ScriptConfig是否存在，避免重复清理报错
+    if not getgenv().ScriptConfig then return end
+    
     -- 1. 断开所有事件连接
     for _, conn in pairs(getgenv().ScriptConfig.ScriptConnections) do
         if conn and typeof(conn) == "RBXScriptConnection" then
             conn:Disconnect()
         end
     end
+
     -- 2. 清空全局变量
     getgenv().ScriptConfig = nil
     _G.HoHoLoaded = nil
+
     -- 3. 提示清理完成
     ShowNotification("脚本已关闭", "所有资源已清理，可安全退出", 3)
 end
@@ -131,7 +136,6 @@ table.insert(getgenv().ScriptConfig.ScriptConnections, Players.PlayerRemoving:Co
     end
 end))
 
-
 -- ===================== 2. 核心UI界面模块 =====================
 -- 2.1 逆光脚本启动弹窗（YtPr）
 function YtPr()
@@ -140,7 +144,7 @@ function YtPr()
     local IconFrame = Instance.new("ImageLabel")
     local TitleLabel = Instance.new("TextLabel")
     local ConfirmButton = Instance.new("TextButton")
-    local CloseAllBtn = Instance.new("TextButton")  -- 新增：关闭所有脚本按钮
+    local CloseAllBtn = Instance.new("TextButton")  -- 关闭所有脚本按钮
 
     -- 基础UI设置
     YoutubeGui.Name = "YoutubeGui"
@@ -192,7 +196,7 @@ function YtPr()
     local BtnCorner = Instance.new("UICorner")
     BtnCorner.Parent = ConfirmButton
 
-    -- 新增：关闭所有脚本按钮
+    -- 关闭所有脚本按钮
     CloseAllBtn.Parent = MainFrame
     CloseAllBtn.BackgroundColor3 = Color3.fromRGB(0, 0, 255)
     CloseAllBtn.Position = UDim2.new(0.02, 0, 0.9, 0)
@@ -212,7 +216,9 @@ function YtPr()
     end)
 
     CloseAllBtn.MouseButton1Click:Connect(function()
-        getgenv().ScriptConfig.ScriptEnabled = false
+        if getgenv().ScriptConfig then
+            getgenv().ScriptConfig.ScriptEnabled = false
+        end
         CleanupScript()
         game.Debris:AddItem(YoutubeGui, 0)
     end)
@@ -266,108 +272,184 @@ function MakePrGui()
         game.Debris:AddItem(PrEz, 0)
     end)
 end
-
--- 2.3 彩虹文本列表窗口（CreateSupportList）
+-- 2.3 彩虹文本列表窗口（CreateSupportList，修复重复变量）
 function CreateSupportList(gameList)
     local SupportUi = Instance.new("ScreenGui")
     local MainWindow = Instance.new("ImageLabel")
     local DarkOverlay = Instance.new("Frame")
     local TitleLabel = Instance.new("TextLabel")
     local ScrollFrame = Instance.new("ScrollingFrame")
+    -- 复用变量，删除重复创建
     local ListLayout = Instance.new("UIListLayout")
     local CloseButton = Instance.new("TextButton")
 
-    -- 滚动列表核心配置（接 local ScrollFrame = Instance.new("ScrollingFrame") 后）
-ScrollFrame.Parent = DarkOverlay
-ScrollFrame.Active = true
-ScrollFrame.BackgroundTransparency = 1
-ScrollFrame.Position = UDim2.new(0.024, 0, 0.104, 0)
-ScrollFrame.Size = UDim2.new(0, 366, 0, 329)
-ScrollFrame.CanvasSize = UDim2.new(0, 0, 0, 0)  -- 自动适应列表内容高度
-ScrollFrame.ScrollBarThickness = 10
-ScrollFrame.ScrollBarImageColor3 = Color3.fromRGB(255, 0, 0)  -- 滚动条颜色（红色）
-ScrollFrame.ScrollBarImageTransparency = 0.2  -- 滚动条透明度
-ScrollFrame.ScrollBarImage = ""  -- 滚动条默认样式（可留空用系统默认）
-ScrollFrame.VerticalScrollBarInset = Enum.ScrollBarInset.None  -- 滚动条无内边距
-ScrollFrame.HorizontalScrollBarInset = Enum.ScrollBarInset.None
+    -- 基础设置
+    SupportUi.Name = "SupportUi"
+    SupportUi.Parent = GetLocalPlayer():WaitForChild("PlayerGui")
+    SupportUi.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
--- 列表布局控制器（控制列表项排列）
-local ListLayout = Instance.new("UIListLayout")
-ListLayout.Parent = ScrollFrame
-ListLayout.SortOrder = Enum.SortOrder.LayoutOrder  -- 按布局顺序排列
-ListLayout.Padding = UDim.new(0, 5)  -- 列表项之间垂直间距（5像素）
-ListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Left  -- 列表项左对齐
-ListLayout.VerticalAlignment = Enum.VerticalAlignment.Top  -- 列表项顶部对齐
+    -- 主窗口（带默认背景）
+    MainWindow.Name = "MainWindow"
+    MainWindow.Parent = SupportUi
+    MainWindow.BackgroundColor3 = Color3.fromRGB(48, 48, 48)
+    MainWindow.Position = UDim2.new(0.667782426, 0, 0.33959043, 0)
+    MainWindow.Size = UDim2.new(0, 375, 0, 375)
+    MainWindow.Image = getgenv().ScriptConfig.DefaultImages.BackGround
+    MakeDraggable(MainWindow, MainWindow)  -- 支持拖拽
 
--- 绑定布局变化，自动更新滚动区域高度
-table.insert(getgenv().ScriptConfig.ScriptConnections, ListLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
-    ScrollFrame.CanvasSize = UDim2.new(0, 0, 0, ListLayout.AbsoluteContentSize.Y)
+    -- 深色遮罩（提升文字可读性）
+    DarkOverlay.Name = "DarkOverlay"
+    DarkOverlay.Parent = MainWindow
+    DarkOverlay.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    DarkOverlay.BackgroundTransparency = 0.4
+    DarkOverlay.Size = UDim2.new(1, 0, 1, 0)
+
+    -- 标题（彩虹效果）
+    TitleLabel.Name = "TitleLabel"
+    TitleLabel.Parent = DarkOverlay
+    TitleLabel.BackgroundTransparency = 1
+    TitleLabel.Position = UDim2.new(0.04, 0, 0, 0)
+    TitleLabel.Size = UDim2.new(0, 265, 0, 39)
+    TitleLabel.Font = Enum.Font.Highway
+    TitleLabel.Text = "逆光支持游戏列表"
+    TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    TitleLabel.TextScaled = true
+    RainbowText(TitleLabel)
+
+    -- 滚动列表核心配置
+    ScrollFrame.Parent = DarkOverlay
+    ScrollFrame.Active = true
+    ScrollFrame.BackgroundTransparency = 1
+    ScrollFrame.Position = UDim2.new(0.024, 0, 0.104, 0)
+    ScrollFrame.Size = UDim2.new(0, 366, 0, 329)
+    ScrollFrame.CanvasSize = UDim2.new(0, 0, 0, 0)  -- 自动适应列表内容高度
+    ScrollFrame.ScrollBarThickness = 10
+    ScrollFrame.ScrollBarImageColor3 = Color3.fromRGB(255, 0, 0)  -- 滚动条红色
+    ScrollFrame.ScrollBarImageTransparency = 0.2  -- 滚动条半透明
+    ScrollFrame.ScrollBarImage = ""  -- 系统默认滚动条样式
+    ScrollFrame.VerticalScrollBarInset = Enum.ScrollBarInset.None
+    ScrollFrame.HorizontalScrollBarInset = Enum.ScrollBarInset.None
+
+    -- 列表布局控制器（复用变量）
+    ListLayout.Parent = ScrollFrame
+    ListLayout.SortOrder = Enum.SortOrder.LayoutOrder  -- 按顺序排列
+    ListLayout.Padding = UDim.new(0, 5)  -- 列表项间距5像素
+    ListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Left  -- 左对齐
+    ListLayout.VerticalAlignment = Enum.VerticalAlignment.Top  -- 顶部对齐
+
+    -- 绑定布局变化，自动更新滚动高度
+    table.insert(getgenv().ScriptConfig.ScriptConnections, ListLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+        ScrollFrame.CanvasSize = UDim2.new(0, 0, 0, ListLayout.AbsoluteContentSize.Y)
+    end))
+
+    -- 关闭按钮（复用变量，彩虹效果）
+    CloseButton.Name = "CloseButton"
+    CloseButton.Parent = DarkOverlay
+    CloseButton.BackgroundTransparency = 1  -- 透明背景
+    CloseButton.Position = UDim2.new(0.896, 0, 0, 0)  -- 右上角
+    CloseButton.Size = UDim2.new(0, 39, 0, 39)  -- 正方形大小
+    CloseButton.Font = Enum.Font.FredokaOne  -- 圆润字体
+    CloseButton.Text = "X"  -- 关闭符号
+    CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)  -- 白色文字
+    CloseButton.TextScaled = true  -- 文字适配
+    RainbowText(CloseButton)
+
+    -- 添加游戏列表项
+    for _, gameName in pairs(gameList) do
+        local GameLabel = Instance.new("TextLabel")
+        GameLabel.Parent = ScrollFrame
+        GameLabel.BackgroundTransparency = 1
+        GameLabel.Size = UDim2.new(0, 353, 0, 24)
+        GameLabel.Font = Enum.Font.Highway
+        GameLabel.Text = "	• " .. gameName  -- 带项目符号
+        GameLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+        GameLabel.TextScaled = true
+        GameLabel.TextTransparency = 0.5  -- 半透明文字
+        GameLabel.TextXAlignment = Enum.TextXAlignment.Left
+        RainbowText(GameLabel)
+    end
+
+    -- 关闭按钮逻辑
+    CloseButton.MouseButton1Click:Connect(function()
+        game.Debris:AddItem(SupportUi, 0)
+    end)
+end
+
+-- ===================== 3. 脚本自动匹配执行模块 =====================
+-- 3.1 游戏脚本配置表（修复GitHub Raw链接）
+local GameScriptConfig = {
+    list = {  -- 无密钥脚本列表（修复链接）
+        [189707] = "loadstring(game:HttpGet('https://raw.githubusercontent.com/lool8/jiaoben/main/%E9%80%86%E5%85%89%E8%87%AA%E7%84%B6%E7%81%BE%E5%AE%B3.lua'))()"
+    },
+    name = {  -- 游戏ID→游戏名称
+        [189707] = "自然灾害"
+    },
+    listPre = {}  -- 密钥脚本列表（预留）
+}
+
+-- 3.2 核心匹配执行函数（修复listPre引用+错误捕获）
+local function ExecuteMatchedScript()
+    -- 检测脚本总开关与配置
+    if not getgenv().ScriptConfig or not getgenv().ScriptConfig.ScriptEnabled then
+        ShowNotification("脚本已暂停", "请开启总开关后重试", 4)
+        return
+    end
+
+    -- 显示加载提示
+    ShowNotification("脚本匹配中", "正在检测当前游戏...", 2)
+    local currentGameId = game.GameId
+    local hasKey = getgenv().Key ~= nil  -- 密钥判断（预留）
+
+    -- 1. 优先执行密钥脚本（引用正确的GameScriptConfig.listPre）
+    if hasKey and GameScriptConfig.listPre[currentGameId] then
+        local success, err = pcall(function()
+            getgenv().messagebox = function() end  -- 屏蔽外部弹窗
+            loadstring([[
+                while not getgenv().ScriptConfig or not getgenv().ScriptConfig.ScriptEnabled do task.wait() end
+                ]] .. GameScriptConfig.listPre[tonumber(currentGameId)])()
+        end)
+        if success then
+            ShowNotification("密钥脚本执行", "已加载当前游戏专属密钥脚本", 4)
+        else
+            ShowNotification("密钥脚本错误", tostring(err), 5)
+        end
+        return
+    end
+
+    -- 2. 执行无密钥脚本（修复链接后执行）
+    if GameScriptConfig.list[currentGameId] then
+        local gameName = GameScriptConfig.name[currentGameId] or "未知游戏"
+        ShowNotification("自动执行脚本", "当前游戏：" .. gameName .. "\n脚本执行中...", 4)
+        
+        local success, err = pcall(function()
+            loadstring([[
+                while not getgenv().ScriptConfig or not getgenv().ScriptConfig.ScriptEnabled do task.wait() end
+                ]] .. GameScriptConfig.list[tonumber(currentGameId)])()
+        end)
+        if not success then
+            ShowNotification("脚本执行失败", tostring(err), 5)
+            setclipboard("游戏ID：" .. currentGameId .. "\n错误信息：" .. tostring(err))
+        end
+    else
+        -- 3. 无对应脚本（复制完整游戏信息）
+        local gameInfo = MarketplaceService:GetProductInfo(currentGameId)
+        local copyText = "游戏名称：" .. gameInfo.Name .. "\n游戏ID：" .. currentGameId
+        setclipboard(copyText)
+        ShowNotification("无专属脚本", "已复制游戏信息，可反馈添加脚本\n" .. gameInfo.Name, 5)
+    end
+end
+
+-- ===================== 4. 脚本启动入口 =====================
+-- 4.1 初始化UI（按需启用MakePrGui）
+YtPr()  -- 启动弹窗
+CreateSupportList({"自然灾害"})  -- 支持游戏列表
+-- MakePrGui()  -- 商店窗口（取消注释即可启用）
+
+-- 4.2 等待角色加载后执行脚本匹配
+table.insert(getgenv().ScriptConfig.ScriptConnections, RunService.Heartbeat:ConnectOnce(function()
+    GetLocalCharacter()  -- 等待角色加载完成
+    ExecuteMatchedScript()
 end))
-
--- 关闭按钮（彩虹文本效果）
-local CloseButton = Instance.new("TextButton")
-CloseButton.Name = "CloseButton"
-CloseButton.Parent = DarkOverlay
-CloseButton.BackgroundTransparency = 1  -- 透明背景
-CloseButton.Position = UDim2.new(0.896, 0, 0, 0)  -- 右上角定位
-CloseButton.Size = UDim2.new(0, 39, 0, 39)  -- 按钮大小（正方形）
-CloseButton.Font = Enum.Font.FredokaOne  -- 圆润字体
-CloseButton.Text = "X"  -- 关闭符号
-CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)  -- 白色文字
-CloseButton.TextScaled = true  -- 文字自动适配按钮大小
-RainbowText(CloseButton)  -- 应用彩虹文本动画
-
--- 向滚动列表添加游戏项（循环生成列表内容）
-for _, gameName in pairs(gameList) do
-    local GameLabel = Instance.new("TextLabel")
-    GameLabel.Parent = ScrollFrame
-    GameLabel.BackgroundTransparency = 1  -- 透明背景
-    GameLabel.Size = UDim2.new(0, 353, 0, 24)  -- 列表项大小（宽353，高24）
-    GameLabel.Font = Enum.Font.Highway  -- 标题类字体
-    GameLabel.Text = "	• " .. gameName  -- 列表项文本（带项目符号）
-    GameLabel.TextColor3 = Color3.fromRGB(255, 255, 255)  -- 白色文字
-    GameLabel.TextScaled = true  -- 文字自动适配大小
-    GameLabel.TextTransparency = 0.5  -- 文字半透明（弱化效果）
-    GameLabel.TextXAlignment = Enum.TextXAlignment.Left  -- 文字左对齐
-    RainbowText(GameLabel)  -- 应用彩虹文本动画
-end
-
--- 关闭按钮点击逻辑（销毁列表窗口）
-CloseButton.MouseButton1Click:Connect(function()
-    game.Debris:AddItem(SupportUi, 0)  -- 立即销毁窗口
-end)
-
-local list = {
-	--自然灾害
-	[189707] = "loadstring(game:HttpGet("https://github.com/lool8/jiaoben/blob/main/%E9%80%86%E5%85%89%E8%87%AA%E7%84%B6%E7%81%BE%E5%AE%B3.lua"))()",
-
-}
-
-local name = {
-		[189707] = "自然灾害",
-																																				
-}
-
-YtPr()
-CreateSupportList({"自然灾害"
-
-})
+-- 4.3 标记脚本加载完成
 _G.HoHoLoaded = true
-if getgenv().Key and listPre[game.GameId] ~= nil then
-	getgenv().messagebox = function()end
-	loadstring(listPre[tonumber(game.GameId)])()
-elseif not getgenv().Key and list[game.GameId] ~= nil then
-    game:GetService("StarterGui"):SetCore("SendNotification",{
-                Title = "当前游戏:"..name[game.GameId].."";
-                Text ="检测到你当前游玩的游戏为:"..name[game.GameId].."\n已自动为你执行此游戏脚本";
-                Duration = 3;
-            })
-	loadstring(list[tonumber(game.GameId)])()
-else
-	game:GetService("StarterGui"):SetCore("SendNotification",{
-                Title = "没有此游戏脚本";
-                Text ="复制东西的名字";
-                Duration = 5;
-            })
-	setclipboard("复制信息")
-end
+ShowNotification("脚本启动成功", "逆光脚本已加载，可在UI中操作", 4)
