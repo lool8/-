@@ -850,6 +850,19 @@ Tab:AddButton({
 })
 
 local Tab = Window:MakeTab({
+    Name = "自然灾害",
+    Icon = "rbxassetid://4483345998",
+    PremiumOnly = false
+})
+
+Tab:AddButton({
+    Name ="传送到安全位置",
+    Callback = function()
+    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new( -261.54,  194.76,  301.28)
+    end
+})
+
+local Tab = Window:MakeTab({
     Name = "强壮传奇",
     Icon = "rbxassetid://4483345998",
     PremiumOnly = false
@@ -886,27 +899,6 @@ Tab:AddToggle({
             local args = {"Punch"}
             game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("UseTool"):FireServer(unpack(args))
             task.wait(0.1) -- Adjust this delay as needed (0.1 seconds between punches)
-        end
-    end
-})
-
-Tab:AddButton({
-    Name = "自动解锁所有岛屿",
-    Callback = function()
-        local coordinates = {
-            {718.34, 1717.45, 2058.72},
-            {703.17, 3340.41, 2041.46},
-            {715.11, 5938.00, 2057.97},
-            {771.49, 9188.80, 2060.20},
-            {663.26, 12854.54, 2046.93},
-            {709.37, 16609.40, 2009.45},
-            {734.86, 21916.71, 2090.01},
-            {691.55, 30306.88, 2050.44}
-        }
-        
-        for i, coord in ipairs(coordinates) do
-            task.wait(2) -- 2 second delay
-            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(coord[1], coord[2], coord[3])
         end
     end
 })
