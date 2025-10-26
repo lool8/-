@@ -1,278 +1,153 @@
-local Players = game:GetService("Players")
+-- 核心UI容器（适配高版本Roblox，优化层级管理）
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "AlienX_Wind_UI"
+ScreenGui.Parent = game.CoreGui
+ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+ScreenGui.IgnoreGuiInset = true -- 忽略屏幕边缘内边距，适配全尺寸
+
+-- 顶部触发按钮（极简风，贴合参考UI的隐蔽式设计）
+local TriggerBtn = Instance.new("TextButton")
+TriggerBtn.Name = "WindTrigger"
+TriggerBtn.Size = UDim2.new(0.12, 0, 0.025, 0)
+TriggerBtn.Position = UDim2.new(0.44, 0, 0.005, 0) -- 灵动岛顶端正中间（贴顶）
+TriggerBtn.BackgroundColor3 = Color3.fromRGB(20, 25, 40)
+TriggerBtn.BackgroundTransparency = 0.4
+TriggerBtn.BorderSizePixel = 0
+TriggerBtn.CornerRadius = UDim.new(0, 8) -- 圆角优化
+TriggerBtn.Text = "Wind"
+TriggerBtn.TextColor3 = Color3.fromRGB(180, 220, 255)
+TriggerBtn.TextSize = 11
+TriggerBtn.Font = Enum.Font.GothamBold -- 粗体字体，贴合参考风格
+TriggerBtn.Parent = ScreenGui
+
+-- 触发按钮hover动画（参考UI的交互反馈）
 local TweenService = game:GetService("TweenService")
-local UserInputService = game:GetService("UserInputService")
+local hoverTweenIn = TweenService:Create(TriggerBtn, TweenInfo.new(0.2), {
+    BackgroundTransparency = 0.2,
+    TextColor3 = Color3.fromRGB(255, 255, 255)
+})
+local hoverTweenOut = TweenService:Create(TriggerBtn, TweenInfo.new(0.2), {
+    BackgroundTransparency = 0.4,
+    TextColor3 = Color3.fromRGB(180, 220, 255)
+})
 
-local player = Players.LocalPlayer
-local playerGui = player:WaitForChild("PlayerGui")
+TriggerBtn.MouseEnter:Connect(function() hoverTweenIn:Play() end)
+TriggerBtn.MouseLeave:Connect(function() hoverTweenOut:Play() end)
 
--- 创建主屏幕GUI
-local screenGui = Instance.new("ScreenGui")
-screenGui.Name = "TopFloatingUI"
-screenGui.Parent = playerGui
-screenGui.ResetOnSpawn = false
+-- 半透明主界面（渐变+阴影，还原参考UI视觉）
+local MainFrame = Instance.new("Frame")
+MainFrame.Name = "MainUI"
+MainFrame.Size = UDim2.new(0.75, 0, 0.65, 0)
+MainFrame.Position = UDim2.new(0.125, 0, 0.175, 0) -- 居中偏上，更紧凑
+MainFrame.BackgroundColor3 = Color3.fromRGB(15, 18, 30)
+MainFrame.BackgroundTransparency = 0.7 -- 更细腻的半透明
+MainFrame.BorderSizePixel = 1
+MainFrame.BorderColor3 = Color3.fromRGB(60, 140, 255)
+MainFrame.CornerRadius = UDim.new(0, 12) -- 大圆角，贴合参考风格
+MainFrame.Visible = false
+MainFrame.Parent = ScreenGui
 
--- 创建顶部悬浮条
-local topBar = Instance.new("Frame")
-topBar.Name = "TopBar"
-topBar.Size = UDim2.new(0.3, 0, 0, 40)  -- 宽度为屏幕30%，高度40像素
-topBar.Position = UDim2.new(0.35, 0, 0, 10)  -- 水平居中，距离顶部10像素
-topBar.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
-topBar.BorderSizePixel = 0
-topBar.ZIndex = 10
-topBar.Parent = screenGui
+-- 主界面渐变叠加层（参考UI的渐变背景效果）
+local Gradient = Instance.new("UIGradient")
+Gradient.Name = "BgGradient"
+Gradient.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(30, 40, 80)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(15, 20, 40))
+})
+Gradient.Rotation = 45
+Gradient.Parent = MainFrame
 
--- 顶部悬浮条圆角
-local topBarCorner = Instance.new("UICorner")
-topBarCorner.CornerRadius = UDim.new(0, 8)
-topBarCorner.Parent = topBar
+-- 主界面阴影（增强层次感，参考UI的立体效果）
+local Shadow = Instance.new("UIStroke")
+Shadow.Name = "FrameShadow"
+Shadow.Thickness = 3
+Shadow.Color3 = Color3.fromRGB(0, 20, 80)
+Shadow.Transparency = 0.7
+Shadow.Parent = MainFrame
 
--- 添加阴影效果
-local shadow = Instance.new("ImageLabel")
-shadow.Name = "Shadow"
-shadow.Size = UDim2.new(1, 10, 1, 10)
-shadow.Position = UDim2.new(0, -5, 0, -5)
-shadow.BackgroundTransparency = 1
-shadow.Image = "rbxassetid://1316045217"  -- 阴影贴图
-shadow.ImageColor3 = Color3.fromRGB(0, 0, 0)
-shadow.ImageTransparency = 0.8
-shadow.ScaleType = Enum.ScaleType.Slice
-shadow.SliceCenter = Rect.new(10, 10, 118, 118)
-shadow.ZIndex = 9
-shadow.Parent = topBar
+-- 标题栏（参考UI顶部标题设计，带关闭按钮）
+local TitleBar = Instance.new("Frame")
+TitleBar.Name = "TitleBar"
+TitleBar.Size = UDim2.new(1, 0, 0.1, 0)
+TitleBar.BackgroundTransparency = 1
+TitleBar.Parent = MainFrame
 
--- 添加拖拽区域
-local dragArea = Instance.new("TextButton")
-dragArea.Name = "DragArea"
-dragArea.Size = UDim2.new(1, -50, 1, 0)  -- 留出右侧空间给按钮
-dragArea.Position = UDim2.new(0, 0, 0, 0)
-dragArea.BackgroundTransparency = 1
-dragArea.Text = ""
-dragArea.ZIndex = 11
-dragArea.Parent = topBar
+-- 标题文字
+local TitleText = Instance.new("TextLabel")
+TitleText.Name = "Title"
+TitleText.Text = "AlienX Wind"
+TitleText.Size = UDim2.new(0.8, 0, 1, 0)
+TitleText.Position = UDim2.new(0.1, 0, 0, 0)
+TitleText.BackgroundTransparency = 1
+TitleText.TextColor3 = Color3.fromRGB(180, 220, 255)
+TitleText.TextSize = 16
+TitleText.Font = Enum.Font.GothamBold
+TitleText.Parent = TitleBar
 
--- 添加标题
-local title = Instance.new("TextLabel")
-title.Name = "Title"
-title.Size = UDim2.new(1, -50, 1, 0)
-title.Position = UDim2.new(0, 10, 0, 0)
-title.BackgroundTransparency = 1
-title.TextColor3 = Color3.fromRGB(255, 255, 255)
-title.Text = "控制面板"
-title.TextSize = 14
-title.Font = Enum.Font.SourceSansBold
-title.TextXAlignment = Enum.TextXAlignment.Left
-title.ZIndex = 11
-title.Parent = topBar
+-- 关闭按钮（参考UI的极简关闭键）
+local CloseBtn = Instance.new("TextButton")
+CloseBtn.Name = "CloseUI"
+CloseBtn.Size = UDim2.new(0.05, 0, 0.8, 0)
+CloseBtn.Position = UDim2.new(0.95, 0, 0.1, 0)
+CloseBtn.BackgroundTransparency = 1
+CloseBtn.Text = "✕"
+CloseBtn.TextColor3 = Color3.fromRGB(200, 100, 100)
+CloseBtn.TextSize = 14
+CloseBtn.Font = Enum.Font.Gotham
+CloseBtn.Parent = TitleBar
 
--- 添加切换按钮
-local toggleButton = Instance.new("TextButton")
-toggleButton.Name = "ToggleButton"
-toggleButton.Size = UDim2.new(0, 40, 1, 0)
-toggleButton.Position = UDim2.new(1, -40, 0, 0)
-toggleButton.BackgroundColor3 = Color3.fromRGB(0, 120, 215)
-toggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-toggleButton.Text = "≡"
-toggleButton.TextSize = 16
-toggleButton.ZIndex = 11
-toggleButton.Parent = topBar
+-- 功能/分类扩展容器（完全预留，直接加内容即可）
+local ContentHolder = Instance.new("Frame")
+ContentHolder.Name = "ContentContainer"
+ContentHolder.Size = UDim2.new(0.96, 0, 0.85, 0)
+ContentHolder.Position = UDim2.new(0.02, 0, 0.12, 0)
+ContentHolder.BackgroundTransparency = 1
+ContentHolder.Parent = MainFrame
 
--- 切换按钮圆角
-local toggleCorner = Instance.new("UICorner")
-toggleCorner.CornerRadius = UDim.new(0, 6)
-toggleCorner.Parent = toggleButton
-
--- 创建主UI容器
-local mainFrame = Instance.new("Frame")
-mainFrame.Name = "MainFrame"
-mainFrame.Size = UDim2.new(0.3, 0, 0, 300)  -- 与顶部条同宽
-mainFrame.Position = UDim2.new(0.35, 0, 0, 50)  -- 在顶部条下方
-mainFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
-mainFrame.BorderSizePixel = 0
-mainFrame.ClipsDescendants = true
-mainFrame.Parent = screenGui
-
--- 主UI圆角
-local mainCorner = Instance.new("UICorner")
-mainCorner.CornerRadius = UDim.new(0, 8)
-mainCorner.Parent = mainFrame
-
--- 主UI阴影
-local mainShadow = Instance.new("ImageLabel")
-mainShadow.Name = "MainShadow"
-mainShadow.Size = UDim2.new(1, 10, 1, 10)
-mainShadow.Position = UDim2.new(0, -5, 0, -5)
-mainShadow.BackgroundTransparency = 1
-mainShadow.Image = "rbxassetid://1316045217"
-mainShadow.ImageColor3 = Color3.fromRGB(0, 0, 0)
-mainShadow.ImageTransparency = 0.8
-mainShadow.ScaleType = Enum.ScaleType.Slice
-mainShadow.SliceCenter = Rect.new(10, 10, 118, 118)
-mainShadow.ZIndex = 9
-mainShadow.Parent = mainFrame
-
--- 添加内容区域
-local content = Instance.new("ScrollingFrame")
-content.Name = "Content"
-content.Size = UDim2.new(1, -20, 1, -20)
-content.Position = UDim2.new(0, 10, 0, 10)
-content.BackgroundTransparency = 1
-content.ScrollBarThickness = 5
-content.ScrollBarImageColor3 = Color3.fromRGB(100, 100, 100)
-content.Parent = mainFrame
-
-local layout = Instance.new("UIListLayout")
-layout.Parent = content
-layout.Padding = UDim.new(0, 10)
-
--- 添加一些示例内容
-for i = 1, 12 do
-    local item = Instance.new("Frame")
-    item.Size = UDim2.new(1, 0, 0, 50)
-    item.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-    item.Parent = content
-    
-    local itemCorner = Instance.new("UICorner")
-    itemCorner.CornerRadius = UDim.new(0, 6)
-    itemCorner.Parent = item
-    
-    local itemTitle = Instance.new("TextLabel")
-    itemTitle.Size = UDim2.new(1, -20, 0, 20)
-    itemTitle.Position = UDim2.new(0, 10, 0, 5)
-    itemTitle.BackgroundTransparency = 1
-    itemTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
-    itemTitle.Text = "项目 " .. i
-    itemTitle.TextSize = 14
-    itemTitle.Font = Enum.Font.SourceSansBold
-    itemTitle.TextXAlignment = Enum.TextXAlignment.Left
-    itemTitle.Parent = item
-    
-    local itemDesc = Instance.new("TextLabel")
-    itemDesc.Size = UDim2.new(1, -20, 0, 20)
-    itemDesc.Position = UDim2.new(0, 10, 0, 25)
-    itemDesc.BackgroundTransparency = 1
-    itemDesc.TextColor3 = Color3.fromRGB(200, 200, 200)
-    itemDesc.Text = "这是项目 " .. i .. " 的描述"
-    itemDesc.TextSize = 12
-    itemDesc.Font = Enum.Font.SourceSans
-    itemDesc.TextXAlignment = Enum.TextXAlignment.Left
-    itemDesc.Parent = item
-end
-
--- 状态变量
-local isUIVisible = true
-local isAnimating = false
-local isDragging = false
-local dragStartPos, frameStartPos
-
--- 切换UI显示状态的函数
+-- 动画控制（流畅显示/隐藏，参考UI的过渡效果）
+local isUIOpen = false
 local function toggleUI()
-    if isAnimating then return end
-    isAnimating = true
+    isUIOpen = not isUIOpen
+    local targetTransparency = isUIOpen and 0 or 0.7
+    local targetScale = isUIOpen and UDim2.new(0.75, 0, 0.65, 0) or UDim2.new(0.7, 0, 0.6, 0)
     
-    local targetSize, targetPosition
+    -- 主界面动画
+    TweenService:Create(MainFrame, TweenInfo.new(0.3, Enum.EasingStyle.Quad), {
+        BackgroundTransparency = targetTransparency,
+        Size = targetScale
+    }):Play()
     
-    if isUIVisible then
-        -- 隐藏UI
-        targetSize = UDim2.new(0.3, 0, 0, 0)
-        targetPosition = UDim2.new(mainFrame.Position.X.Scale, mainFrame.Position.X.Offset, 0, 50)
-        toggleButton.Text = "≡"
-    else
-        -- 显示UI
-        targetSize = UDim2.new(0.3, 0, 0, 300)
-        targetPosition = UDim2.new(mainFrame.Position.X.Scale, mainFrame.Position.X.Offset, 0, 50)
-        toggleButton.Text = "×"
-    end
-    
-    local tweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
-    local sizeTween = TweenService:Create(mainFrame, tweenInfo, {Size = targetSize})
-    local posTween = TweenService:Create(mainFrame, tweenInfo, {Position = targetPosition})
-    
-    sizeTween.Completed:Connect(function()
-        isAnimating = false
-    end)
-    
-    sizeTween:Play()
-    posTween:Play()
-    isUIVisible = not isUIVisible
-end
-
--- 绑定切换按钮点击事件
-toggleButton.MouseButton1Click:Connect(toggleUI)
-
--- 拖拽功能
-local function startDrag(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 then
-        isDragging = true
-        dragStartPos = Vector2.new(input.Position.X, input.Position.Y)
-        frameStartPos = topBar.Position
-        
-        -- 拖动时改变外观
-        toggleButton.BackgroundColor3 = Color3.fromRGB(0, 150, 255)
+    MainFrame.Visible = true
+    -- 隐藏时延迟消失，保证动画完整
+    if not isUIOpen then
+        task.wait(0.3)
+        MainFrame.Visible = false
     end
 end
 
-local function updateDrag(input)
-    if input.UserInputType == Enum.UserInputType.MouseMovement and isDragging then
-        local dragDelta = Vector2.new(input.Position.X, input.Position.Y) - dragStartPos
-        
-        -- 限制在屏幕范围内
-        local newX = math.clamp(frameStartPos.X.Offset + dragDelta.X, 0, screenGui.AbsoluteSize.X - topBar.AbsoluteSize.X)
-        local newY = math.clamp(frameStartPos.Y.Offset + dragDelta.Y, 0, screenGui.AbsoluteSize.Y - topBar.AbsoluteSize.Y)
-        
-        topBar.Position = UDim2.new(0, newX, 0, newY)
-        
-        -- 同时移动主UI
-        if isUIVisible then
-            mainFrame.Position = UDim2.new(0, newX, 0, newY + topBar.AbsoluteSize.Y)
-        end
-    end
-end
+-- 触发按钮点击事件
+TriggerBtn.MouseButton1Click:Connect(toggleUI)
 
-local function endDrag(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 then
-        isDragging = false
-        toggleButton.BackgroundColor3 = Color3.fromRGB(0, 120, 215)
-    end
-end
-
--- 绑定拖拽事件
-dragArea.InputBegan:Connect(startDrag)
-dragArea.InputChanged:Connect(updateDrag)
-UserInputService.InputEnded:Connect(endDrag)
-
--- 双击快速隐藏/显示
-local lastClickTime = 0
-dragArea.MouseButton1Click:Connect(function()
-    local currentTime = tick()
-    if currentTime - lastClickTime < 0.3 then
-        -- 双击事件
-        toggleUI()
-    end
-    lastClickTime = currentTime
+-- 关闭按钮事件
+CloseBtn.MouseButton1Click:Connect(function()
+    if isUIOpen then toggleUI() end
 end)
 
---- 创建一个简单的UI隐藏/显示切换系统
-local Player = game:GetService("Players").LocalPlayer
-local PlayerGui = Player:WaitForChild("PlayerGui")
+-- 点击主界面外部关闭（优化交互）
+local CloseOverlay = Instance.new("TextButton")
+CloseOverlay.Name = "CloseOverlay"
+CloseOverlay.Size = UDim2.new(1, 0, 1, 0)
+CloseOverlay.BackgroundTransparency = 1
+CloseOverlay.Text = ""
+CloseOverlay.Visible = false
+CloseOverlay.Parent = ScreenGui
 
--- 假设你的UI位于ScreenGui中
-local screenGui = PlayerGui:WaitForChild("YourScreenGuiName") -- 替换为你的ScreenGui名称
+CloseOverlay.MouseButton1Click:Connect(function()
+    if isUIOpen then toggleUI() end
+    CloseOverlay.Visible = false
+end)
 
--- 初始隐藏UI
-screenGui.Enabled = false
-
--- 切换UI显示状态的函数
-function toggleUI()
-    screenGui.Enabled = not screenGui.Enabled
-end
-
--- 绑定按键来切换UI（例如按F1键）
-local UserInputService = game:GetService("UserInputService")
-
-UserInputService.InputBegan:Connect(function(input, gameProcessed)
-    if gameProcessed then return end
-    
-    if input.KeyCode == Enum.KeyCode.F1 then
-        toggleUI()
-    end
+-- 同步遮罩显示/隐藏
+TriggerBtn.MouseButton1Click:Connect(function()
+    CloseOverlay.Visible = isUIOpen
 end)
