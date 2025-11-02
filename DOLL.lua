@@ -1051,7 +1051,7 @@ Tab3Section:Button({
     Icon = "refresh-cw",
     Color = Color3.fromHex("3B82F6"), 
     Callback = function()
-        脚本
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/GamingScripter/Animation-Hub/main/Animation%20Gui", true))()
         WindUI:Notify({
             Title = "动画中心执行成功✅",
             Content = "动画美化包🤔",
