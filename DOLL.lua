@@ -37,8 +37,8 @@ CameraSection:Slider({
     Title = "视角距离",
     Value = {
         Min = 0,
-        Max = 400,
-        Default = 15
+        Max = 120,
+        Default = 30
     },
     Callback = function(value)
         local camera = game.Workspace.CurrentCamera
@@ -74,6 +74,10 @@ CameraSection:Dropdown({
 local BasicTab = MainWindow:Tab({
     Title = "玩家",
     Icon = "bolt"  -- 标签页图标
+})
+
+local CameraSection = CameraTab:Section({
+    Title = "右边小分类"
 })
 
 -- 防摔落
@@ -866,6 +870,10 @@ BasicSection:Button({
 local BasicTab = MainWindow:Tab({
     Title = "通用",
     Icon = "bolt"  -- 标签页图标
+})
+
+local CameraSection = CameraTab:Section({
+    Title = "通用所有"
 })
 
 BasicSection:Button({
