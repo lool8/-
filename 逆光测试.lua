@@ -1309,17 +1309,33 @@ Tab:AddToggle({
 
         -- 设置开关状态
         PredictionAim.Enabled = state
-        
-        -- 添加预测滑块
-        Tab:AddSlider({
-            Name = "瞄准预测值",
-            Min = 1,
-            Max = 10,
-            Default = PredictionAim.Prediction,
-            Callback = function(value)
-                PredictionAim.Prediction = value
+    end
+})
+
+-- 瞄准预测值输入框 (移到外面来了！)
+Tab:AddTextbox({
+    Name = "瞄准预测值",
+    Default = "1",
+    TextDisappear = true,
+    Callback = function(inputValue)
+        -- 检查 PredictionAim 是否存在
+        if _G.PredictionAim then
+            local num = tonumber(inputValue)
+            if num and num >= 1 and num <= 10 then
+                _G.PredictionAim.Prediction = num
+            else
+                warn("请输入1到10之间的有效数字")
             end
-        })
+        else
+            -- 如果 PredictionAim 不存在，我们需要先创建它
+            _G.PredictionAim = { Prediction = 1 }
+            local num = tonumber(inputValue)
+            if num and num >= 1 and num <= 10 then
+                _G.PredictionAim.Prediction = num
+            else
+                warn("请输入1到10之间的有效数字")
+            end
+        end
     end
 })
 
@@ -1399,63 +1415,90 @@ local Section = Tab:AddSection({
 	Name = "Guest 1337幸存者［牢达! man!😋］"
 })
 
--- 自动格挡 + 拳击
+-- 自动格挡
 Tab:AddToggle({
-    Name = "自动格挡 + 拳击",
-    Callback = function(state)
-        local ReplicatedStorage = game:GetService("ReplicatedStorage")
-        local RunService = game:GetService("RunService")
-        local Players = game:GetService("Players")
-
-        local LocalPlayer = Players.LocalPlayer
-        local AutoBlockEnabled = false
-        local BlockDistance = 18
-        local combatConnection = nil
-        local lastBlockTime = 0
-        local BlockCooldown = 0.35
-
-        local TargetSoundIds = {
-            "rbxassetid://102228729296384", "rbxassetid://140242176732868", "rbxassetid://12222216", 
-            "rbxassetid://86174610237192", "rbxassetid://101199185291628", "rbxassetid://95079963655241", 
-            "rbxassetid://112809109188560", "rbxassetid://84307400688050", "rbxassetid://136323728355613", 
-            "rbxassetid://115026634746636", "rbxassetid://119942598489800", "rbxassetid://108907358619313", 
-            "rbxassetid://119942598489800"
+    Name = "自动格挡",
+    Callback = function(enabled)
+        if not _G.AutoBlockSystem then
+            _G.AutoBlockSystem = {
+                Active = false,
+                SteppedConnection = nil
+            }
+        end
+        
+        local config = {
+            BlockDistance = 15,
+            ScanInterval = 0.05,
+            BlockCooldown = 0.5,
+            DebugMode = false, -- 为了不刷屏，默认关闭调试模式
+            TargetSoundIds = {
+                "rbxassetid://102228729296384",
+                "rbxassetid://140242176732868",
+                "rbxassetid://12222216",
+                "rbxassetid://86174610237192",
+                "rbxassetid://101199185291628",
+                "rbxassetid://95079963655241",
+                "rbxassetid://112809109188560",
+                "rbxassetid://84307400688050",
+                "rbxassetid://136323728355613",
+                "rbxassetid://115026634746636"
+            }
         }
+
+        local LocalPlayer = game:GetService("Players").LocalPlayer
+        local ReplicatedStorage = game:GetService("ReplicatedStorage")
+        local RemoteEvent = ReplicatedStorage:WaitForChild("Modules"):WaitForChild("Network"):WaitForChild("RemoteEvent")
+        local lastBlockTime = 0
 
         local function HasTargetSound(character)
             if not character then return false end
-            local rootPart = character:FindFirstChild("HumanoidRootPart")
-            if not rootPart then return false end
             
-            for _, sound in ipairs(rootPart:GetDescendants()) do
-                if sound:IsA("Sound") and sound.IsPlaying then
-                    for _, id in ipairs(TargetSoundIds) do
-                        if sound.SoundId == id then
+            local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
+            if humanoidRootPart then
+                for _, child in ipairs(humanoidRootPart:GetDescendants()) do
+                    if child:IsA("Sound") then
+                        for _, targetId in ipairs(config.TargetSoundIds) do
+                            if child.SoundId == targetId then
+                                if config.DebugMode then
+                                    print("Audio detected:", humanoidRootPart:GetFullName(), "ID:", child.SoundId)
+                                end
+                                return true
+                            end
+                        end
+                    end
+                end
+            end
+            
+            for _, sound in ipairs(character:GetDescendants()) do
+                if sound:IsA("Sound") then
+                    for _, targetId in ipairs(config.TargetSoundIds) do
+                        if sound.SoundId == targetId then
+                            if config.DebugMode then
+                                print("Audio detected:", sound:GetFullName(), "ID:", sound.SoundId)
+                            end
                             return true
                         end
                     end
                 end
             end
+            
             return false
         end
 
-        local function GetThreateningKillers()
+        local function GetKillersInRange()
             local killers = {}
             local killersFolder = workspace:FindFirstChild("Killers") or (workspace:FindFirstChild("Players") and workspace.Players:FindFirstChild("Killers"))
             if not killersFolder then return killers end
             
             local myCharacter = LocalPlayer.Character
-            if not myCharacter then return killers end
+            if not myCharacter or not myCharacter:FindFirstChild("HumanoidRootPart") then return killers end
             
-            local myRoot = myCharacter:FindFirstChild("HumanoidRootPart")
-            if not myRoot then return killers end
+            local myPos = myCharacter.HumanoidRootPart.Position
             
             for _, killer in ipairs(killersFolder:GetChildren()) do
                 if killer:FindFirstChild("HumanoidRootPart") then
-                    local killerRoot = killer.HumanoidRootPart
-                    local distance = (killerRoot.Position - myRoot.Position).Magnitude
-                    
-                    if distance <= BlockDistance and HasTargetSound(killer) then
+                    local distance = (killer.HumanoidRootPart.Position - myPos).Magnitude
+                    if distance <= config.BlockDistance then
                         table.insert(killers, killer)
                     end
                 end
@@ -1464,61 +1507,54 @@ Tab:AddToggle({
             return killers
         end
 
-        local function PerformBlockAndPunch()
-            local now = os.clock()
-            if now - lastBlockTime >= BlockCooldown then
-                -- 执行格挡
-                game:GetService("ReplicatedStorage"):WaitForChild("Modules"):WaitForChild("Network"):WaitForChild("RemoteEvent"):FireServer("UseActorAbility", "Block")
-                
-                -- 执行拳击
-                local args = {
-                    [1] = "UseActorAbility",
-                    [2] = "Punch"
-                }
-                game:GetService("ReplicatedStorage"):WaitForChild("Modules"):WaitForChild("Network"):WaitForChild("RemoteEvent"):FireServer(unpack(args))
-                
-                lastBlockTime = now
-            end
-        end
-
-        local function CombatLoop()
-            local killers = GetThreateningKillers()
-            if #killers > 0 then
-                PerformBlockAndPunch()
-            end
-        end
-
-        AutoBlockEnabled = state
-        
-        if state then
-            combatConnection = RunService.Stepped:Connect(function()
-                pcall(CombatLoop)
-            end)
-        elseif combatConnection then
-            combatConnection:Disconnect()
-            combatConnection = nil
-        end
-
-        -- 添加检测范围输入框
-        Tab:AddTextbox({
-            Name = "检测范围",
-            Default = tostring(BlockDistance),
-            TextDisappear = true,
-            Callback = function(value)
-                local num = tonumber(value)
-                if num and num > 0 then
-                    BlockDistance = num
+        local function PerformBlock()
+            if os.clock() - lastBlockTime >= config.BlockCooldown then
+                RemoteEvent:FireServer("UseActorAbility", "Block")
+                lastBlockTime = os.clock()
+                if config.DebugMode then
+                    print("Block performed at:", os.clock())
                 end
             end
-        })
+        end
 
-        -- 角色重生时重新连接
-        LocalPlayer.CharacterAdded:Connect(function()
-            if AutoBlockEnabled and combatConnection then
-                combatConnection:Disconnect()
-                combatConnection = RunService.Stepped:Connect(CombatLoop)
+        local function CheckConditions()
+            local killers = GetKillersInRange()
+            
+            for _, killer in ipairs(killers) do
+                if HasTargetSound(killer) then
+                    PerformBlock()
+                    break
+                end
             end
+        end
+
+        if not enabled then
+            if _G.AutoBlockSystem.Active then
+                if _G.AutoBlockSystem.SteppedConnection then
+                    _G.AutoBlockSystem.SteppedConnection:Disconnect()
+                end
+                print("Auto Block system disabled")
+                _G.AutoBlockSystem.Active = false
+            end
+            return
+        end
+        
+        if _G.AutoBlockSystem.Active then
+            return
+        end
+        
+        _G.AutoBlockSystem.Active = true
+        
+        if not LocalPlayer.Character then
+            LocalPlayer.CharacterAdded:Wait()
+        end
+
+        _G.AutoBlockSystem.SteppedConnection = game:GetService("RunService").Stepped:Connect(function()
+            pcall(CheckConditions)
         end)
+        
+        print("Auto Block system enabled")
+        print("Range:", config.BlockDistance, "m | Audio IDs:", #config.TargetSoundIds)
     end
 })
 
@@ -2464,19 +2500,31 @@ Tab:AddToggle({
     Name = "透视NPC",
     Callback = function(state)
         if state then
-            for _,v in next,workspace.Map.Lobby.NPCs:GetChildren() do
-                if v:IsA("Model") then
-                    ESPNPCS(v.Name,v,Color3.new(0,0,1))
+            -- 检查文件夹是否存在
+            local npcsFolder = workspace:FindFirstChild("Map") and workspace.Map:FindFirstChild("Lobby") and workspace.Map.Lobby:FindFirstChild("NPCs")
+            if npcsFolder then
+                for _,v in next, npcsFolder:GetChildren() do
+                    if v:IsA("Model") then
+                        ESPNPCS(v.Name, v, Color3.new(0, 0, 1))
+                    end
                 end
+                
+                -- 保存连接到变量，以便后续断开
+                local npcChildAddedConn
+                npcChildAddedConn = npcsFolder.ChildAdded:Connect(function(v)
+                    if v:IsA("Model") and state then
+                        ESPNPCS(v.Name, v, Color3.new(0, 0, 1))
+                    else
+                        -- 如果状态已关闭，断开连接
+                        npcChildAddedConn:Disconnect()
+                    end
+                end)
             end
-            workspace.Map.Lobby.NPCs.ChildAdded:Connect(function(v)
-                if v:IsA("Model") and state then
-                    ESPNPCS(v.Name,v,Color3.new(0,0,1))
-                end
-            end)
         else
-            for _,v in pairs(workspace.NPCESPFloder:GetChildren()) do
-                v:Destroy()
+            -- 安全地销毁ESP
+            local espFolder = workspace:FindFirstChild("NPCESPFloder")
+            if espFolder then
+                espFolder:Destroy()
             end
         end
     end
@@ -2487,19 +2535,28 @@ Tab:AddToggle({
     Name = "透视杀手",
     Callback = function(state)
         if state then
-            for _,v in next,workspace.Players.Killers:GetChildren() do
-                if v:IsA("Model") then
-                    ESPKiller(v.Name,v,Color3.new(255,0,255))
+            -- 检查文件夹是否存在
+            local killersFolder = workspace:FindFirstChild("Players") and workspace.Players:FindFirstChild("Killers")
+            if killersFolder then
+                for _,v in next, killersFolder:GetChildren() do
+                    if v:IsA("Model") then
+                        ESPKiller(v.Name, v, Color3.new(1, 0, 1)) -- 修正颜色值 (255,0,255) -> (1,0,1)
+                    end
                 end
+                
+                local killerChildAddedConn
+                killerChildAddedConn = killersFolder.ChildAdded:Connect(function(v)
+                    if v:IsA("Model") and state then
+                        ESPKiller(v.Name, v, Color3.new(1, 0, 1)) -- 修正颜色值
+                    else
+                        killerChildAddedConn:Disconnect()
+                    end
+                end)
             end
-            workspace.Players.Killers.ChildAdded:Connect(function(v)
-                if v:IsA("Model") and state then
-                    ESPKiller(v.Name,v,Color3.new(255,0,255))
-                end
-            end)
         else 
-            for _,v in pairs(workspace.KillerESPFloder:GetChildren()) do
-                v:Destroy()
+            local espFolder = workspace:FindFirstChild("KillerESPFloder")
+            if espFolder then
+                espFolder:Destroy()
             end
         end
     end
@@ -2510,19 +2567,28 @@ Tab:AddToggle({
     Name = "透视幸存者",
     Callback = function(state)
         if state then
-            for _,v in next,workspace.Players.Survivors:GetChildren() do
-                if v:IsA("Model") and v.Name ~= game.Players.LocalPlayer.Name then
-                    ESPSurvivors(v.Name,v,Color3.new(0,1,0))
+            -- 检查文件夹是否存在
+            local survivorsFolder = workspace:FindFirstChild("Players") and workspace.Players:FindFirstChild("Survivors")
+            if survivorsFolder then
+                for _,v in next, survivorsFolder:GetChildren() do
+                    if v:IsA("Model") and v.Name ~= game.Players.LocalPlayer.Name then
+                        ESPSurvivors(v.Name, v, Color3.new(0, 1, 0))
+                    end
                 end
+                
+                local survivorChildAddedConn
+                survivorChildAddedConn = survivorsFolder.ChildAdded:Connect(function(v)
+                    if v:IsA("Model") and state then
+                        ESPSurvivors(v.Name, v, Color3.new(0, 1, 0)) -- 修正颜色值 (0,0,1) -> (0,1,0)
+                    else
+                        survivorChildAddedConn:Disconnect()
+                    end
+                end)
             end
-            workspace.Players.Survivors.ChildAdded:Connect(function(v)
-                if v:IsA("Model") and state then
-                    ESPSurvivors(v.Name,v,Color3.new(0,0,1))
-                end
-            end)
         else
-            for _,v in pairs(workspace.SurvivorsESPFloder:GetChildren()) do
-                v:Destroy()
+            local espFolder = workspace:FindFirstChild("SurvivorsESPFloder")
+            if espFolder then
+                espFolder:Destroy()
             end
         end
     end
@@ -2533,19 +2599,28 @@ Tab:AddToggle({
     Name = "透视工具",
     Callback = function(state)
         if state then
-            for _,v in next,workspace.Map.Ingame:GetChildren() do
-                if v:IsA("Tool") then
-                    ESPTool(v.Name,v,Color3.new(255,255,255))
+            -- 检查文件夹是否存在
+            local ingameFolder = workspace:FindFirstChild("Map") and workspace.Map:FindFirstChild("Ingame")
+            if ingameFolder then
+                for _,v in next, ingameFolder:GetChildren() do
+                    if v:IsA("Tool") then
+                        ESPTool(v.Name, v, Color3.new(1, 1, 1)) -- 修正颜色值 (255,255,255) -> (1,1,1)
+                    end
                 end
+                
+                local toolChildAddedConn
+                toolChildAddedConn = ingameFolder.ChildAdded:Connect(function(v)
+                    if v:IsA("Tool") and state then
+                        ESPTool(v.Name, v, Color3.new(1, 1, 1)) -- 修正颜色值
+                    else
+                        toolChildAddedConn:Disconnect()
+                    end
+                end)
             end
-            workspace.Map.Ingame.ChildAdded:Connect(function(v)
-                if v:IsA("Tool") and state then
-                    ESPTool(v.Name,v,Color3.new(255,255,255))
-                end
-            end)
         else
-            for _,v in pairs(workspace.ToolESPFloder:GetChildren()) do
-                v:Destroy()
+            local espFolder = workspace:FindFirstChild("ToolESPFloder")
+            if espFolder then
+                espFolder:Destroy()
             end
         end
     end
