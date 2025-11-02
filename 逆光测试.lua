@@ -852,178 +852,218 @@ Tab:AddButton({
     end
 })
 
-Main:Toggle("自动修电机", "", false, function(state)
-   if state then
-        while state and wait() do
-            wait(6)
-            local FartNapFolder = workspace:FindFirstChild("Map") and workspace.Map:FindFirstChild("Ingame") and workspace.Map.Ingame:FindFirstChild("Map")
-            if FartNapFolder then
-				local closestGenerator, closestDistance = nil, math.huge
-				local playerPosition = game.Players.LocalPlayer.Character.HumanoidRootPart.Position
-				for _, g in ipairs(FartNapFolder:GetChildren()) do
-					if g.Name == "Generator" and g.Progress.Value < 100 then
-						local distance = (g.Main.Position - playerPosition).Magnitude
-						if distance < closestDistance then
-							closestDistance = distance
-							closestGenerator = g
-						end
-					end
-				end
-				if closestGenerator then
-					closestGenerator.Remotes.RE:FireServer()
-				end
-		    end
-        end
-    end
-end)
+local Tab = Window:MakeTab({
+    Name = "被遗弃",
+    Icon = "rbxassetid://4483345998",
+    PremiumOnly = false
+})
 
-Main:Toggle("无限体力", "", false, function(state)
-    if state then
-        while state and wait() do
-            local sprintModule = require(game.ReplicatedStorage.Systems.Character.Game.Sprinting)
-            sprintModule.StaminaLossDisabled = true
-        end
-    else
-        local sprintModule = require(game.ReplicatedStorage.Systems.Character.Game.Sprinting)
-        sprintModule.StaminaLossDisabled = false
-    end
-end)
-
-Main:Toggle("无限体力", "", false, function(state)
-    if state then
-        while state and wait() do
-            local sprintModule = require(game.ReplicatedStorage.Systems.Character.Game.Sprinting)
-            sprintModule.MinStamina = -100000
-        end
-    else
-        local sprintModule = require(game.ReplicatedStorage.Systems.Character.Game.Sprinting)
-        sprintModule.MinStamina = 0
-    end
-end)
-
-Main:Toggle("自动点击1×1×1弹窗", "", false, function(state)
-    if state then
-        while wait() and state do
-            for _, i in next,game.Players.LocalPlayer.PlayerGui.TemporaryUI:GetChildren() do
-                if v.Name == "1x1x1x1Popup" then
-                    game.VirtualBallsManager:SendMouseButtonEvent(v.AbsolutePosition.X + (v.AbsoluteSize.X / 2), v.AbsolutePosition.Y + (v.AbsoluteSize.Y / 2), Enum.UserInputType.MouseButton1.Value, true, game.Players.PlayerGui, 1)
-                    game.VirtualBallsManager:SendMouseButtonEvent(v.AbsolutePosition.X + (v.AbsoluteSize.X / 2), v.AbsolutePosition.Y + (v.AbsoluteSize.Y / 2), Enum.UserInputType.MouseButton1.Value, false, game.Players.PlayerGui, 1)
-                end
-            end
-        end
-    end
-end)
-
-ESP:Toggle("透视发电机", "", false, function(state)
-    if state then
-        for _,v in next,workspace.Map.Ingame.Map:GetChildren() do
-            if v.Name == "Generator" and v:IsA("Model") then
-                if v.Progress.Value < 99 then
-                    ESPGenerator("发电机(未完成) 进度.."..v.Progress.Value,v,Color3.new(1,0,0))
-                elseif v.Progress.Value == 100 then
-                    ESPGenerator("发电机(完成)",v,Color3.new(1,0,0))
-                end
-            end
-        end
-        workspace.Map.Ingame.Map.ChildAdded:Connect(function(v)
-            if v.Name == "Generator" and v:IsA("Model") and state then
-                if v.Progress.Value < 99 then
-                    ESPGenerator("发电机(未完成) 进度.."..v.Progress.Value,v,Color3.new(1,0,0))
-                elseif v.Progress.Value == 100 then
-                    ESPGenerator("发电机(完成)",v,Color3.new(1,0,0))
-                end
-            end
-        end)
-        while wait() and state do
-            for _,v in pairs(workspace.GeneratorESPFloder:GetChildren()) do
-                for _,i in pairs(v:GetChildren()) do
-                    if v.Progress.Value < 99 then
-                        v.Text = "发电机(未完成) 进度.."..v.Progress.Value
-                        elseif v.Progress.Value == 100 then
-                        v.Text = "发电机(完成)"
+-- 自动修电机
+Tab:AddToggle({
+    Name = "自动修电机",
+    Callback = function(state)
+        if state then
+            while state and wait() do
+                wait(6)
+                local FartNapFolder = workspace:FindFirstChild("Map") and workspace.Map:FindFirstChild("Ingame") and workspace.Map.Ingame:FindFirstChild("Map")
+                if FartNapFolder then
+                    local closestGenerator, closestDistance = nil, math.huge
+                    local playerPosition = game.Players.LocalPlayer.Character.HumanoidRootPart.Position
+                    for _, g in ipairs(FartNapFolder:GetChildren()) do
+                        if g.Name == "Generator" and g.Progress.Value < 100 then
+                            local distance = (g.Main.Position - playerPosition).Magnitude
+                            if distance < closestDistance then
+                                closestDistance = distance
+                                closestGenerator = g
+                            end
+                        end
+                    end
+                    if closestGenerator then
+                        closestGenerator.Remotes.RE:FireServer()
                     end
                 end
             end
         end
-    else
-        for _,v in pairs(workspace.GeneratorESPFloder:GetChildren()) do
-            v:Destroy()
-        end
     end
-end)
- 
-ESP:Toggle("透视NPC", "", false, function(state)
-    if state then
-        for _,v in next,workspace.Map.Lobby.NPCs:GetChildren() do
-            if v:IsA("Model") then
-                ESPNPCS(v.Name,v,Color3.new(0,0,1))
-            end
-        end
-        workspace.Map.Lobby.NPCs.ChildAdded:Connect(function(v)
-            if v:IsA("Model") and state then
-                ESPNPCS(v.Name,v,Color3.new(0,0,1))
-            end
-        end)
-    else
-        for _,v in pairs(workspace.NPCESPFloder:GetChildren()) do
-            v:Destroy()
-        end
-    end
-end)
+})
 
-ESP:Toggle("透视杀手", "", false, function(state)
-    if state then
-        for _,v in next,workspace.Players.Killers:GetChildren() do
-            if v:IsA("Model") then
-                ESPKiller(v.Name,v,Color3.new(255,0,255))
+-- 无限体力(1)
+Tab:AddToggle({
+    Name = "无限体力(1)",
+    Callback = function(state)
+        local sprintModule = require(game.ReplicatedStorage.Systems.Character.Game.Sprinting)
+        if state then
+            while state and wait() do
+                sprintModule.StaminaLossDisabled = true
             end
-        end
-        workspace.Players.Killers.ChildAdded:Connect(function(v)
-            if v:IsA("Model") and state then
-                ESPKiller(v.Name,v,Color3.new(255,0,255))
-            end
-        end)
-    else 
-        for _,v in pairs(workspace.KillerESPFloder:GetChildren()) do
-            v:Destroy()
+        else
+            sprintModule.StaminaLossDisabled = false
         end
     end
-end)
+})
 
-ESP:Toggle("透视幸存者", "", false, function(state)
-    if state then
-        for _,v in next,workspace.Players.Survivors:GetChildren() do
-            if v:IsA("Model") and v.Name ~= game.Players.LocalPlayer.Name then
-                ESPSurvivors(v.Name,v,Color3.new(0,1,0))
+-- 无限体力(2)
+Tab:AddToggle({
+    Name = "无限体力(2)",
+    Callback = function(state)
+        local sprintModule = require(game.ReplicatedStorage.Systems.Character.Game.Sprinting)
+        if state then
+            while state and wait() do
+                sprintModule.MinStamina = -100000
             end
-        end
-        workspace.Players.Survivors.ChildAdded:Connect(function(v)
-            if v:IsA("Model") and state then
-                ESPSurvivors(v.Name,v,Color3.new(0,0,1))
-            end
-        end)
-    else
-        for _,v in pairs(workspace.SurvivorsESPFloder:GetChildren()) do
-            v:Destroy()
+        else
+            sprintModule.MinStamina = 0
         end
     end
-end)
+})
 
-ESP:Toggle("透视工具", "", false, function(state)
-    if state then
-        for _,v in next,workspace.Map.Ingame:GetChildren() do
-            if v:IsA("Tool") then
-                ESPTool(v.Name,v,Color3.new(255,255,255))
+-- 自动点击1×1×1弹窗 (已修复)
+Tab:AddToggle({
+    Name = "自动点击1×1×1弹窗",
+    Callback = function(state)
+        if state then
+            while wait() and state do
+                for _, v in next, game.Players.LocalPlayer.PlayerGui.TemporaryUI:GetChildren() do
+                    if v.Name == "1x1x1x1Popup" then
+                        game.VirtualBallsManager:SendMouseButtonEvent(v.AbsolutePosition.X + (v.AbsoluteSize.X / 2), v.AbsolutePosition.Y + (v.AbsoluteSize.Y / 2), Enum.UserInputType.MouseButton1.Value, true, game.Players.PlayerGui, 1)
+                        game.VirtualBallsManager:SendMouseButtonEvent(v.AbsolutePosition.X + (v.AbsoluteSize.X / 2), v.AbsolutePosition.Y + (v.AbsoluteSize.Y / 2), Enum.UserInputType.MouseButton1.Value, false, game.Players.PlayerGui, 1)
+                    end
+                end
             end
-        end
-        workspace.Map.Ingame.ChildAdded:Connect(function(v)
-            if v:IsA("Tool") and state then
-                ESPTool(v.Name,v,Color3.new(255,255,255))
-            end
-        end)
-    else
-        for _,v in pairs(workspace.ToolESPFloder:GetChildren()) do
-            v:Destroy()
         end
     end
-end)
+})
+
+-- 透视发电机
+Tab:AddToggle({
+    Name = "透视发电机",
+    Callback = function(state)
+        if state then
+            for _,v in next,workspace.Map.Ingame.Map:GetChildren() do
+                if v.Name == "Generator" and v:IsA("Model") then
+                    if v.Progress.Value < 99 then
+                        ESPGenerator("发电机(未完成) 进度.."..v.Progress.Value,v,Color3.new(1,0,0))
+                    elseif v.Progress.Value == 100 then
+                        ESPGenerator("发电机(完成)",v,Color3.new(1,0,0))
+                    end
+                end
+            end
+            workspace.Map.Ingame.Map.ChildAdded:Connect(function(v)
+                if v.Name == "Generator" and v:IsA("Model") and state then
+                    if v.Progress.Value < 99 then
+                        ESPGenerator("发电机(未完成) 进度.."..v.Progress.Value,v,Color3.new(1,0,0))
+                    elseif v.Progress.Value == 100 then
+                        ESPGenerator("发电机(完成)",v,Color3.new(1,0,0))
+                    end
+                end
+            end)
+            while wait() and state do
+                for _,v in pairs(workspace.GeneratorESPFloder:GetChildren()) do
+                    for _,i in pairs(v:GetChildren()) do
+                        if v.Progress.Value < 99 then
+                            v.Text = "发电机(未完成) 进度.."..v.Progress.Value
+                        elseif v.Progress.Value == 100 then
+                            v.Text = "发电机(完成)"
+                        end
+                    end
+                end
+            end
+        else
+            for _,v in pairs(workspace.GeneratorESPFloder:GetChildren()) do
+                v:Destroy()
+            end
+        end
+    end
+})
+
+-- 透视NPC
+Tab:AddToggle({
+    Name = "透视NPC",
+    Callback = function(state)
+        if state then
+            for _,v in next,workspace.Map.Lobby.NPCs:GetChildren() do
+                if v:IsA("Model") then
+                    ESPNPCS(v.Name,v,Color3.new(0,0,1))
+                end
+            end
+            workspace.Map.Lobby.NPCs.ChildAdded:Connect(function(v)
+                if v:IsA("Model") and state then
+                    ESPNPCS(v.Name,v,Color3.new(0,0,1))
+                end
+            end)
+        else
+            for _,v in pairs(workspace.NPCESPFloder:GetChildren()) do
+                v:Destroy()
+            end
+        end
+    end
+})
+
+-- 透视杀手
+Tab:AddToggle({
+    Name = "透视杀手",
+    Callback = function(state)
+        if state then
+            for _,v in next,workspace.Players.Killers:GetChildren() do
+                if v:IsA("Model") then
+                    ESPKiller(v.Name,v,Color3.new(255,0,255))
+                end
+            end
+            workspace.Players.Killers.ChildAdded:Connect(function(v)
+                if v:IsA("Model") and state then
+                    ESPKiller(v.Name,v,Color3.new(255,0,255))
+                end
+            end)
+        else 
+            for _,v in pairs(workspace.KillerESPFloder:GetChildren()) do
+                v:Destroy()
+            end
+        end
+    end
+})
+
+-- 透视幸存者
+Tab:AddToggle({
+    Name = "透视幸存者",
+    Callback = function(state)
+        if state then
+            for _,v in next,workspace.Players.Survivors:GetChildren() do
+                if v:IsA("Model") and v.Name ~= game.Players.LocalPlayer.Name then
+                    ESPSurvivors(v.Name,v,Color3.new(0,1,0))
+                end
+            end
+            workspace.Players.Survivors.ChildAdded:Connect(function(v)
+                if v:IsA("Model") and state then
+                    ESPSurvivors(v.Name,v,Color3.new(0,0,1))
+                end
+            end)
+        else
+            for _,v in pairs(workspace.SurvivorsESPFloder:GetChildren()) do
+                v:Destroy()
+            end
+        end
+    end
+})
+
+-- 透视工具
+Tab:AddToggle({
+    Name = "透视工具",
+    Callback = function(state)
+        if state then
+            for _,v in next,workspace.Map.Ingame:GetChildren() do
+                if v:IsA("Tool") then
+                    ESPTool(v.Name,v,Color3.new(255,255,255))
+                end
+            end
+            workspace.Map.Ingame.ChildAdded:Connect(function(v)
+                if v:IsA("Tool") and state then
+                    ESPTool(v.Name,v,Color3.new(255,255,255))
+                end
+            end)
+        else
+            for _,v in pairs(workspace.ToolESPFloder:GetChildren()) do
+                v:Destroy()
+            end
+        end
+    end
+})
