@@ -780,7 +780,7 @@ local Tab2NightVisionToggle = Tab2Section:Toggle({
 })
 
 local Tab2Slider = Tab2Section:Slider({
-    Title = "范围",
+    Title = "范围［近战类］",
     Desc = "调整其他玩家的碰撞箱大小",
     Step = 1,
     Value = {
@@ -811,6 +811,42 @@ game:GetService('RunService').RenderStepped:connect(function()
     end
 end)
 
+local Tab2Slider = Tab2Section:Slider({
+    Title = "范围［射击］",
+    Desc = "调整其他玩家碰撞箱",
+    Step = 1,
+    Value = {
+        Min = 1,
+        Max = 100,
+        Default = 1
+    },
+    Callback = function(value)
+        _G.HeadSize = value
+        _G.Disabled = true
+        
+        -- 为了避免重复连接，先断开已有的RenderStepped连接
+        if _G.RenderSteppedConnection then
+            _G.RenderSteppedConnection:Disconnect()
+        end
+        
+        _G.RenderSteppedConnection = game:GetService('RunService').RenderStepped:Connect(function()
+            if _G.Disabled then
+                for i, v in next, game:GetService('Players'):GetPlayers() do
+                    if v.Name ~= game:GetService('Players').LocalPlayer.Name then
+                        pcall(function()
+                            v.Character.HumanoidRootPart.Size = Vector3.new(_G.HeadSize, _G.HeadSize, _G.HeadSize)
+                            v.Character.HumanoidRootPart.Transparency = 0.9
+                            v.Character.HumanoidRootPart.BrickColor = BrickColor.new("Really black")
+                            v.Character.HumanoidRootPart.Material = "Neon"
+                            v.Character.HumanoidRootPart.CanCollide = false
+                        end)
+                    end
+                end
+            end
+        end)
+    end
+})
+
 Tab2Section:Button({
     Title = "控制玩家",
     Icon = "refresh-cw",
@@ -819,7 +855,7 @@ Tab2Section:Button({
         loadstring(game:HttpGet("https://raw.githubusercontent.com/dingding123hhh/tt/main/%E6%AD%BB%E4%BA%A1%E7%AC%94%E8%AE%B0%20(1).txt"))()
         WindUI:Notify({
             Title = "控制玩家",
-            Content = "控制玩家已打开",
+            Content = "控制玩家已打开✅",
             Icon = "check-circle"
         })
     end
