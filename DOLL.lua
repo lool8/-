@@ -882,6 +882,12 @@ local Tab3 = MainWindow:Tab({
     Icon = "bolt"  -- 标签页图标
 })
 
+local Tab3Section = Tab1:Section({
+    Title = "通用所有",
+    TextSize = 18,
+    FontWeight = Enum.FontWeight.SemiBold
+})
+
 Tab3Section:Button({
     Title = "铁拳",
     Icon = "refresh-cw",
