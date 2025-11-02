@@ -779,7 +779,7 @@ local Tab2NightVisionToggle = Tab2Section:Toggle({
     end
 })
 
-local Tab1Slider = Tab1Section:Slider({
+local Tab2Slider = Tab2Section:Slider({
     Title = "范围",
     Desc = "调整其他玩家的碰撞箱大小",
     Step = 1,
@@ -916,7 +916,7 @@ Tab3Section:Button({
     Icon = "refresh-cw",
     Color = Color3.fromHex("3B82F6"), 
     Callback = function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/krlpl/dfhj/main/%E6%AD%BB%E4%BA%A1%E7%AC%94%E8%AE%B0.txt"))()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/xiaopi77/xiaopi77/main/1_1.txt_2024-08-08_153358.OTed.lua"))()
         WindUI:Notify({
             Title = "死亡笔记开启成功✅",
             Content = "掏出你的小本本写上TA的名字吧",
@@ -1108,6 +1108,174 @@ Tab3Section:Button({
         WindUI:Notify({
             Title = "键盘执行成功✅",
             Content = "你要当键盘侠了?",
+            Icon = "bolt"
+        })
+    end
+})
+
+Tab3Section:Button({
+    Title = "替身",
+    Icon = "refresh-cw",
+    Color = Color3.fromHex("3B82F6"), 
+    Callback = function()
+        loadstring(game:HttpGet(('https://raw.githubusercontent.com/SkrillexMe/SkrillexLoader/main/SkrillexLoadMain')))()
+        WindUI:Notify({
+            Title = "替身开启成功✅",
+            Content = "👾",
+            Icon = "bolt"
+        })
+    end
+})
+
+Tab3Section:Button({
+    Title = "反挂机",
+    Icon = "refresh-cw",
+    Color = Color3.fromHex("3B82F6"), 
+    Callback = function()
+        loadstring(game:HttpGet("https://pastebin.com/raw/9fFu43FF"))()
+        WindUI:Notify({
+            Title = "反挂机开启成功✅",
+            Content = "👾",
+            Icon = "bolt"
+        })
+    end
+})
+
+Tab3Section:Button({
+    Title = "阿尔宙斯自瞄",
+    Icon = "refresh-cw",
+    Color = Color3.fromHex("3B82F6"), 
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/AZYsGithub/chillz-workshop/main/Arceus%20Aimbot.lua"))()
+        WindUI:Notify({
+            Title = "阿尔宙斯自瞄✅开启成功",
+            Content = "小提示",
+            Icon = "bolt"
+        })
+    end
+})
+
+Tab3Section:Button({
+    Title = "光影V4",
+    Icon = "refresh-cw",
+    Color = Color3.fromHex("3B82F6"), 
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/MZEEN2424/Graphics/main/Graphics.xml"))()
+        WindUI:Notify({
+            Title = "光影V4开启成功✅",
+            Content = "👾",
+            Icon = "bolt"
+        })
+    end
+})
+
+Tab3Section:Button({
+    Title = "鼠标［手机不建议使用］",
+    Icon = "refresh-cw",
+    Color = Color3.fromHex("3B82F6"), 
+    Callback = function()
+        loadstring(game:HttpGet(('https://pastefy.ga/V75mqzaz/raw'),true))()
+        WindUI:Notify({
+            Title = "鼠标开启成功✅",
+            Content = "👾",
+            Icon = "bolt"
+        })
+    end
+})
+
+Tab3Section:Button({
+    Title = "传送玩家",
+    Icon = "refresh-cw",
+    Color = Color3.fromHex("3B82F6"), 
+    Callback = function()
+        loadstring(game:HttpGet(("https://pastebin.com/raw/YNVbeqPy")))()
+        WindUI:Notify({
+            Title = "传送玩家执行成功✅",
+            Content = "👾",
+            Icon = "bolt"
+        })
+    end
+})
+
+Tab3Section:Button({
+    Title = "变成蛇",
+    Icon = "refresh-cw",
+    Color = Color3.fromHex("3B82F6"), 
+    Callback = function()
+        loadstring(game:HttpGet(('https://pastefy.ga/tWBTcE4R/raw'),true))()
+        WindUI:Notify({
+            Title = "变成蛇执行成功✅",
+            Content = "👾",
+            Icon = "bolt"
+        })
+    end
+})
+
+Tab3Section:Button({
+    Title = "子弹追踪",
+    Icon = "refresh-cw",
+    Color = Color3.fromHex("3B82F6"), 
+    Callback = function()
+        loadstring(game:HttpGet("https://pastebin.com/raw/1AJ69eRG"))()
+        WindUI:Notify({
+            Title = "子弹追踪执行成功✅",
+            Content = "👾",
+            Icon = "bolt"
+        })
+    end
+})
+
+Tab3Section:Button({
+    Title = "伪名说话",
+    Icon = "refresh-cw",
+    Color = Color3.fromHex("3B82F6"), 
+    Callback = function()
+        loadstring(game:HttpGet(('https://pastefy.ga/zCFEwaYq/raw'),true))()
+        WindUI:Notify({
+            Title = "伪名说话开启成功✅",
+            Content = "👾",
+            Icon = "bolt"
+        })
+    end
+})
+
+Tab3Section:Button({
+    Title = "跟踪玩家",
+    Icon = "refresh-cw",
+    Color = Color3.fromHex("3B82F6"), 
+    Callback = function()
+        loadstring(game:HttpGet("https://pastebin.com/raw/F9PNLcXk"))()
+        WindUI:Notify({
+            Title = "跟踪玩家执行成功✅",
+            Content = "👾",
+            Icon = "bolt"
+        })
+    end
+})
+
+Tab3Section:Button({
+    Title = "吸人",
+    Icon = "refresh-cw",
+    Color = Color3.fromHex("3B82F6"), 
+    Callback = function()
+        loadstring(game:HttpGet('https://pastebin.com/raw/hQSBGsw2'))()
+        WindUI:Notify({
+            Title = "吸人开启成功✅",
+            Content = "👾",
+            Icon = "bolt"
+        })
+    end
+})
+
+Tab3Section:Button({
+    Title = "紫砂",
+    Icon = "refresh-cw",
+    Color = Color3.fromHex("3B82F6"), 
+    Callback = function()
+        game.Players.LocalPlayer.Character.Humanoid.Health=0
+        WindUI:Notify({
+            Title = "紫砂执行成功✅",
+            Content = "😵",
             Icon = "bolt"
         })
     end
