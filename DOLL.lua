@@ -1037,7 +1037,7 @@ Tab3Section:Button({
     Icon = "refresh-cw",
     Color = Color3.fromHex("3B82F6"), 
     Callback = function()
-        脚本
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/gclich/FPS-X-GUI/main/FPS_X.lua"))()
         WindUI:Notify({
             Title = "执行成功✅",
             Content = "👾",
