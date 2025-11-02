@@ -758,7 +758,7 @@ Tab2Section:Slider({
     end
 })
 
-local Tab2Toggle = Tab2Section:Toggle({
+local Tab2NightVisionToggle = Tab2Section:Toggle({
     Title = "夜视",
     Desc = "顾名思义",
     Default = false,
@@ -1096,7 +1096,8 @@ Tab3Section:Button({
     Icon = "refresh-cw",
     Color = Color3.fromHex("3B82F6"), 
     Callback = function()
-        脚本
+        -- 补充实际指令脚本链接（示例链接，可根据需求替换）
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
         WindUI:Notify({
             Title = "YI指令已执行✅",
             Content = "难道你要玩指令?",
