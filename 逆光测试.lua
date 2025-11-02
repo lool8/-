@@ -2636,12 +2636,23 @@ local Section = Tab:AddSection({
 	Name = "玩家手上抬45°其他玩家可以看见"
 })
 
+-- 角色动画修改
 Tab:AddToggle({
     Name = "角色动画修改",
     Callback = function(state)
+        -- 确保 _G 表中有 AnimMod 字段，用于存储全局状态
+        if not _G.AnimMod then
+            _G.AnimMod = {
+                isActive = false,
+                connections = {},
+                tracks = {}
+            }
+        end
+
         if state then
+            if _G.AnimMod.isActive then return end -- 防止重复激活
+            
             local Players     = game:GetService("Players")
-            local RunService  = game:GetService("RunService")
             local LocalPlayer = Players.LocalPlayer
             local firstAnimId  = "rbxassetid://77894750279891"
             local secondAnimId = "rbxassetid://98261071866527"
@@ -2662,14 +2673,21 @@ Tab:AddToggle({
                 local character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
                 local humanoid  = character:WaitForChild("Humanoid")
                 
+                -- 保存动画轨道引用，以便后续停止
                 local firstTrack  = loadAndPause(humanoid, firstAnimId, 0.3, Enum.AnimationPriority.Action)
                 local secondTrack = loadAndPause(humanoid, secondAnimId, secondPause, Enum.AnimationPriority.Core)
                 
-                humanoid.Running:Connect(function(speed)
+                table.insert(_G.AnimMod.tracks, firstTrack)
+                table.insert(_G.AnimMod.tracks, secondTrack)
+                
+                -- 保存连接引用
+                local runningConn = humanoid.Running:Connect(function(speed)
                     if speed == 0 then
                         task.wait(0.05)
                         if humanoid and humanoid.Parent then
-                            secondTrack = loadAndPause(humanoid, secondAnimId, secondPause, Enum.AnimationPriority.Core)
+                            local newSecondTrack = loadAndPause(humanoid, secondAnimId, secondPause, Enum.AnimationPriority.Core)
+                            table.insert(_G.AnimMod.tracks, newSecondTrack)
+                            secondTrack = newSecondTrack
                         end
                     else
                         if secondTrack and secondTrack.IsPlaying then
@@ -2677,19 +2695,34 @@ Tab:AddToggle({
                         end
                     end
                 end)
+                
+                table.insert(_G.AnimMod.connections, runningConn)
             end
+            
+            _G.AnimMod.isActive = true
         else
-            -- 停止所有自定义动画，恢复默认
-            local character = LocalPlayer.Character
-            if character then
-                local humanoid = character:FindFirstChildOfClass("Humanoid")
-                if humanoid then
-                    for _, track in ipairs(humanoid:GetPlayingAnimationTracks()) do
-                        
-                        track:Stop()
-                    end
+            if not _G.AnimMod.isActive then return end -- 防止重复关闭
+            
+            -- 停止所有自定义动画轨道
+            for _, track in ipairs(_G.AnimMod.tracks) do
+                if track and track.IsPlaying then
+                    track:Stop()
                 end
             end
+            
+            -- 断开所有连接
+            for _, conn in ipairs(_G.AnimMod.connections) do
+                if conn and conn.Connected then
+                    conn:Disconnect()
+                end
+            end
+            
+            -- 重置状态
+            _G.AnimMod = {
+                isActive = false,
+                connections = {},
+                tracks = {}
+            }
         end
     end
 })
@@ -2698,41 +2731,48 @@ Tab:AddToggle({
 Tab:AddToggle({
     Name = "Jason美化",
     Callback = function(state)
+        -- 确保 _G 表中有 JasonSkin 字段，用于存储全局状态
+        if not _G.JasonSkin then
+            _G.JasonSkin = {
+                originalAppearance = {
+                    bodyColors = {},
+                    shirtTemplate = "",
+                    pantsTemplate = "",
+                    removedAccessories = {},
+                    addedAccessories = {}
+                },
+                character = nil,
+                bodyColors = nil
+            }
+        end
+
         local player = game.Players.LocalPlayer  
         local character = player.Character or player.CharacterAdded:Wait()
+        _G.JasonSkin.character = character
 
-        -- 保存原始外观数据，以便关闭时恢复
-        local originalAppearance = {
-            bodyColors = {},
-            shirtTemplate = "",
-            pantsTemplate = "",
-            removedAccessories = {},
-            addedAccessories = {}
-        }
-
-        -- 备份原始身体颜色
         local bodyColors = character:FindFirstChild("Body Colors")
-        if bodyColors then
-            originalAppearance.bodyColors.HeadColor = bodyColors.HeadColor
-            originalAppearance.bodyColors.LeftArmColor = bodyColors.LeftArmColor
-            originalAppearance.bodyColors.RightArmColor = bodyColors.RightArmColor
-            originalAppearance.bodyColors.LeftLegColor = bodyColors.LeftLegColor
-            originalAppearance.bodyColors.RightLegColor = bodyColors.RightLegColor
-            originalAppearance.bodyColors.TorsoColor = bodyColors.TorsoColor
-        end
+        _G.JasonSkin.bodyColors = bodyColors
 
-        -- 备份原始服装
-        local shirt = character:FindFirstChildOfClass("Shirt")
-        if shirt then
-            originalAppearance.shirtTemplate = shirt.ShirtTemplate
-        end
-        local pants = character:FindFirstChildOfClass("Pants")
-        if pants then
-            originalAppearance.pantsTemplate = pants.PantsTemplate
-        end
+        if state then
+            -- 备份原始外观数据，以便关闭时恢复
+            if bodyColors then
+                _G.JasonSkin.originalAppearance.bodyColors.HeadColor = bodyColors.HeadColor
+                _G.JasonSkin.originalAppearance.bodyColors.LeftArmColor = bodyColors.LeftArmColor
+                _G.JasonSkin.originalAppearance.bodyColors.RightArmColor = bodyColors.RightArmColor
+                _G.JasonSkin.originalAppearance.bodyColors.LeftLegColor = bodyColors.LeftLegColor
+                _G.JasonSkin.originalAppearance.bodyColors.RightLegColor = bodyColors.RightLegColor
+                _G.JasonSkin.originalAppearance.bodyColors.TorsoColor = bodyColors.TorsoColor
+            end
 
-        -- 自定义外观函数
-        local function applyCustomAppearance()
+            local shirt = character:FindFirstChildOfClass("Shirt")
+            if shirt then
+                _G.JasonSkin.originalAppearance.shirtTemplate = shirt.ShirtTemplate
+            end
+            local pants = character:FindFirstChildOfClass("Pants")
+            if pants then
+                _G.JasonSkin.originalAppearance.pantsTemplate = pants.PantsTemplate
+            end
+
             -- 1. 全身变黑
             if bodyColors then
                 bodyColors.HeadColor = BrickColor.new("Really black")
@@ -2744,19 +2784,20 @@ Tab:AddToggle({
             end
 
             -- 2. 移除旧面具
+            _G.JasonSkin.originalAppearance.removedAccessories = {} -- 清空之前的备份
             for _, obj in pairs(character:GetDescendants()) do
                 if obj.Name == "Mask" then
-                    table.insert(originalAppearance.removedAccessories, obj:Clone())
+                    table.insert(_G.JasonSkin.originalAppearance.removedAccessories, obj:Clone())
                     obj:Destroy()
                 end
             end
 
             -- 3. 穿上新衣服
             local newShirt = character:FindFirstChildOfClass("Shirt") or Instance.new("Shirt", character)
-            newShirt.ShirtTemplate = "http://www.roblox.com/asset/?id=130919586308395"
+            newShirt.ShirtTemplate = "rbxassetid://130919586308395"
 
             local newPants = character:FindFirstChildOfClass("Pants") or Instance.new("Pants", character)
-            newPants.PantsTemplate = "http://www.roblox.com/asset/?id=83940216283729"
+            newPants.PantsTemplate = "rbxassetid://83940216283729"
 
             -- 4. 添加新配饰
             local function addAccessory(name, meshId, textureId, parentPartName, handleSize, position, rotation, customWeldC0, customWeldC1, meshScale, meshOffset)
@@ -2799,14 +2840,15 @@ Tab:AddToggle({
                 end
                 weld.Parent = handle
                 accessory.Parent = character
-                table.insert(originalAppearance.addedAccessories, accessory)
+                table.insert(_G.JasonSkin.originalAppearance.addedAccessories, accessory)
             end
 
+            _G.JasonSkin.originalAppearance.addedAccessories = {} -- 清空之前的添加记录
             addAccessory(
                 "Scarf", 
                 "rbxassetid://131343945015522", 
                 "rbxassetid://78916578261510", 
-                "Scarf", 
+                "Torso", -- 假设围巾应该挂在躯干上，而不是一个叫"Scarf"的部位
                 {1, 0.5, 1},
                 {0, 0, 0},
                 {0, 0, 0}
@@ -2821,50 +2863,51 @@ Tab:AddToggle({
                 {0, 0, 0},
                 {0, 260, 0}
             )
-        end
+        else
+            -- 恢复原始外观函数
+            local character = _G.JasonSkin.character
+            local bodyColors = _G.JasonSkin.bodyColors
+            local original = _G.JasonSkin.originalAppearance
 
-        -- 恢复原始外观函数
-        local function restoreOriginalAppearance()
-            -- 恢复身体颜色
-            if bodyColors and originalAppearance.bodyColors.HeadColor then
-                bodyColors.HeadColor = originalAppearance.bodyColors.HeadColor
-                bodyColors.LeftArmColor = originalAppearance.bodyColors.LeftArmColor
-                bodyColors.RightArmColor = originalAppearance.bodyColors.RightArmColor
-                bodyColors.LeftLegColor = originalAppearance.bodyColors.LeftLegColor
-                bodyColors.RightLegColor = originalAppearance.bodyColors.RightLegColor
-                bodyColors.TorsoColor = originalAppearance.bodyColors.TorsoColor
+            if not character then return end
+
+                        if bodyColors and original.bodyColors.HeadColor then
+                bodyColors.HeadColor = original.bodyColors.HeadColor
+                bodyColors.LeftArmColor = original.bodyColors.LeftArmColor
+                bodyColors.RightArmColor = original.bodyColors.RightArmColor
+                bodyColors.LeftLegColor = original.bodyColors.LeftLegColor
+                bodyColors.RightLegColor = original.bodyColors.RightLegColor
+                bodyColors.TorsoColor = original.bodyColors.TorsoColor
             end
 
             -- 恢复服装
             local shirt = character:FindFirstChildOfClass("Shirt")
-            if shirt and originalAppearance.shirtTemplate ~= "" then
-                shirt.ShirtTemplate = originalAppearance.shirtTemplate
+            if shirt and original.shirtTemplate ~= "" then
+                shirt.ShirtTemplate = original.shirtTemplate
             end
             local pants = character:FindFirstChildOfClass("Pants")
-            if pants and originalAppearance.pantsTemplate ~= "" then
-                pants.PantsTemplate = originalAppearance.pantsTemplate
+            if pants and original.pantsTemplate ~= "" then
+                pants.PantsTemplate = original.pantsTemplate
             end
 
             -- 移除添加的配饰
-            for _, accessory in ipairs(originalAppearance.addedAccessories) do
+            for _, accessory in ipairs(original.addedAccessories) do
                 if accessory and accessory.Parent then
                     accessory:Destroy()
                 end
             end
 
             -- 恢复移除的旧面具
-            for _, accessory in ipairs(originalAppearance.removedAccessories) do
+            for _, accessory in ipairs(original.removedAccessories) do
                 if accessory then
                     local newAccessory = accessory:Clone()
                     newAccessory.Parent = character
                 end
             end
-        end
 
-        if state then
-            applyCustomAppearance()
-        else
-            restoreOriginalAppearance()
+            -- 重置添加/移除的记录
+            _G.JasonSkin.originalAppearance.addedAccessories = {}
+            _G.JasonSkin.originalAppearance.removedAccessories = {}
         end
     end
 })
