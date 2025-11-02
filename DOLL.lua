@@ -898,7 +898,7 @@ Tab3Section:Button({
 
 
 
-Tab1Section:Button({
+Tab3Section:Button({
     Title = "甩人",
     Icon = "refresh-cw",
     Color = Color3.fromHex("3B82F6"), 
@@ -912,7 +912,7 @@ Tab1Section:Button({
     end
 })
 
-Tab1Section:Button({
+Tab3Section:Button({
     Title = "死亡笔记",
     Icon = "refresh-cw",
     Color = Color3.fromHex("3B82F6"), 
@@ -927,7 +927,7 @@ Tab1Section:Button({
 })
 
 
-Tab1Section:Button({
+Tab3Section:Button({
     Title = "上墙",
     Icon = "refresh-cw",
     Color = Color3.fromHex("3B82F6"), 
@@ -942,7 +942,7 @@ Tab1Section:Button({
 })
 
 
-Tab1Section:Button({
+Tab3Section:Button({
     Title = "飞车",
     Icon = "refresh-cw",
     Color = Color3.fromHex("3B82F6"), 
@@ -956,7 +956,7 @@ Tab1Section:Button({
     end
 })
 
-Tab1Section:Button({
+Tab3Section:Button({
     Title = "穿墙",
     Icon = "refresh-cw",
     Color = Color3.fromHex("3B82F6"), 
@@ -970,7 +970,7 @@ Tab1Section:Button({
     end
 })
 
-Tab1Section:Button({
+Tab3Section:Button({
     Title = "点击传送工具",
     Icon = "refresh-cw",
     Color = Color3.fromHex("3B82F6"), 
@@ -984,7 +984,7 @@ Tab1Section:Button({
     end
 })
 
-Tab1Section:Button({
+Tab3Section:Button({
     Title = "无敌",
     Icon = "refresh-cw",
     Color = Color3.fromHex("3B82F6"), 
@@ -998,7 +998,7 @@ Tab1Section:Button({
     end
 })
 
-Tab1Section:Button({
+Tab3Section:Button({
     Title = "隐身",
     Icon = "refresh-cw",
     Color = Color3.fromHex("3B82F6"), 
@@ -1012,7 +1012,7 @@ Tab1Section:Button({
     end
 })
 
-Tab1Section:Button({
+Tab3Section:Button({
     Title = "旋转",
     Icon = "refresh-cw",
     Color = Color3.fromHex("3B82F6"), 
@@ -1026,7 +1026,7 @@ Tab1Section:Button({
     end
 })
 
-Tab1Section:Button({
+Tab3Section:Button({
     Title = "fps显示",
     Icon = "refresh-cw",
     Color = Color3.fromHex("3B82F6"), 
@@ -1040,7 +1040,7 @@ Tab1Section:Button({
     end
 })
 
-Tab1Section:Button({
+Tab3Section:Button({
     Title = "动画中心",
     Icon = "refresh-cw",
     Color = Color3.fromHex("3B82F6"), 
@@ -1054,7 +1054,7 @@ Tab1Section:Button({
     end
 })
 
-Tab1Section:Button({
+Tab3Section:Button({
     Title = "义勇军进行曲",
     Icon = "refresh-cw",
     Color = Color3.fromHex("3B82F6"), 
@@ -1071,7 +1071,7 @@ Tab1Section:Button({
     end
 })
 
-Tab1Section:Button({
+Tab3Section:Button({
     Title = "工具",
     Icon = "refresh-cw",
     Color = Color3.fromHex("3B82F6"), 
@@ -1085,7 +1085,7 @@ Tab1Section:Button({
     end
 })
 
-Tab1Section:Button({
+Tab3Section:Button({
     Title = "YI指令",
     Icon = "refresh-cw",
     Color = Color3.fromHex("3B82F6"), 
@@ -1099,7 +1099,7 @@ Tab1Section:Button({
     end
 })
 
-Tab1Section:Button({
+Tab3Section:Button({
     Title = "键盘",
     Icon = "refresh-cw",
     Color = Color3.fromHex("3B82F6"), 
