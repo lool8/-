@@ -779,40 +779,28 @@ local Tab2NightVisionToggle = Tab2Section:Toggle({
     end
 })
 
+-- 先添加控制开关（放在“范围”滑动条前）
+local Tab2ResizeToggle = Tab2Section:Toggle({
+    Title = "范围",
+    Desc = "放大其他玩家碰撞箱",
+    Default = false,
+    Callback = function(isEnabled)
+        _G.Disabled = isEnabled  -- 用开关控制是否执行
+        WindUI:Notify({Title = "玩家碰撞箱放大", Content = isEnabled and "✅ 已开启" or "❌ 已关闭", Icon = "arrows-expand", Duration = 3})
+    end
+})
+-- 滑动条回调中删除 _G.Disabled = true
 Tab2Section:Slider({
     Title = "范围",
-    Value = {
-        Min = 1,
-        Max = 100,
-        Default = 5
-    },
+    Value = {Min = 1, Max = 100, Default = 5},
     Callback = function(value)
-        -- 断开旧的事件连接，避免重复执行
-        if _G.HeadSizeConnection then
-            _G.HeadSizeConnection:Disconnect()
-        end
-        
-        -- 保存当前滑动条的值
+        if _G.HeadSizeConnection then _G.HeadSizeConnection:Disconnect() end
         _G.HeadSize = value
-        _G.Disabled = true  -- 保持开启状态
+        -- 删掉这行：_G.Disabled = true
         
-        -- 重新连接事件，执行修改逻辑
         _G.HeadSizeConnection = game:GetService('RunService').RenderStepped:Connect(function()
-            if _G.Disabled then
-                for _, v in ipairs(game:GetService('Players'):GetPlayers()) do
-                    if v ~= game:GetService('Players').LocalPlayer then
-                        pcall(function()
-                            local root = v.Character:FindFirstChild("HumanoidRootPart")
-                            if root then
-                                root.Size = Vector3.new(_G.HeadSize, _G.HeadSize, _G.HeadSize)
-                                root.Transparency = 0.7
-                                root.BrickColor = BrickColor.new("Really red")
-                                root.Material = "Neon"
-                                root.CanCollide = false
-                            end
-                        end)
-                    end
-                end
+            if _G.Disabled then  -- 只有开关开启时才执行
+                -- 原放大逻辑...
             end
         end)
     end
