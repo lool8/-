@@ -668,7 +668,7 @@ Players.PlayerRemoving:Connect(function(plr)
     end
 end)
 
-local Tab2Toggle = Tab2Section:Toggle({
+local Tab2GodmodeToggle = Tab2Section:Toggle({
     Title = "上帝模式",
     Desc = "开启后角色无敌且不掉血",
     Default = false,  -- 默认关闭
@@ -690,7 +690,7 @@ local Tab2Toggle = Tab2Section:Toggle({
     end
 })
 
-local Tab2Toggle = Tab2Section:Toggle({
+local Tab2InfJumpToggle = Tab2Section:Toggle({
     Title = "无限跳",
     Desc = "开启后按跳跃键可持续跳跃",
     Default = false,  -- 默认关闭
@@ -722,7 +722,7 @@ local Tab2Toggle = Tab2Section:Toggle({
 
 
 -- 3.1.2 滑动条：移动速度调节
-local Tab2Slider = Tab2Section:Slider({
+local Tab2NightVisionSlider = Tab2Section:Slider({
     Title = "移动速度",
     Desc = "调节角色行走/奔跑速度",
     Step = 1,  -- 调节步长
