@@ -780,65 +780,37 @@ local Tab2NightVisionToggle = Tab2Section:Toggle({
 })
 
 local Tab2Slider = Tab2Section:Slider({
-    Title = "范围［近战类］",
-    Desc = "调整其他玩家的碰撞箱大小",
+    Title = "范围",
+    Desc = "调整其他玩家碰撞箱大小",
     Step = 1,
     Value = {
-        Min = 1,      -- 最小尺寸
-        Max = 100,     -- 最大尺寸
-        Default = 5  -- 初始尺寸
+        Min = 1,      -- 最小值
+        Max = 100,     -- 最大值
+        Default = 1   -- 初始值
     },
     Callback = function(value)
-        _G.HeadSize = value
-        _G.Disabled = false  -- 启用功能
-    end
-})
-
--- 循环执行功能的部分
-game:GetService('RunService').RenderStepped:connect(function()
-    if not _G.Disabled then  -- 检查功能是否启用
-        for i, v in next, game:GetService('Players'):GetPlayers() do
-            if v.Name ~= game:GetService('Players').LocalPlayer.Name then
-                pcall(function()
-                    v.Character.HumanoidRootPart.Size = Vector3.new(_G.HeadSize, _G.HeadSize, _G.HeadSize)
-                    v.Character.HumanoidRootPart.Transparency = 0.7
-                    v.Character.HumanoidRootPart.BrickColor = BrickColor.new("Really blue")
-                    v.Character.HumanoidRootPart.Material = "Neon"
-                    v.Character.HumanoidRootPart.CanCollide = false
-                end)
-            end
+        -- 断开旧的事件连接，避免重复执行
+        if _G.HeadSizeConnection then
+            _G.HeadSizeConnection:Disconnect()
         end
-    end
-end)
 
-local Tab2Slider = Tab2Section:Slider({
-    Title = "范围［射击］",
-    Desc = "调整其他玩家碰撞箱",
-    Step = 1,
-    Value = {
-        Min = 1,
-        Max = 100,
-        Default = 1
-    },
-    Callback = function(value)
         _G.HeadSize = value
-        _G.Disabled = true
-        
-        -- 为了避免重复连接，先断开已有的RenderStepped连接
-        if _G.RenderSteppedConnection then
-            _G.RenderSteppedConnection:Disconnect()
-        end
-        
-        _G.RenderSteppedConnection = game:GetService('RunService').RenderStepped:Connect(function()
+        _G.Disabled = true  -- 保持开启状态（可按需添加开关控制）
+
+        -- 重新连接事件，执行修改逻辑
+        _G.HeadSizeConnection = game:GetService('RunService').RenderStepped:Connect(function()
             if _G.Disabled then
-                for i, v in next, game:GetService('Players'):GetPlayers() do
-                    if v.Name ~= game:GetService('Players').LocalPlayer.Name then
+                for _, v in ipairs(game:GetService('Players'):GetPlayers()) do
+                    if v ~= game:GetService('Players').LocalPlayer then  -- 简化判断
                         pcall(function()
-                            v.Character.HumanoidRootPart.Size = Vector3.new(_G.HeadSize, _G.HeadSize, _G.HeadSize)
-                            v.Character.HumanoidRootPart.Transparency = 0.9
-                            v.Character.HumanoidRootPart.BrickColor = BrickColor.new("Really black")
-                            v.Character.HumanoidRootPart.Material = "Neon"
-                            v.Character.HumanoidRootPart.CanCollide = false
+                            local root = v.Character:FindFirstChild("HumanoidRootPart")
+                            if root then  -- 检查部件是否存在，避免错误
+                                root.Size = Vector3.new(_G.HeadSize, _G.HeadSize, _G.HeadSize)
+                                root.Transparency = 0.7
+                                root.BrickColor = BrickColor.new("Really red")
+                                root.Material = "Neon"
+                                root.CanCollide = false
+                            end
                         end)
                     end
                 end
