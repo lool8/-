@@ -52,7 +52,7 @@ CameraSection:Slider({
 CameraSection:Dropdown({
     Title = "视角模式",
     Values = {"第三人称", "第一人称", "自由视角"},  -- 可选选项
-    Value = "第三人称",  -- 默认选项
+    Value = "自由视角",  -- 默认选项
     Callback = function(selected)
         local camera = game.Workspace.CurrentCamera
         local humanoid = game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
@@ -77,7 +77,7 @@ local BasicTab = MainWindow:Tab({
 })
 
 local CameraSection = CameraTab:Section({
-    Title = "右边小分类"
+    Title = "主要的"
 })
 
 -- 防摔落
