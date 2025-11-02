@@ -1,3 +1,6 @@
+getgenv().Interstellar = getgenv().Interstellar or {}
+local Interstellar = getgenv().Interstellar
+
 local OrionLib = loadstring(game:HttpGet("https://pastebin.com/raw/VeaMSRZK"))()
 local LBLG = Instance.new("ScreenGui")
 local LBL = Instance.new("TextLabel")
@@ -39,8 +42,8 @@ local function HeartbeatUpdate()
 end
 Start = tick()
 Heartbeat:Connect(HeartbeatUpdate)
-local Window = OrionLib:MakeWindow({Name = "逆光脚本-极速传奇", HidePremium = false, SaveConfig = true,IntroText = "欢迎使用逆光脚本", ConfigFolder = "作者：3829174015"})
-game:GetService("StarterGui"):SetCore("SendNotification",{ Title = "逆光脚本-极速传奇"; Text ="欢迎使用逆光脚本"; Duration = 4; })
+local Window = OrionLib:MakeWindow({Name = "逆光脚本", HidePremium = false, SaveConfig = true,IntroText = "欢迎使用逆光脚本", ConfigFolder = "作者：逆光"})
+game:GetService("StarterGui"):SetCore("SendNotification",{ Title = "逆光脚本"; Text ="欢迎使用逆光脚本"; Duration = 4; })
 local Tab = Window:MakeTab({
     Name = "用户信息",
     Icon = "rbxassetid://4483345998",
@@ -849,95 +852,178 @@ Tab:AddButton({
     end
 })
 
-local Tab = Window:MakeTab({
-    Name = "主要功能",
-    Icon = "rbxassetid://4483345998",
-    PremiumOnly = false
-})
+Main:Toggle("自动修电机", "", false, function(state)
+   if state then
+        while state and wait() do
+            wait(6)
+            local FartNapFolder = workspace:FindFirstChild("Map") and workspace.Map:FindFirstChild("Ingame") and workspace.Map.Ingame:FindFirstChild("Map")
+            if FartNapFolder then
+				local closestGenerator, closestDistance = nil, math.huge
+				local playerPosition = game.Players.LocalPlayer.Character.HumanoidRootPart.Position
+				for _, g in ipairs(FartNapFolder:GetChildren()) do
+					if g.Name == "Generator" and g.Progress.Value < 100 then
+						local distance = (g.Main.Position - playerPosition).Magnitude
+						if distance < closestDistance then
+							closestDistance = distance
+							closestGenerator = g
+						end
+					end
+				end
+				if closestGenerator then
+					closestGenerator.Remotes.RE:FireServer()
+				end
+		    end
+        end
+    end
+end)
 
-local isRunning = false
-local loopConnection = nil
+Main:Toggle("无限体力", "", false, function(state)
+    if state then
+        while state and wait() do
+            local sprintModule = require(game.ReplicatedStorage.Systems.Character.Game.Sprinting)
+            sprintModule.StaminaLossDisabled = true
+        end
+    else
+        local sprintModule = require(game.ReplicatedStorage.Systems.Character.Game.Sprinting)
+        sprintModule.StaminaLossDisabled = false
+    end
+end)
 
-Tab:AddToggle({
-    Name = "自动收集所有颜色的球和钻石",
-    Callback = function(state)
-        -- state 是一个布尔值，true 表示开启，false 表示关闭
-        
-        if state then
-            -- 如果是开启状态，并且当前没有在运行
-            if not isRunning then
-                isRunning = true
-                -- 开始循环
-                loopConnection = task.spawn(function()
-                    while isRunning do
-                        -- 定义所有要收集的物品
-                        local orbsToCollect = {
-                            "Blue Orb",
-                            "Red Orb", 
-                            "Gem",
-                            "Orange Orb",
-                            "Yellow Orb"
-                        }
-                        
-                        -- 遍历所有物品并执行收集
-                        for _, orbName in ipairs(orbsToCollect) do
-                            -- 如果在循环过程中被关闭，就立即退出
-                            if not isRunning then break end
-                            
-                            local args = {
-                                "collectOrb",
-                                orbName,
-                                "City"
-                            }
-                            game:GetService("ReplicatedStorage"):WaitForChild("rEvents"):WaitForChild("orbEvent"):FireServer(unpack(args))
-                            
-                            -- 每个物品收集后等待 0.0 秒
-                            task.wait(0.0)
-                        end
-                        
-                        -- 一轮收集完毕后，等待 1 秒再开始下一轮
-                        task.wait(1)
+Main:Toggle("无限体力", "", false, function(state)
+    if state then
+        while state and wait() do
+            local sprintModule = require(game.ReplicatedStorage.Systems.Character.Game.Sprinting)
+            sprintModule.MinStamina = -100000
+        end
+    else
+        local sprintModule = require(game.ReplicatedStorage.Systems.Character.Game.Sprinting)
+        sprintModule.MinStamina = 0
+    end
+end)
+
+Main:Toggle("自动点击1×1×1弹窗", "", false, function(state)
+    if state then
+        while wait() and state do
+            for _, i in next,game.Players.LocalPlayer.PlayerGui.TemporaryUI:GetChildren() do
+                if v.Name == "1x1x1x1Popup" then
+                    game.VirtualBallsManager:SendMouseButtonEvent(v.AbsolutePosition.X + (v.AbsoluteSize.X / 2), v.AbsolutePosition.Y + (v.AbsoluteSize.Y / 2), Enum.UserInputType.MouseButton1.Value, true, game.Players.PlayerGui, 1)
+                    game.VirtualBallsManager:SendMouseButtonEvent(v.AbsolutePosition.X + (v.AbsoluteSize.X / 2), v.AbsolutePosition.Y + (v.AbsoluteSize.Y / 2), Enum.UserInputType.MouseButton1.Value, false, game.Players.PlayerGui, 1)
+                end
+            end
+        end
+    end
+end)
+
+ESP:Toggle("透视发电机", "", false, function(state)
+    if state then
+        for _,v in next,workspace.Map.Ingame.Map:GetChildren() do
+            if v.Name == "Generator" and v:IsA("Model") then
+                if v.Progress.Value < 99 then
+                    ESPGenerator("发电机(未完成) 进度.."..v.Progress.Value,v,Color3.new(1,0,0))
+                elseif v.Progress.Value == 100 then
+                    ESPGenerator("发电机(完成)",v,Color3.new(1,0,0))
+                end
+            end
+        end
+        workspace.Map.Ingame.Map.ChildAdded:Connect(function(v)
+            if v.Name == "Generator" and v:IsA("Model") and state then
+                if v.Progress.Value < 99 then
+                    ESPGenerator("发电机(未完成) 进度.."..v.Progress.Value,v,Color3.new(1,0,0))
+                elseif v.Progress.Value == 100 then
+                    ESPGenerator("发电机(完成)",v,Color3.new(1,0,0))
+                end
+            end
+        end)
+        while wait() and state do
+            for _,v in pairs(workspace.GeneratorESPFloder:GetChildren()) do
+                for _,i in pairs(v:GetChildren()) do
+                    if v.Progress.Value < 99 then
+                        v.Text = "发电机(未完成) 进度.."..v.Progress.Value
+                        elseif v.Progress.Value == 100 then
+                        v.Text = "发电机(完成)"
                     end
-                end)
-            end
-        else
-            -- 如果是关闭状态
-            isRunning = false
-            -- 如果有循环在运行，就停止它
-            if loopConnection then
-                task.cancel(loopConnection)
-                loopConnection = nil
+                end
             end
         end
-    end
-})
-
-Tab:AddButton({
-    Name = "解锁所有通行证",
-    Callback = function()
-        for i, v in ipairs(game:GetService("ReplicatedStorage").gamepassIds:GetChildren()) do
-            v.Parent = game.Players.LocalPlayer.ownedGamepasses
+    else
+        for _,v in pairs(workspace.GeneratorESPFloder:GetChildren()) do
+            v:Destroy()
         end
     end
-})
-
-Tab:AddButton({
-    Name ="快速刷升级［别人的 仅供参考］",
-    Callback = function()
-    loadstring(game:HttpGet("https://pastebin.com/raw/T9wTL150"))()
+end)
+ 
+ESP:Toggle("透视NPC", "", false, function(state)
+    if state then
+        for _,v in next,workspace.Map.Lobby.NPCs:GetChildren() do
+            if v:IsA("Model") then
+                ESPNPCS(v.Name,v,Color3.new(0,0,1))
+            end
+        end
+        workspace.Map.Lobby.NPCs.ChildAdded:Connect(function(v)
+            if v:IsA("Model") and state then
+                ESPNPCS(v.Name,v,Color3.new(0,0,1))
+            end
+        end)
+    else
+        for _,v in pairs(workspace.NPCESPFloder:GetChildren()) do
+            v:Destroy()
+        end
     end
-})
+end)
 
-local Section = Tab:AddSection({
-	Name = "待更新...."
-})
+ESP:Toggle("透视杀手", "", false, function(state)
+    if state then
+        for _,v in next,workspace.Players.Killers:GetChildren() do
+            if v:IsA("Model") then
+                ESPKiller(v.Name,v,Color3.new(255,0,255))
+            end
+        end
+        workspace.Players.Killers.ChildAdded:Connect(function(v)
+            if v:IsA("Model") and state then
+                ESPKiller(v.Name,v,Color3.new(255,0,255))
+            end
+        end)
+    else 
+        for _,v in pairs(workspace.KillerESPFloder:GetChildren()) do
+            v:Destroy()
+        end
+    end
+end)
 
-local Tab = Window:MakeTab({
-    Name = "传送功能",
-    Icon = "rbxassetid://4483345998",
-    PremiumOnly = false
-})
+ESP:Toggle("透视幸存者", "", false, function(state)
+    if state then
+        for _,v in next,workspace.Players.Survivors:GetChildren() do
+            if v:IsA("Model") and v.Name ~= game.Players.LocalPlayer.Name then
+                ESPSurvivors(v.Name,v,Color3.new(0,1,0))
+            end
+        end
+        workspace.Players.Survivors.ChildAdded:Connect(function(v)
+            if v:IsA("Model") and state then
+                ESPSurvivors(v.Name,v,Color3.new(0,0,1))
+            end
+        end)
+    else
+        for _,v in pairs(workspace.SurvivorsESPFloder:GetChildren()) do
+            v:Destroy()
+        end
+    end
+end)
 
-local Section = Tab:AddSection({
-	Name = "待更新..."
-})
+ESP:Toggle("透视工具", "", false, function(state)
+    if state then
+        for _,v in next,workspace.Map.Ingame:GetChildren() do
+            if v:IsA("Tool") then
+                ESPTool(v.Name,v,Color3.new(255,255,255))
+            end
+        end
+        workspace.Map.Ingame.ChildAdded:Connect(function(v)
+            if v:IsA("Tool") and state then
+                ESPTool(v.Name,v,Color3.new(255,255,255))
+            end
+        end)
+    else
+        for _,v in pairs(workspace.ToolESPFloder:GetChildren()) do
+            v:Destroy()
+        end
+    end
+end)
