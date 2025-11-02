@@ -690,26 +690,36 @@ local Tab2Toggle = Tab2Section:Toggle({
     end
 })
 
-local Tab2Toggle = Tab2Section:Toggle({
+local Tab1Toggle = Tab1Section:Toggle({
     Title = "无限跳",
-    Desc = "开启后按住跳跃键可以一直跳",
-    Default = false,
+    Desc = "开启后按跳跃键可持续跳跃",
+    Default = false,  -- 默认关闭
     Callback = function(isEnabled)
-        -- 保存状态到全局变量
-        getgenv().InfJ = isEnabled
+        -- 先断开旧连接，避免重复绑定导致多次跳跃
+        if _G.JumpConnection then
+            _G.JumpConnection:Disconnect()
+        end
         
-        -- 这里不需要再连接事件，因为原代码的逻辑是监听系统的跳跃请求
-        -- 当InfJ为true时，会在每次跳跃请求时执行一次跳跃动作
+        -- 开启时绑定跳跃请求事件
+        if isEnabled then
+            _G.JumpConnection = game.UserInputService.JumpRequest:Connect(function()
+                local humanoid = game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+                if humanoid then
+                    humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                end
+            end)
+        end
         
-        -- 发送通知提示
+        -- 发送状态通知
         WindUI:Notify({
             Title = "无限跳",
             Content = isEnabled and "✅ 已开启" or "❌ 已关闭",
             Icon = "feather",
             Duration = 3
         })
-    end
+    end 
 })
+
 
 -- 3.1.2 滑动条：移动速度调节
 local Tab2Slider = Tab2Section:Slider({
@@ -867,13 +877,9 @@ Tab2Section:Button({
     end
 })
 
-local Tab3Tab = MainWindow:Tab({
+local Tab3 = MainWindow:Tab({
     Title = "通用",
     Icon = "bolt"  -- 标签页图标
-})
-
-local Tab3Section = Tab3:Section({
-    Title = "通用所有"
 })
 
 Tab3Section:Button({
