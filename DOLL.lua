@@ -779,32 +779,37 @@ local Tab2NightVisionToggle = Tab2Section:Toggle({
     end
 })
 
--- 先添加控制开关（放在“范围”滑动条前）
-local Tab2ResizeToggle = Tab2Section:Toggle({
+local Tab1Slider = Tab1Section:Slider({
     Title = "范围",
-    Desc = "放大其他玩家碰撞箱",
-    Default = false,
-    Callback = function(isEnabled)
-        _G.Disabled = isEnabled  -- 用开关控制是否执行
-        WindUI:Notify({Title = "玩家碰撞箱放大", Content = isEnabled and "✅ 已开启" or "❌ 已关闭", Icon = "arrows-expand", Duration = 3})
-    end
-})
--- 滑动条回调中删除 _G.Disabled = true
-Tab2Section:Slider({
-    Title = "范围",
-    Value = {Min = 1, Max = 100, Default = 5},
+    Desc = "调整其他玩家的碰撞箱大小",
+    Step = 1,
+    Value = {
+        Min = 1,      -- 最小尺寸
+        Max = 100,     -- 最大尺寸
+        Default = 5  -- 初始尺寸
+    },
     Callback = function(value)
-        if _G.HeadSizeConnection then _G.HeadSizeConnection:Disconnect() end
         _G.HeadSize = value
-        -- 删掉这行：_G.Disabled = true
-        
-        _G.HeadSizeConnection = game:GetService('RunService').RenderStepped:Connect(function()
-            if _G.Disabled then  -- 只有开关开启时才执行
-                -- 原放大逻辑...
-            end
-        end)
+        _G.Disabled = false  -- 启用功能
     end
 })
+
+-- 循环执行功能的部分
+game:GetService('RunService').RenderStepped:connect(function()
+    if not _G.Disabled then  -- 检查功能是否启用
+        for i, v in next, game:GetService('Players'):GetPlayers() do
+            if v.Name ~= game:GetService('Players').LocalPlayer.Name then
+                pcall(function()
+                    v.Character.HumanoidRootPart.Size = Vector3.new(_G.HeadSize, _G.HeadSize, _G.HeadSize)
+                    v.Character.HumanoidRootPart.Transparency = 0.7
+                    v.Character.HumanoidRootPart.BrickColor = BrickColor.new("Really blue")
+                    v.Character.HumanoidRootPart.Material = "Neon"
+                    v.Character.HumanoidRootPart.CanCollide = false
+                end)
+            end
+        end
+    end
+end)
 
 Tab2Section:Button({
     Title = "控制玩家",
