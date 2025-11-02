@@ -690,7 +690,7 @@ local Tab2Toggle = Tab2Section:Toggle({
     end
 })
 
-local Tab1Toggle = Tab1Section:Toggle({
+local Tab2Toggle = Tab2Section:Toggle({
     Title = "无限跳",
     Desc = "开启后按跳跃键可持续跳跃",
     Default = false,  -- 默认关闭
@@ -884,219 +884,232 @@ local Tab3 = MainWindow:Tab({
 
 Tab3Section:Button({
     Title = "铁拳",
-    Icon = "fist-raised",
-    Color = Color3.fromHex("EF4444"),
+    Icon = "refresh-cw",
+    Color = Color3.fromHex("3B82F6"), 
     Callback = function()
         loadstring(game:HttpGet('https://raw.githubusercontent.com/0Ben1/fe/main/obf_rf6iQURzu1fqrytcnLBAvW34C9N55kS9g9G3CKz086rC47M6632sEd4ZZYB0AYgV.lua.txt'))()
-        WindUI:Notify({ Title = "铁拳", Content = "✅ 已执行", Icon = "check-circle" })
+        WindUI:Notify({
+            Title = "铁拳开启成功✅",
+            Content = "开始你的甩飞之旅吧",
+            Icon = "bolt"
+        })
     end
 })
 
-Tab3Section:Button({
+
+
+Tab1Section:Button({
     Title = "甩人",
-    Icon = "arrows-rotate",
-    Color = Color3.fromHex("F59E0B"),
+    Icon = "refresh-cw",
+    Color = Color3.fromHex("3B82F6"), 
     Callback = function()
         loadstring(game:HttpGet("https://pastebin.com/raw/zqyDSUWX"))()
-        WindUI:Notify({ Title = "甩人", Content = "✅ 已执行", Icon = "check-circle" })
+        WindUI:Notify({
+            Title = "甩人开启成功✅",
+            Content = "甩飞全图吧👍👍",
+            Icon = "bolt"
+        })
     end
 })
 
-Tab3Section:Button({
+Tab1Section:Button({
     Title = "死亡笔记",
-    Icon = "book-dead",
-    Color = Color3.fromHex("7C3AED"),
+    Icon = "refresh-cw",
+    Color = Color3.fromHex("3B82F6"), 
     Callback = function()
         loadstring(game:HttpGet("https://raw.githubusercontent.com/krlpl/dfhj/main/%E6%AD%BB%E4%BA%A1%E7%AC%94%E8%AE%B0.txt"))()
-        WindUI:Notify({ Title = "死亡笔记", Content = "✅ 已执行", Icon = "check-circle" })
+        WindUI:Notify({
+            Title = "死亡笔记开启成功✅",
+            Content = "掏出你的小本本写上TA的名字吧",
+            Icon = "bolt"
+        })
     end
 })
 
--- 移动相关
-Tab3Section:Button({
+
+Tab1Section:Button({
     Title = "上墙",
-    Icon = "arrow-up-right-dots",
-    Color = Color3.fromHex("8B5CF6"),
+    Icon = "refresh-cw",
+    Color = Color3.fromHex("3B82F6"), 
     Callback = function()
         loadstring(game:HttpGet("https://pastebin.com/raw/zXk4Rq2r"))()
-        WindUI:Notify({ Title = "上墙", Content = "✅ 已执行", Icon = "check-circle" })
+        WindUI:Notify({
+            Title = "上墙开启成功✅",
+            Content = "开始你的阴暗爬行吧",
+            Icon = "bolt"
+        })
     end
 })
 
-Tab3Section:Button({
+
+Tab1Section:Button({
     Title = "飞车",
-    Icon = "car-side",
-    Color = Color3.fromHex("F43F5E"),
+    Icon = "refresh-cw",
+    Color = Color3.fromHex("3B82F6"), 
     Callback = function()
         loadstring(game:HttpGet("https://pastebin.com/raw/63T0fkBm"))()
-        WindUI:Notify({ Title = "飞车", Content = "✅ 已执行", Icon = "check-circle" })
+        WindUI:Notify({
+            Title = "开启成功✅",
+            Content = "这个可以带飞载具",
+            Icon = "bolt"
+        })
     end
 })
 
-Tab3Section:Button({
+Tab1Section:Button({
     Title = "穿墙",
-    Icon = "window-maximize",
-    Color = Color3.fromHex("EC4899"),
+    Icon = "refresh-cw",
+    Color = Color3.fromHex("3B82F6"), 
     Callback = function()
         loadstring(game:HttpGet("https://raw.githubusercontent.com/TtmScripter/OtherScript/main/Noclip"))()
-        WindUI:Notify({ Title = "穿墙", Content = "✅ 已执行", Icon = "check-circle" })
+        WindUI:Notify({
+            Title = "穿墙开启成功✅",
+            Content = "疑似能穿地🤔",
+            Icon = "bolt"
+        })
     end
 })
 
-Tab3Section:Button({
+Tab1Section:Button({
     Title = "点击传送工具",
-    Icon = "map-location-dot",
-    Color = Color3.fromHex("06B6D4"),
+    Icon = "refresh-cw",
+    Color = Color3.fromHex("3B82F6"), 
     Callback = function()
         mouse = game.Players.LocalPlayer:GetMouse() tool = Instance.new("Tool") tool.RequiresHandle = false tool.Name = "[FE] TELEPORT TOOL" tool.Activated:connect(function() local pos = mouse.Hit+Vector3.new(0,2.5,0) pos = CFrame.new(pos.X,pos.Y,pos.Z) game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = pos end) tool.Parent = game.Players.LocalPlayer.Backpack
-        WindUI:Notify({ Title = "点击传送工具", Content = "✅ 已添加到背包", Icon = "check-circle" })
+        WindUI:Notify({
+            Title = "点击传送工具已放入背包✅",
+            Content = "装备后点击一个地方能传送",
+            Icon = "bolt"
+        })
     end
 })
 
--- 角色状态
-Tab3Section:Button({
+Tab1Section:Button({
     Title = "无敌",
-    Icon = "shield-halved",
-    Color = Color3.fromHex("10B981"),
+    Icon = "refresh-cw",
+    Color = Color3.fromHex("3B82F6"), 
     Callback = function()
         loadstring(game:HttpGet('https://pastebin.com/raw/H3RLCWWZ'))()
-        WindUI:Notify({ Title = "无敌", Content = "✅ 已执行", Icon = "check-circle" })
+        WindUI:Notify({
+            Title = "执行成功✅",
+            Content = "🤡🤡🤡🤡🤡",
+            Icon = "bolt"
+        })
     end
 })
 
-Tab3Section:Button({
+Tab1Section:Button({
     Title = "隐身",
-    Icon = "eye-slash",
-    Color = Color3.fromHex("6B7280"),
+    Icon = "refresh-cw",
+    Color = Color3.fromHex("3B82F6"), 
     Callback = function()
         loadstring(game:HttpGet('https://pastebin.com/raw/nwGEvkez'))()
-        WindUI:Notify({ Title = "隐身", Content = "✅ 已执行", Icon = "check-circle" })
+        WindUI:Notify({
+            Title = "隐身执行成功",
+            Content = "🤡🤡🤡🤡",
+            Icon = "bolt"
+        })
     end
 })
 
-Tab3Section:Button({
+Tab1Section:Button({
     Title = "旋转",
-    Icon = "sync-alt",
-    Color = Color3.fromHex("FBBF24"),
+    Icon = "refresh-cw",
+    Color = Color3.fromHex("3B82F6"), 
     Callback = function()
         loadstring(game:HttpGet('https://pastebin.com/raw/r97d7dS0', true))()
-        WindUI:Notify({ Title = "旋转", Content = "✅ 已执行", Icon = "check-circle" })
+        WindUI:Notify({
+            Title = "旋转执行成功✅",
+            Content = "好像转的有点小慢",
+            Icon = "bolt"
+        })
     end
 })
 
--- 视觉相关
-Tab3Section:Button({
-    Title = "透视",
-    Icon = "eye",
-    Color = Color3.fromHex("3B82F6"),
-    Callback = function()
-        loadstring(game:HttpGet('https://raw.githubusercontent.com/Lucasfin000/SpaceHub/main/UESP'))()
-        WindUI:Notify({ Title = "透视", Content = "✅ 已执行", Icon = "check-circle" })
-    end
-})
-
-Tab3Section:Button({
+Tab1Section:Button({
     Title = "fps显示",
-    Icon = "tachometer-alt",
-    Color = Color3.fromHex("14B8A6"),
+    Icon = "refresh-cw",
+    Color = Color3.fromHex("3B82F6"), 
     Callback = function()
-        loadstring(game:HttpGet('https://raw.githubusercontent.com/1201for/littlegui/main/FPS-Counter'))()
-        WindUI:Notify({ Title = "fps显示", Content = "✅ 已执行", Icon = "check-circle" })
+        脚本
+        WindUI:Notify({
+            Title = "执行成功✅",
+            Content = "👾",
+            Icon = "bolt"
+        })
     end
 })
 
--- 娱乐与动画
-Tab3Section:Button({
+Tab1Section:Button({
     Title = "动画中心",
-    Icon = "film",
-    Color = Color3.fromHex("84CC16"),
+    Icon = "refresh-cw",
+    Color = Color3.fromHex("3B82F6"), 
     Callback = function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/GamingScripter/Animation-Hub/main/Animation%20Gui", true))()
-        WindUI:Notify({ Title = "动画中心", Content = "✅ 已执行", Icon = "check-circle" })
+        脚本
+        WindUI:Notify({
+            Title = "动画中心执行成功✅",
+            Content = "动画美化包🤔",
+            Icon = "bolt"
+        })
     end
 })
 
-Tab3Section:Button({
-    Title = "撸管r15",
-    Icon = "user",
-    Color = Color3.fromHex("A855F7"),
-    Callback = function()
-        loadstring(game:HttpGet("https://pastefy.app/YZoglOyJ/raw"))()
-        WindUI:Notify({ Title = "撸管r15", Content = "✅ 已执行", Icon = "check-circle" })
-    end
-})
-
-Tab3Section:Button({
-    Title = "撸管r6",
-    Icon = "user",
-    Color = Color3.fromHex("D946EF"),
-    Callback = function()
-        loadstring(game:HttpGet("https://pastefy.app/wa3v2Vgm/raw"))()
-        WindUI:Notify({ Title = "撸管r6", Content = "✅ 已执行", Icon = "check-circle" })
-    end
-})
-
-Tab3Section:Button({
-    Title = "艹人",
-    Icon = "users",
-    Color = Color3.fromHex("DB2777"),
-    Callback = function()
-        loadstring(game:HttpGet("https://pastebin.com/raw/bzmhRgKL"))();
-        WindUI:Notify({ Title = "艹人", Content = "✅ 已执行", Icon = "check-circle" })
-    end
-})
-
-Tab3Section:Button({
+Tab1Section:Button({
     Title = "义勇军进行曲",
-    Icon = "music",
-    Color = Color3.fromHex("DC2626"),
+    Icon = "refresh-cw",
+    Color = Color3.fromHex("3B82F6"), 
     Callback = function()
         local sound = Instance.new("Sound")
         sound.SoundId = "rbxassetid://1845918434"
         sound.Parent = game.Workspace
         sound:Play()
-        WindUI:Notify({ Title = "义勇军进行曲", Content = "🎵 正在播放", Icon = "music" })
+        WindUI:Notify({
+            Title = "正在播放义勇军进行曲✅",
+            Content = "🇨🇳🇨🇳🇨🇳🇨🇳🇨🇳🇨🇳",
+            Icon = "bolt"
+        })
     end
 })
 
--- 工具与系统
-Tab3Section:Button({
+Tab1Section:Button({
     Title = "工具",
-    Icon = "wrench",
-    Color = Color3.fromHex("6366F1"),
+    Icon = "refresh-cw",
+    Color = Color3.fromHex("3B82F6"), 
     Callback = function()
         loadstring(game:HttpGet("https://raw.githubusercontent.com/Bebo-Mods/BeboScripts/main/StandAwekening.lua"))()
-        WindUI:Notify({ Title = "工具", Content = "✅ 已执行", Icon = "check-circle" })
+        WindUI:Notify({
+            Title = "工具执行成功✅",
+            Content = "难道要开始破坏了🤔",
+            Icon = "bolt"
+        })
     end
 })
 
-Tab3Section:Button({
-    Title = "指令",
-    Icon = "terminal",
-    Color = Color3.fromHex("2563EB"),
+Tab1Section:Button({
+    Title = "YI指令",
+    Icon = "refresh-cw",
+    Color = Color3.fromHex("3B82F6"), 
     Callback = function()
-        loadstring(game:HttpGet(('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'),true))()
-        WindUI:Notify({ Title = "指令", Content = "✅ 已执行", Icon = "check-circle" })
+        脚本
+        WindUI:Notify({
+            Title = "YI指令已执行✅",
+            Content = "难道你要玩指令?",
+            Icon = "bolt"
+        })
     end
 })
 
-Tab3Section:Button({
+Tab1Section:Button({
     Title = "键盘",
-    Icon = "keyboard",
-    Color = Color3.fromHex("4F46E5"),
+    Icon = "refresh-cw",
+    Color = Color3.fromHex("3B82F6"), 
     Callback = function()
         loadstring(game:HttpGet("https://raw.githubusercontent.com/advxzivhsjjdhxhsidifvsh/mobkeyboard/main/main.txt", true))()
-        WindUI:Notify({ Title = "键盘", Content = "✅ 已执行", Icon = "check-circle" })
-    end
-})
-
-Tab3Section:Button({
-    Title = "玩家提示",
-    Icon = "info-circle",
-    Color = Color3.fromHex("0EA5E9"),
-    Callback = function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/boyscp/scriscriptsc/main/bbn.lua"))()
-        WindUI:Notify({ Title = "玩家提示", Content = "✅ 已执行", Icon = "check-circle" })
+        WindUI:Notify({
+            Title = "键盘执行成功✅",
+            Content = "你要当键盘侠了?",
+            Icon = "bolt"
+        })
     end
 })
 
