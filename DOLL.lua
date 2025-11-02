@@ -28,7 +28,7 @@ local Tab1 = MainWindow:Tab({
 })
 
 -- 4.1 视角控制分组
-local CameraSection = Tab1:Section({
+local Tab1Section = Tab1:Section({
     Title = "视角参数"
 })
 
@@ -76,7 +76,7 @@ local Tab2 = MainWindow:Tab({
     Icon = "bolt"  -- 标签页图标
 })
 
-local CameraSection = Tab2:Section({
+local Tab2Section = Tab2:Section({
     Title = "主要的"
 })
 
@@ -590,7 +590,7 @@ end)
     end
 })
 
-local PlayerESP = Tab2Section:Toggle({
+local Tab2ESP = Tab2Section:Toggle({
     Title = "玩家透视",
     Desc = "高亮显示所有玩家，便于观察",
     Default = false,
@@ -668,7 +668,7 @@ Players.PlayerRemoving:Connect(function(plr)
     end
 end)
 
-local GodmodeToggle = Tab2Section:Toggle({
+local Tab2Toggle = Tab2Section:Toggle({
     Title = "上帝模式",
     Desc = "开启后角色无敌且不掉血",
     Default = false,  -- 默认关闭
@@ -690,7 +690,7 @@ local GodmodeToggle = Tab2Section:Toggle({
     end
 })
 
-local InfJumpToggle = Tab2Section:Toggle({
+local Tab2Toggle = Tab2Section:Toggle({
     Title = "无限跳",
     Desc = "开启后按住跳跃键可以一直跳",
     Default = false,
@@ -712,7 +712,7 @@ local InfJumpToggle = Tab2Section:Toggle({
 })
 
 -- 3.1.2 滑动条：移动速度调节
-local SpeedSlider = Tab2Section:Slider({
+local Tab2Slider = Tab2Section:Slider({
     Title = "移动速度",
     Desc = "调节角色行走/奔跑速度",
     Step = 1,  -- 调节步长
@@ -731,7 +731,7 @@ local SpeedSlider = Tab2Section:Slider({
     end
 })
 
-CameraSection:Slider({
+Tab2Section:Slider({
     Title = "跳跃高度",
     Value = {
         Min = 1,
@@ -748,7 +748,7 @@ CameraSection:Slider({
     end
 })
 
-local NightVisionToggle = Tab2Section:Toggle({
+local Tab2Toggle = Tab2Section:Toggle({
     Title = "夜视",
     Desc = "顾名思义",
     Default = false,
@@ -769,7 +769,7 @@ local NightVisionToggle = Tab2Section:Toggle({
     end
 })
 
-CameraSection:Slider({
+Tab2Section:Slider({
     Title = "范围",
     Value = {
         Min = 1,
@@ -872,7 +872,7 @@ local Tab3Tab = MainWindow:Tab({
     Icon = "bolt"  -- 标签页图标
 })
 
-local CameraSection = CameraTab:Section({
+local Tab3Section = Tab3:Section({
     Title = "通用所有"
 })
 
