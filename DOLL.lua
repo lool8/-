@@ -22,18 +22,18 @@ local MainWindow = WindUI:CreateWindow({
 })
 
 -- 4. 创建侧边栏标签页：视角设置
-local CameraTab = MainWindow:Tab({
+local Tab1 = MainWindow:Tab({
     Title = "视角设置",
     Icon = "camera"
 })
 
 -- 4.1 视角控制分组
-local CameraSection = CameraTab:Section({
+local CameraSection = Tab1:Section({
     Title = "视角参数"
 })
 
 -- 4.1.1 滑动条：视角距离
-CameraSection:Slider({
+Tab1Section:Slider({
     Title = "视角距离",
     Value = {
         Min = 0,
@@ -49,7 +49,7 @@ CameraSection:Slider({
 })
 
 -- 4.1.2 下拉菜单：视角模式
-CameraSection:Dropdown({
+Tab1Section:Dropdown({
     Title = "视角模式",
     Values = {"第三人称", "第一人称", "自由视角"},  -- 可选选项
     Value = "自由视角",  -- 默认选项
@@ -71,17 +71,17 @@ CameraSection:Dropdown({
     end
 })
 
-local BasicTab = MainWindow:Tab({
+local Tab2 = MainWindow:Tab({
     Title = "玩家",
     Icon = "bolt"  -- 标签页图标
 })
 
-local CameraSection = CameraTab:Section({
+local CameraSection = Tab2:Section({
     Title = "主要的"
 })
 
 -- 防摔落
-BasicSection:Button({
+Tab2Section:Button({
     Title = "防摔落",
     Icon = "shield-virus",
     Color = Color3.fromHex("10B981"),
@@ -92,7 +92,7 @@ BasicSection:Button({
 })
 
 -- 无敌少侠
-BasicSection:Button({
+Tab2Section:Button({
     Title = "无敌少侠",
     Icon = "user-astronaut",
     Color = Color3.fromHex("8B5CF6"),
@@ -102,7 +102,7 @@ BasicSection:Button({
     end
 })
 
-BasicSection:Button({
+Tab2Section:Button({
     Title = "DOLL飞行",
     Icon = "refresh-cw",
     Color = Color3.fromHex("#000000"),  -- 按钮颜色
@@ -590,7 +590,7 @@ end)
     end
 })
 
-local PlayerESP = BasicSection:Toggle({
+local PlayerESP = Tab2Section:Toggle({
     Title = "玩家透视",
     Desc = "高亮显示所有玩家，便于观察",
     Default = false,
@@ -668,7 +668,7 @@ Players.PlayerRemoving:Connect(function(plr)
     end
 end)
 
-local GodmodeToggle = BasicSection:Toggle({
+local GodmodeToggle = Tab2Section:Toggle({
     Title = "上帝模式",
     Desc = "开启后角色无敌且不掉血",
     Default = false,  -- 默认关闭
@@ -690,7 +690,7 @@ local GodmodeToggle = BasicSection:Toggle({
     end
 })
 
-local InfJumpToggle = BasicSection:Toggle({
+local InfJumpToggle = Tab2Section:Toggle({
     Title = "无限跳",
     Desc = "开启后按住跳跃键可以一直跳",
     Default = false,
@@ -712,7 +712,7 @@ local InfJumpToggle = BasicSection:Toggle({
 })
 
 -- 3.1.2 滑动条：移动速度调节
-local SpeedSlider = BasicSection:Slider({
+local SpeedSlider = Tab2Section:Slider({
     Title = "移动速度",
     Desc = "调节角色行走/奔跑速度",
     Step = 1,  -- 调节步长
@@ -748,7 +748,7 @@ CameraSection:Slider({
     end
 })
 
-local NightVisionToggle = BasicSection:Toggle({
+local NightVisionToggle = Tab2Section:Toggle({
     Title = "夜视",
     Desc = "顾名思义",
     Default = false,
@@ -808,7 +808,7 @@ CameraSection:Slider({
     end
 })
 
-BasicSection:Button({
+Tab2Section:Button({
     Title = "控制玩家",
     Icon = "refresh-cw",
     Color = Color3.fromHex("3B82F6"),  -- 按钮颜色
@@ -823,7 +823,7 @@ BasicSection:Button({
 })
 
 -- 玩家提示 按钮
-BasicSection:Button({
+Tab2Section:Button({
     Title = "玩家提示",
     Icon = "info-circle",
     Color = Color3.fromHex("3B82F6"),
@@ -838,7 +838,7 @@ BasicSection:Button({
 })
 
 -- 撸管r15 按钮
-BasicSection:Button({
+Tab2Section:Button({
     Title = "撸管r15",
     Icon = "user",
     Color = Color3.fromHex("10B981"),
@@ -853,7 +853,7 @@ BasicSection:Button({
 })
 
 -- 撸管r6 按钮
-BasicSection:Button({
+Tab2Section:Button({
     Title = "撸管r6",
     Icon = "user",
     Color = Color3.fromHex("F59E0B"),
@@ -867,7 +867,7 @@ BasicSection:Button({
     end
 })
 
-local BasicTab = MainWindow:Tab({
+local Tab3Tab = MainWindow:Tab({
     Title = "通用",
     Icon = "bolt"  -- 标签页图标
 })
@@ -876,7 +876,7 @@ local CameraSection = CameraTab:Section({
     Title = "通用所有"
 })
 
-BasicSection:Button({
+Tab3Section:Button({
     Title = "铁拳",
     Icon = "fist-raised",
     Color = Color3.fromHex("EF4444"),
@@ -886,7 +886,7 @@ BasicSection:Button({
     end
 })
 
-BasicSection:Button({
+Tab3Section:Button({
     Title = "甩人",
     Icon = "arrows-rotate",
     Color = Color3.fromHex("F59E0B"),
@@ -896,7 +896,7 @@ BasicSection:Button({
     end
 })
 
-BasicSection:Button({
+Tab3Section:Button({
     Title = "死亡笔记",
     Icon = "book-dead",
     Color = Color3.fromHex("7C3AED"),
@@ -907,7 +907,7 @@ BasicSection:Button({
 })
 
 -- 移动相关
-BasicSection:Button({
+Tab3Section:Button({
     Title = "上墙",
     Icon = "arrow-up-right-dots",
     Color = Color3.fromHex("8B5CF6"),
@@ -917,7 +917,7 @@ BasicSection:Button({
     end
 })
 
-BasicSection:Button({
+Tab3Section:Button({
     Title = "飞车",
     Icon = "car-side",
     Color = Color3.fromHex("F43F5E"),
@@ -927,7 +927,7 @@ BasicSection:Button({
     end
 })
 
-BasicSection:Button({
+Tab3Section:Button({
     Title = "穿墙",
     Icon = "window-maximize",
     Color = Color3.fromHex("EC4899"),
@@ -937,7 +937,7 @@ BasicSection:Button({
     end
 })
 
-BasicSection:Button({
+Tab3Section:Button({
     Title = "点击传送工具",
     Icon = "map-location-dot",
     Color = Color3.fromHex("06B6D4"),
@@ -948,7 +948,7 @@ BasicSection:Button({
 })
 
 -- 角色状态
-BasicSection:Button({
+Tab3Section:Button({
     Title = "无敌",
     Icon = "shield-halved",
     Color = Color3.fromHex("10B981"),
@@ -958,7 +958,7 @@ BasicSection:Button({
     end
 })
 
-BasicSection:Button({
+Tab3Section:Button({
     Title = "隐身",
     Icon = "eye-slash",
     Color = Color3.fromHex("6B7280"),
@@ -968,7 +968,7 @@ BasicSection:Button({
     end
 })
 
-BasicSection:Button({
+Tab3Section:Button({
     Title = "旋转",
     Icon = "sync-alt",
     Color = Color3.fromHex("FBBF24"),
@@ -979,7 +979,7 @@ BasicSection:Button({
 })
 
 -- 视觉相关
-BasicSection:Button({
+Tab3Section:Button({
     Title = "透视",
     Icon = "eye",
     Color = Color3.fromHex("3B82F6"),
@@ -989,7 +989,7 @@ BasicSection:Button({
     end
 })
 
-BasicSection:Button({
+Tab3Section:Button({
     Title = "fps显示",
     Icon = "tachometer-alt",
     Color = Color3.fromHex("14B8A6"),
@@ -1000,7 +1000,7 @@ BasicSection:Button({
 })
 
 -- 娱乐与动画
-BasicSection:Button({
+Tab3Section:Button({
     Title = "动画中心",
     Icon = "film",
     Color = Color3.fromHex("84CC16"),
@@ -1010,7 +1010,7 @@ BasicSection:Button({
     end
 })
 
-BasicSection:Button({
+Tab3Section:Button({
     Title = "撸管r15",
     Icon = "user",
     Color = Color3.fromHex("A855F7"),
@@ -1020,7 +1020,7 @@ BasicSection:Button({
     end
 })
 
-BasicSection:Button({
+Tab3Section:Button({
     Title = "撸管r6",
     Icon = "user",
     Color = Color3.fromHex("D946EF"),
@@ -1030,7 +1030,7 @@ BasicSection:Button({
     end
 })
 
-BasicSection:Button({
+Tab3Section:Button({
     Title = "艹人",
     Icon = "users",
     Color = Color3.fromHex("DB2777"),
@@ -1040,7 +1040,7 @@ BasicSection:Button({
     end
 })
 
-BasicSection:Button({
+Tab3Section:Button({
     Title = "义勇军进行曲",
     Icon = "music",
     Color = Color3.fromHex("DC2626"),
@@ -1054,7 +1054,7 @@ BasicSection:Button({
 })
 
 -- 工具与系统
-BasicSection:Button({
+Tab3Section:Button({
     Title = "工具",
     Icon = "wrench",
     Color = Color3.fromHex("6366F1"),
@@ -1064,7 +1064,7 @@ BasicSection:Button({
     end
 })
 
-BasicSection:Button({
+Tab3Section:Button({
     Title = "指令",
     Icon = "terminal",
     Color = Color3.fromHex("2563EB"),
@@ -1074,7 +1074,7 @@ BasicSection:Button({
     end
 })
 
-BasicSection:Button({
+Tab3Section:Button({
     Title = "键盘",
     Icon = "keyboard",
     Color = Color3.fromHex("4F46E5"),
@@ -1084,7 +1084,7 @@ BasicSection:Button({
     end
 })
 
-BasicSection:Button({
+Tab3Section:Button({
     Title = "玩家提示",
     Icon = "info-circle",
     Color = Color3.fromHex("0EA5E9"),
