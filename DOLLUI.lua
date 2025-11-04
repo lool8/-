@@ -1,64 +1,64 @@
 --[[
-     _      ___         ____  ______
-    | | /| / (_)__  ___/ / / / /  _/
-    | |/ |/ / / _ \/ _  / /_/ // /  
-    |__/|__/_/_//_/\_,_/\____/___/
+_      ___         ____  _______      ___         ____  ______
+| | /| / (_)__  ___/ / / / /  _/| | /| / (_)__  ___/ / / / /  _/
+| |/ |/ / / _ \/ _  / /_/ // /| |/ |/ / / _ \/ _  / /_/ // /
+|__/|__/_/_//_/\_,_/\____/___/|__/|__/_/_//_/\_,_/\____/___/
     
-    v1.6.57  |  2025-10-27  |  Roblox UI Library for scripts
+v1.6.57|2025-10-27|用于脚本的Roblox UI库v1.6.57|2025-10-27|Roblox UI Library for scripts
     
-    This script is NOT intended to be modified.
-    To view the source code, see the `src/` folder on the official GitHub repository.
+此脚本不用于修改。此脚本不用于修改。
+要查看源代码，请参见官方GitHub存储库中的"src/"文件夹。要查看源代码，请参见官方GitHub存储库中的“src/”文件夹。
     
-    Author: Footagesus (Footages, .ftgs, oftgs)
-    Github: https://github.com/Footagesus/WindUI
-    Discord: https://discord.gg/ftgs-development-hub-1300692552005189632
-    License: MIT
+作者：Footagesus(Footages、.ftgs、oftgs)作者：Footagesus(Footages、.ftgs、oftgs)
+GitHub:https://github.com/Footagesus/WindUIGithub: https://github.com/Footagesus/WindUI
+不和： https://discord.gg/ftgs-development-hub-1300692552005189632Discord: https://discord.gg/ftgs-development-hub-1300692552005189632
+许可证：MIT许可证：MIT
 ]]
 
-local a a={cache={}, load=function(b)if not a.cache[b]then a.cache[b]={c=a[b]()}end return a.cache[b].c end}do function a.a()return{
-Dialog="Accent",
+当地的a a={cache={}，load=功能(b)如果(b)不a.缓存[b]然后a.缓存[b]={c=a[b]()}结束a.缓存[b]={c=a[b]()}返回a.缓存[b].c结束a.cache[b].c做}功能A.a()返回a.a()返回{
+对话="强调文字"，"强调文字",
 
-Background="Accent",
-Hover="Text",
+背景="强调文字"，"强调文字",
+悬停="文本"，"文本",
 
-WindowBackground="Background",
+WindowBackground="背景"，"背景",
 
-TopbarButtonIcon="Icon",
-TopbarTitle="Text",
-TopbarAuthor="Text",
-TopbarIcon="Text",
+TopbarButtonIcon="图标"，"图标",
+TopbarTitle="文本"，"文本",
+TopbarAuthor="文本"，"文本",
+TopbarIcon="文本"，"文本",
 
-TabBackground="Hover",
-TabTitle="Text",
-TabIcon="Icon",
+TabBackground="悬停"，"悬停",
+TabTitle="文本"，"文本",
+TabIcon="图标"，"图标",
 
-ElementBackground="Text",
-ElementTitle="Text",
-ElementDesc="Text",
-ElementIcon="Icon",
-}end function a.b()
-local b=game:GetService"RunService"local d=
-b.Heartbeat
-local e=game:GetService"UserInputService"
-local f=game:GetService"TweenService"
-local g=game:GetService"LocalizationService"
-local h=game:GetService"HttpService"
+ElementBackground="文本"，"文本",
+ElementTitle="文本"，"文本",
+ElementDesc="文本"，
+ElementIcon="图标"，
+结束函数a.b()
+本地b=游戏：GetService"运行服务"本地d=
+B.心跳
+本地e=游戏：GetService"UserInputService"
+本地f=游戏：GetService"TweenService"
+当地的G=游戏：GetService"本地化服务"
+本地H=游戏：GetService"Http服务"
 
-local i="https://raw.githubusercontent.com/Footagesus/Icons/main/Main-v2.lua"
+本地i="https://raw.githubusercontent.com/Footagesus/Icons/main/Main-v2.lua"
 
-local j=loadstring(
-game.HttpGetAsync and game:HttpGetAsync(i)
-or h:GetAsync(i)
+当地的J=荷载串(
+game.HttpGetAsync和game:HttpGetAsync(i)
+或h:GetAsync(i)
 )()
-j.SetIconsType"lucide"
+j.SetIcons类型“Lucide”
 
-local l
+局部l
 
-local m={
-Font="rbxassetid://12187365364",
-Localization=nil,
-CanDraggable=true,
-Theme=nil,
+局部m={
+字体="rbxassetid://12187365364"，
+本地化=零，
+CanDraggable=正确，
+主题=零，
 Themes=nil,
 Icons=j,
 Signals={},
