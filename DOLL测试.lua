@@ -1568,7 +1568,6 @@ Tab5Section:Button({
 
         -- 2. 所有岛屿坐标（保留原顺序）
         local coordinates = {
-            CFrame.new(1335.53, 681.97, 2055.47),   -- 主岛
             CFrame.new(697.86, 1698.29, 2048.00),   -- 蔬菜草地
             CFrame.new(718.67, 3287.09, 2079.90),   -- 面包沙漠
             CFrame.new(710.93, 5936.99, 2051.80),   -- 冰淇淋冻原
@@ -1606,7 +1605,7 @@ Tab5Section:Button({
                 -- 传送进度提示（告知当前解锁状态）
                 WindUI:Notify({
                     Title = "解锁进度",
-                    Content = string.format("📍 已解锁【%s】（%d/9）", islandNames[i], i),
+                    Content = string.format("📍 已解锁【%s】（%d/8）", islandNames[i], i),
                     Icon = "map-location-dot",
                     Duration = 2
                 })
@@ -1635,9 +1634,22 @@ Tab5Section:Button({
 Tab5Section:Dropdown({
     Title = "岛屿传送",
     Values = {"主岛", "蔬菜草地", "面包沙漠", "冰淇淋冻原", "披萨荒地", "甜甜圈银河", "水晶糖果岛", "巧克力王国", "蘑菇绿洲"},
-    Value = "主岛", -- 默认选中主岛
+    Value = "主岛", -- 默认选中主岛（仅显示，不触发传送）
     Callback = function(selected)
-        -- 坐标与岛屿一一对应（按要求顺序）
+        -- 关键修复：新增角色就绪判断+延迟执行，避免初始化误触发
+        local plr = game.Players.LocalPlayer
+        local char = plr.Character or plr.CharacterAdded:Wait(5) -- 最多等5秒角色加载
+        if not char then
+            WindUI:Notify({
+                Title = "传送失败",
+                Content = "❌ 角色加载超时",
+                Icon = "x-circle",
+                Duration = 3
+            })
+            return
+        end
+
+        -- 坐标与岛屿一一对应（保留原顺序）
         local targetPos
         if selected == "主岛" then
             targetPos = CFrame.new(1335.53, 681.97, 2055.47)
@@ -1659,17 +1671,28 @@ Tab5Section:Dropdown({
             targetPos = CFrame.new(722.07, 30300.52, 2046.58)
         end
 
-        -- 执行传送（添加容错，避免角色未加载报错）
+        -- 执行传送（强化容错）
         pcall(function()
-            local rootPart = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-            if rootPart then
-                rootPart.CFrame = targetPos
-                WindUI:Notify({
-                    Title = "传送成功",
-                    Content = string.format("✅ 已传送到【%s】", selected),
-                    Icon = "map-location-dot",
-                    Duration = 3
-                })
+            local rootPart = char:FindFirstChild("HumanoidRootPart")
+            if rootPart and targetPos then
+                -- 额外容错：确保角色不在加载中
+                local humanoid = char:FindFirstChildOfClass("Humanoid")
+                if humanoid and humanoid.Health > 0 then
+                    rootPart.CFrame = targetPos
+                    WindUI:Notify({
+                        Title = "传送成功",
+                        Content = string.format("✅ 已传送到【%s】", selected),
+                        Icon = "map-location-dot",
+                        Duration = 3
+                    })
+                else
+                    WindUI:Notify({
+                        Title = "传送失败",
+                        Content = "❌ 角色状态异常",
+                        Icon = "x-circle",
+                        Duration = 3
+                    })
+                end
             else
                 WindUI:Notify({
                     Title = "传送失败",
