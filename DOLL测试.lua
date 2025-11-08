@@ -1369,148 +1369,16 @@ Tab3Section:Button({
     end
 })
 
--- 初始化存储变量
-local bai = bai or {}
-bai.saymege = ""
-bai.saymount = 1
-bai.sayfast = false
-bai.autosay = false
-
--- 创建自动发言标签页
 local Tab4 = MainWindow:Tab({
-    Title = "自动发言",
+    Title = "预留",
     Icon = "rbxassetid://78892482588180"
 })
 
 -- 创建功能分区
 local Tab4Section = Tab4:Section({
-    Title = "自动发言设置",
+    Title = "预留",
     TextSize = 18,
     FontWeight = Enum.FontWeight.SemiBold
-})
-
--- 输入要发送的内容
-Tab4Section:Textbox({
-    Name = "输入你要说的话",
-    Default = "",
-    TextDisappear = true,
-    Callback = function(txt)
-        bai.saymege = txt
-        WindUI:Notify({
-            Title = "输入成功",
-            Content = "已设置发言内容：" .. (txt ~= "" and txt or "无"),
-            Icon = "message-square",
-            Duration = 2
-        })
-    end
-})
-
--- 输入发言次数（Slider替代Textbox，更直观）
-Tab4Section:Slider({
-    Title = "发言次数",
-    Desc = "单次发言功能的发送次数（1-20次）",
-    Step = 1,
-    Value = {
-        Min = 1,
-        Max = 20,
-        Default = 1
-    },
-    Callback = function(value)
-        bai.saymount = value
-    end
-})
-
--- 停止发言按钮
-Tab4Section:Button({
-    Title = "停止发言",
-    Icon = "stop",
-    Color = Color3.fromHex("#FF3B30"),
-    Callback = function()
-        bai.sayfast = false
-        bai.autosay = false
-        WindUI:Notify({
-            Title = "操作提示",
-            Content = "❌ 已停止所有发言",
-            Icon = "stop",
-            Duration = 2
-        })
-    end
-})
-
--- 发言一次按钮
-Tab4Section:Button({
-    Title = "发言一次",
-    Icon = "send",
-    Color = Color3.fromHex("#34C759"),
-    Callback = function()
-        if bai.saymege == "" then
-            WindUI:Notify({
-                Title = "错误提示",
-                Content = "❌ 请先输入要发送的内容",
-                Icon = "x-circle",
-                Duration = 2
-            })
-            return
-        end
-        
-        bai.sayfast = true
-        WindUI:Notify({
-            Title = "发言开始",
-            Content = "✅ 正在发送 " .. bai.saymount .. " 次",
-            Icon = "send",
-            Duration = 2
-        })
-        
-        task.spawn(function()
-            for i = 1, bai.saymount do
-                if not bai.sayfast then break end
-                game:GetService('ReplicatedStorage').DefaultChatSystemChatEvents.SayMessageRequest:FireServer(bai.saymege, "All")
-                task.wait(0.5) -- 避免发送过快被限制
-            end
-            WindUI:Notify({
-                Title = "发言完成",
-                Content = "✅ 已完成指定次数发言",
-                Icon = "check-circle",
-                Duration = 2
-            })
-        end)
-    end
-})
-
--- 全自动说话开关
-local Tab4Toggle = Tab4Section:Toggle({
-    Title = "全自动说话",
-    Desc = "持续循环发送指定内容",
-    Default = false,
-    Callback = function(isEnabled)
-        bai.autosay = isEnabled
-        
-        WindUI:Notify({
-            Title = "全自动发言",
-            Content = isEnabled and "✅ 已开启（间隔1秒）" or "❌ 已关闭",
-            Icon = "repeat",
-            Duration = 3
-        })
-        
-        if isEnabled then
-            task.spawn(function()
-                while bai.autosay do
-                    if bai.saymege ~= "" then
-                        game:GetService('ReplicatedStorage').DefaultChatSystemChatEvents.SayMessageRequest:FireServer(bai.saymege, "All")
-                    else
-                        WindUI:Notify({
-                            Title = "错误提示",
-                            Content = "❌ 请先输入要发送的内容",
-                            Icon = "x-circle",
-                            Duration = 2
-                        })
-                        bai.autosay = false -- 无内容时自动关闭
-                    end
-                    task.wait(1) -- 自动发言间隔（可调整）
-                end
-            end)
-        end
-    end
 })
 
 local Tab5 = MainWindow:Tab({
