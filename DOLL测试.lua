@@ -1632,82 +1632,55 @@ Tab5Section:Button({
 }) -- 补全：Button的end
 
 Tab5Section:Dropdown({
-    Title = "岛屿传送",
-    Values = {"主岛", "蔬菜草地", "面包沙漠", "冰淇淋冻原", "披萨荒地", "甜甜圈银河", "水晶糖果岛", "巧克力王国", "蘑菇绿洲"},
-    Value = "主岛", -- 默认选中主岛（仅显示，不触发传送）
-    Callback = function(selected)
-        -- 关键修复1：用“初始化标记”替代鼠标按住判断，避免操作时序问题
-        local initFlag = true -- 标记是否为初始化触发
-        -- 延迟0.1秒检测：初始化触发的Callback会立即执行，手动选择的会有延迟
-        task.delay(0.1, function()
-            initFlag = false
-        end)
-        -- 初始化触发（脚本启动/面板打开时）直接返回
-        if initFlag then
-            return
-        end
-
-        -- 关键修复2：优化角色加载校验（等待角色就绪，不超时）
-        local plr = game.Players.LocalPlayer
-        local char = plr.Character or plr.CharacterAdded:Wait() -- 无限等待角色加载（直到生成）
-        local rootPart = char:WaitForChild("HumanoidRootPart", 10) -- 10秒内等待核心部件
-        local humanoid = char:WaitForChildOfClass("Humanoid", 10)
-        if not rootPart or not humanoid then
-            WindUI:Notify({
-                Title = "传送失败",
-                Content = "❌ 角色核心部件缺失",
-                Icon = "x-circle",
-                Duration = 3
-            })
-            return
-        end
-
-        -- 坐标与岛屿一一对应（保留原顺序）
-        local targetPos
-        if selected == "主岛" then
-            targetPos = CFrame.new(1335.53, 681.97, 2055.47)
-        elseif selected == "蔬菜草地" then
-            targetPos = CFrame.new(697.86, 1698.29, 2048.00)
-        elseif selected == "面包沙漠" then
-            targetPos = CFrame.new(718.67, 3287.09, 2079.90)
-        elseif selected == "冰淇淋冻原" then
-            targetPos = CFrame.new(710.93, 5936.99, 2051.80)
-        elseif selected == "披萨荒地" then
-            targetPos = CFrame.new(721.18, 9169.49, 2051.66)
-        elseif selected == "甜甜圈银河" then
-            targetPos = CFrame.new(717.12, 12844.32, 2047.88)
-        elseif selected == "水晶糖果岛" then
-            targetPos = CFrame.new(713.28, 16592.55, 2061.30)
-        elseif selected == "巧克力王国" then
-            targetPos = CFrame.new(699.60, 21918.35, 2048.25)
-        elseif selected == "蘑菇绿洲" then
-            targetPos = CFrame.new(722.07, 30300.52, 2046.58)
-        end
-
-        -- 执行传送（强化容错，确保生效）
-        pcall(function()
-            if rootPart and targetPos and humanoid.Health > 0 then
-                -- 临时关闭碰撞，避免卡地形导致传送失效
-                rootPart.CanCollide = false
-                rootPart.CFrame = targetPos
-                task.wait(0.2) -- 等待传送生效
-                rootPart.CanCollide = true
-                WindUI:Notify({
-                    Title = "传送成功",
-                    Content = string.format("✅ 已传送到【%s】", selected),
-                    Icon = "map-location-dot",
-                    Duration = 3
-                })
-            else
-                WindUI:Notify({
-                    Title = "传送失败",
-                    Content = "❌ 角色状态异常或坐标无效",
-                    Icon = "x-circle",
-                    Duration = 3
-                })
-            end
-        end)
-    end
+Title = "传送至对应区域",
+Values = {"主岛", "蔬菜草地", "面包沙漠", "冰淇淋冻原", "披萨荒地", "甜甜圈银河", "水晶糖果岛", "巧克力王国", "蘑菇绿洲"},
+Value = "主岛",
+Callback = function(selected)
+local player = game.Players.LocalPlayer
+local character = player.Character
+if not character or not character:FindFirstChild("HumanoidRootPart") then
+warn("角色未加载完成，无法传送！")
+return
+end
+ 
+-- 主岛（第一组坐标）
+if selected == "主岛" then
+character.HumanoidRootPart.CFrame = CFrame.new(1335.53, 681.97, 2055.47)
+game.StarterGui:SetCore("SendNotification", {Title = "传送成功", Text = "已传送至" .. selected, Duration = 3})
+-- 蔬菜草地（第二组坐标）
+elseif selected == "蔬菜草地" then
+character.HumanoidRootPart.CFrame = CFrame.new(697.86, 1698.29, 2048.00)
+game.StarterGui:SetCore("SendNotification", {Title = "传送成功", Text = "已传送至" .. selected, Duration = 3})
+-- 面包沙漠（第三组坐标）
+elseif selected == "面包沙漠" then
+character.HumanoidRootPart.CFrame = CFrame.new(718.67, 3287.09, 2079.90)
+game.StarterGui:SetCore("SendNotification", {Title = "传送成功", Text = "已传送至" .. selected, Duration = 3})
+-- 冰淇淋冻原（第四组坐标）
+elseif selected == "冰淇淋冻原" then
+character.HumanoidRootPart.CFrame = CFrame.new(710.93, 5936.99, 2051.80)
+game.StarterGui:SetCore("SendNotification", {Title = "传送成功", Text = "已传送至" .. selected, Duration = 3})
+-- 披萨荒地（第五组坐标）
+elseif selected == "披萨荒地" then
+character.HumanoidRootPart.CFrame = CFrame.new(721.18, 9169.49, 2051.66)
+game.StarterGui:SetCore("SendNotification", {Title = "传送成功", Text = "已传送至" .. selected, Duration = 3})
+-- 甜甜圈银河（第六组坐标）
+elseif selected == "甜甜圈银河" then
+character.HumanoidRootPart.CFrame = CFrame.new(717.12, 12844.32, 2047.88)
+game.StarterGui:SetCore("SendNotification", {Title = "传送成功", Text = "已传送至" .. selected, Duration = 3})
+-- 水晶糖果岛（第七组坐标）
+elseif selected == "水晶糖果岛" then
+character.HumanoidRootPart.CFrame = CFrame.new(713.28, 16592.55, 2061.30)
+game.StarterGui:SetCore("SendNotification", {Title = "传送成功", Text = "已传送至" .. selected, Duration = 3})
+-- 巧克力王国（第八组坐标）
+elseif selected == "巧克力王国" then
+character.HumanoidRootPart.CFrame = CFrame.new(699.60, 21918.35, 2048.25)
+game.StarterGui:SetCore("SendNotification", {Title = "传送成功", Text = "已传送至" .. selected, Duration = 3})
+-- 蘑菇绿洲（第九组坐标）
+elseif selected == "蘑菇绿洲" then
+character.HumanoidRootPart.CFrame = CFrame.new(722.07, 30300.52, 2046.58)
+game.StarterGui:SetCore("SendNotification", {Title = "传送成功", Text = "已传送至" .. selected, Duration = 3})
+end
+end
 })
 
 -- 5. 快捷键设置：LeftControl 快速打开/关闭窗口
