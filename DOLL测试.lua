@@ -1636,26 +1636,33 @@ Tab5Section:Dropdown({
     Values = {"主岛", "蔬菜草地", "面包沙漠", "冰淇淋冻原", "披萨荒地", "甜甜圈银河", "水晶糖果岛", "巧克力王国", "蘑菇绿洲"},
     Value = "主岛", -- 默认选中主岛（仅显示，不触发传送）
     Callback = function(selected)
-        -- 关键修复1：过滤初始化触发（脚本启动时无用户操作，直接返回）
-        -- 原理：初始化时无鼠标点击，只有手动选择时才执行后续逻辑
-        if not game:GetService("UserInputService"):IsMouseButtonPressed(Enum.UserInputType.MouseButton1) then
+        -- 关键修复1：用“初始化标记”替代鼠标按住判断，避免操作时序问题
+        local initFlag = true -- 标记是否为初始化触发
+        -- 延迟0.1秒检测：初始化触发的Callback会立即执行，手动选择的会有延迟
+        task.delay(0.1, function()
+            initFlag = false
+        end)
+        -- 初始化触发（脚本启动/面板打开时）直接返回
+        if initFlag then
             return
         end
 
-        -- 关键修复2：角色加载校验（双重保险）
+        -- 关键修复2：优化角色加载校验（等待角色就绪，不超时）
         local plr = game.Players.LocalPlayer
-        local char = plr.Character or plr.CharacterAdded:Wait(5) -- 最多等5秒角色加载
-        if not char then
+        local char = plr.Character or plr.CharacterAdded:Wait() -- 无限等待角色加载（直到生成）
+        local rootPart = char:WaitForChild("HumanoidRootPart", 10) -- 10秒内等待核心部件
+        local humanoid = char:WaitForChildOfClass("Humanoid", 10)
+        if not rootPart or not humanoid then
             WindUI:Notify({
                 Title = "传送失败",
-                Content = "❌ 角色加载超时",
+                Content = "❌ 角色核心部件缺失",
                 Icon = "x-circle",
                 Duration = 3
             })
             return
         end
 
-        -- 坐标与岛屿一一对应（保留原顺序，无修改）
+        -- 坐标与岛屿一一对应（保留原顺序）
         local targetPos
         if selected == "主岛" then
             targetPos = CFrame.new(1335.53, 681.97, 2055.47)
@@ -1677,31 +1684,24 @@ Tab5Section:Dropdown({
             targetPos = CFrame.new(722.07, 30300.52, 2046.58)
         end
 
-        -- 执行传送（强化容错，无修改）
+        -- 执行传送（强化容错，确保生效）
         pcall(function()
-            local rootPart = char:FindFirstChild("HumanoidRootPart")
-            if rootPart and targetPos then
-                local humanoid = char:FindFirstChildOfClass("Humanoid")
-                if humanoid and humanoid.Health > 0 then
-                    rootPart.CFrame = targetPos
-                    WindUI:Notify({
-                        Title = "传送成功",
-                        Content = string.format("✅ 已传送到【%s】", selected),
-                        Icon = "map-location-dot",
-                        Duration = 3
-                    })
-                else
-                    WindUI:Notify({
-                        Title = "传送失败",
-                        Content = "❌ 角色状态异常",
-                        Icon = "x-circle",
-                        Duration = 3
-                    })
-                end
+            if rootPart and targetPos and humanoid.Health > 0 then
+                -- 临时关闭碰撞，避免卡地形导致传送失效
+                rootPart.CanCollide = false
+                rootPart.CFrame = targetPos
+                task.wait(0.2) -- 等待传送生效
+                rootPart.CanCollide = true
+                WindUI:Notify({
+                    Title = "传送成功",
+                    Content = string.format("✅ 已传送到【%s】", selected),
+                    Icon = "map-location-dot",
+                    Duration = 3
+                })
             else
                 WindUI:Notify({
                     Title = "传送失败",
-                    Content = "❌ 角色未加载完成",
+                    Content = "❌ 角色状态异常或坐标无效",
                     Icon = "x-circle",
                     Duration = 3
                 })
