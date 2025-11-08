@@ -1415,7 +1415,7 @@ local Tab5Toggle_AutoEat = Tab5Section:Toggle({
                 pcall(function()
                     remote:FireServer("Food")
                 end)
-                task.wait(0.0) -- 间隔不能少，防止卡顿
+                task.wait(0.1) -- 间隔不能少，防止卡顿
             end
         end) -- 闭合 task.spawn 函数
     end -- 闭合 Callback 函数
