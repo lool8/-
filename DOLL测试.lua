@@ -1553,7 +1553,7 @@ Tab5Section:Button({
     Icon = "refresh-cw",
     Color = Color3.fromHex("#000000"),
     Callback = function()
-        -- 1. 新增：判断角色是否就绪，避免脚本加载时误触发
+        -- 1. 判断角色是否就绪，避免脚本加载时误触发
         local plr = game.Players.LocalPlayer
         local char = plr.Character
         if not char or not char:FindFirstChild("HumanoidRootPart") then
@@ -1566,7 +1566,7 @@ Tab5Section:Button({
             return
         end
 
-        -- 2. 原有坐标和传送逻辑不变（保留）
+        -- 2. 所有岛屿坐标（保留原顺序）
         local coordinates = {
             CFrame.new(1335.53, 681.97, 2055.47),   -- 主岛
             CFrame.new(697.86, 1698.29, 2048.00),   -- 蔬菜草地
@@ -1579,36 +1579,58 @@ Tab5Section:Button({
             CFrame.new(722.07, 30300.52, 2046.58)   -- 蘑菇绿洲
         }
 
+        -- 3. 独立线程执行传送（避免阻塞）
         task.spawn(function()
             local plr = game.Players.LocalPlayer
             local islandNames = {"主岛", "蔬菜草地", "面包沙漠", "冰淇淋冻原", "披萨荒地", "甜甜圈银河", "水晶糖果岛", "巧克力王国", "蘑菇绿洲"}
             
             for i, cframe in ipairs(coordinates) do
-                -- 等待角色就绪
+                -- 等待角色就绪（容错角色重生）
                 local char = plr.Character or plr.CharacterAdded:Wait()
                 local rootPart = char:FindFirstChild("HumanoidRootPart")
                 if not rootPart then
                     WindUI:Notify({
                         Title = "传送失败",
-                        Content = "❌ 角色未加载完成",
+                        Content = "❌ 角色核心部件缺失",
                         Icon = "x-circle",
                         Duration = 3
                     })
                     break
                 end
 
-                -- 执行传送（使用你提供的核心代码）
+                -- 执行传送（pcall容错，避免单次传送失败中断循环）
                 pcall(function()
                     rootPart.CFrame = cframe
-        end)
+                end)
 
+                -- 传送进度提示（告知当前解锁状态）
+                WindUI:Notify({
+                    Title = "解锁进度",
+                    Content = string.format("📍 已解锁【%s】（%d/9）", islandNames[i], i),
+                    Icon = "map-location-dot",
+                    Duration = 2
+                })
+
+                task.wait(1.5)  -- 每个岛屿停留1.5秒，确保解锁生效
+            end
+
+            -- 4. 全部解锁完成提示
+            WindUI:Notify({
+                Title = "解锁完成",
+                Content = "🎉 所有岛屿已全部解锁！",
+                Icon = "trophy",
+                Duration = 5
+            })
+        end) -- 补全：task.spawn的end
+
+        -- 5. 按钮点击成功提示
         WindUI:Notify({
             Title = "解锁成功✅",
             Content = "🤓",
             Icon = "bolt"
         })
-    end
-})
+    end -- 补全：Callback的end
+}) -- 补全：Button的end
 
 Tab5Section:Dropdown({
     Title = "岛屿传送",
