@@ -1636,54 +1636,39 @@ Tab5Section:Dropdown({
     Values = {"主岛", "蔬菜草地", "面包沙漠", "冰淇淋冻原", "披萨荒地", "甜甜圈银河", "水晶糖果岛", "巧克力王国", "蘑菇绿洲"},
     Value = "主岛",
     Callback = function(selected)
-        -- 新增：获取当前存储的选中值，对比后再执行
-        local currentValue = script.Parent.Parent.Tab5Section.Dropdown.Value -- 按实际组件路径调整
-        if selected == currentValue then return end -- 选中值未变则不执行
-        
         local player = game.Players.LocalPlayer
-        local character = player.Character
-        if not character or not character:FindFirstChild("HumanoidRootPart") then
-            warn("角色未加载完成，无法传送！")
+        -- 容错：等待角色加载（解决角色未加载问题）
+        local character = player.Character or player.CharacterAdded:Wait()
+        local humanoidRootPart = character:WaitForChild("HumanoidRootPart", 10) -- 10秒超时等待
+        
+        if not humanoidRootPart then
+            game.StarterGui:SetCore("SendNotification", {Title = "传送失败", Text = "角色加载超时！", Duration = 3})
             return
         end
 
-        -- 主岛（第一组坐标）
+        -- 直接执行传送（移除冗余的默认值对比，避免拦截正常触发）
         if selected == "主岛" then
-            character.HumanoidRootPart.CFrame = CFrame.new(1335.53, 681.97, 2055.47)
-            game.StarterGui:SetCore("SendNotification", {Title = "传送成功", Text = "已传送至" .. selected, Duration = 3})
-        -- 蔬菜草地（第二组坐标）
+            humanoidRootPart.CFrame = CFrame.new(1335.53, 681.97, 2055.47)
         elseif selected == "蔬菜草地" then
-            character.HumanoidRootPart.CFrame = CFrame.new(697.86, 1698.29, 2048.00)
-            game.StarterGui:SetCore("SendNotification", {Title = "传送成功", Text = "已传送至" .. selected, Duration = 3})
-        -- 面包沙漠（第三组坐标）
+            humanoidRootPart.CFrame = CFrame.new(699.60, 21918.35, 2048.25)
         elseif selected == "面包沙漠" then
-            character.HumanoidRootPart.CFrame = CFrame.new(718.67, 3287.09, 2079.90)
-            game.StarterGui:SetCore("SendNotification", {Title = "传送成功", Text = "已传送至" .. selected, Duration = 3})
-        -- 冰淇淋冻原（第四组坐标）
+            humanoidRootPart.CFrame = CFrame.new(718.67, 3287.09, 2079.90)
         elseif selected == "冰淇淋冻原" then
-            character.HumanoidRootPart.CFrame = CFrame.new(710.93, 5936.99, 2051.80)
-            game.StarterGui:SetCore("SendNotification", {Title = "传送成功", Text = "已传送至" .. selected, Duration = 3})
-        -- 披萨荒地（第五组坐标）
+            humanoidRootPart.CFrame = CFrame.new(710.93, 5936.99, 2051.80)
         elseif selected == "披萨荒地" then
-            character.HumanoidRootPart.CFrame = CFrame.new(721.18, 9169.49, 2051.66)
-            game.StarterGui:SetCore("SendNotification", {Title = "传送成功", Text = "已传送至" .. selected, Duration = 3})
-        -- 甜甜圈银河（第六组坐标）
+            humanoidRootPart.CFrame = CFrame.new(721.18, 9169.49, 2051.66)
         elseif selected == "甜甜圈银河" then
-            character.HumanoidRootPart.CFrame = CFrame.new(717.12, 12844.32, 2047.88)
-            game.StarterGui:SetCore("SendNotification", {Title = "传送成功", Text = "已传送至" .. selected, Duration = 3})
-        -- 水晶糖果岛（第七组坐标）
+            humanoidRootPart.CFrame = CFrame.new(717.12, 12844.32, 2047.88)
         elseif selected == "水晶糖果岛" then
-            character.HumanoidRootPart.CFrame = CFrame.new(713.28, 16592.55, 2061.30)
-            game.StarterGui:SetCore("SendNotification", {Title = "传送成功", Text = "已传送至" .. selected, Duration = 3})
-        -- 巧克力王国（第八组坐标）
+            humanoidRootPart.CFrame = CFrame.new(713.28, 16592.55, 2061.30)
         elseif selected == "巧克力王国" then
-            character.HumanoidRootPart.CFrame = CFrame.new(699.60, 21918.35, 2048.25)
-            game.StarterGui:SetCore("SendNotification", {Title = "传送成功", Text = "已传送至" .. selected, Duration = 3})
-        -- 蘑菇绿洲（第九组坐标）
+            humanoidRootPart.CFrame = CFrame.new(697.86, 1698.29, 2048.00)
         elseif selected == "蘑菇绿洲" then
-            character.HumanoidRootPart.CFrame = CFrame.new(722.07, 30300.52, 2046.58)
-            game.StarterGui:SetCore("SendNotification", {Title = "传送成功", Text = "已传送至" .. selected, Duration = 3})
+            humanoidRootPart.CFrame = CFrame.new(722.07, 30300.52, 2046.58)
         end
+
+        -- 统一提示（避免重复代码）
+        game.StarterGui:SetCore("SendNotification", {Title = "传送成功", Text = "已传送至" .. selected, Duration = 3})
     end
 })
 
