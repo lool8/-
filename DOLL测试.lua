@@ -1397,7 +1397,7 @@ local Tab5Toggle_AutoEat = Tab5Section:Toggle({
         getgenv().autousefood = isEnabled
         WindUI:Notify({
             Title = "自动吃食物",
-            Content = isEnabled and "✅ 已开启（间隔0.1秒）" or "❌ 已关闭",
+            Content = isEnabled and "✅ 已开启" or "❌ 已关闭",
             Icon = "utensils",
             Duration = 3
         })
@@ -1415,7 +1415,7 @@ local Tab5Toggle_AutoEat = Tab5Section:Toggle({
                 pcall(function()
                     remote:FireServer("Food")
                 end)
-                task.wait(0.1) -- 间隔不能少，防止卡顿
+                task.wait(0.0) -- 间隔不能少，防止卡顿
             end
         end) -- 闭合 task.spawn 函数
     end -- 闭合 Callback 函数
@@ -1549,11 +1549,24 @@ local Tab5Toggle = Tab1Section:Toggle({
 })
 
 Tab5Section:Button({
-    Title = "功能",
+    Title = "解锁所有岛屿",
     Icon = "refresh-cw",
     Color = Color3.fromHex("#000000"),
     Callback = function()
-        -- 所有目标坐标（按提供顺序排列）
+        -- 1. 新增：判断角色是否就绪，避免脚本加载时误触发
+        local plr = game.Players.LocalPlayer
+        local char = plr.Character
+        if not char or not char:FindFirstChild("HumanoidRootPart") then
+            WindUI:Notify({
+                Title = "提示",
+                Content = "⚠️ 角色未加载，点击按钮后再解锁",
+                Icon = "info-circle",
+                Duration = 3
+            })
+            return
+        end
+
+        -- 2. 原有坐标和传送逻辑不变（保留）
         local coordinates = {
             CFrame.new(1335.53, 681.97, 2055.47),   -- 主岛
             CFrame.new(697.86, 1698.29, 2048.00),   -- 蔬菜草地
@@ -1566,7 +1579,6 @@ Tab5Section:Button({
             CFrame.new(722.07, 30300.52, 2046.58)   -- 蘑菇绿洲
         }
 
-        -- 执行批量传送（独立线程+容错）
         task.spawn(function()
             local plr = game.Players.LocalPlayer
             local islandNames = {"主岛", "蔬菜草地", "面包沙漠", "冰淇淋冻原", "披萨荒地", "甜甜圈银河", "水晶糖果岛", "巧克力王国", "蘑菇绿洲"}
@@ -1588,29 +1600,8 @@ Tab5Section:Button({
                 -- 执行传送（使用你提供的核心代码）
                 pcall(function()
                     rootPart.CFrame = cframe
-                end)
-
-                -- 传送进度提示
-                WindUI:Notify({
-                    Title = "传送进度",
-                    Content = string.format("📍 已传送到【%s】（%d/9）", islandNames[i], i),
-                    Icon = "map-location-dot",
-                    Duration = 2
-                })
-
-                task.wait(1.5)  -- 每个岛屿停留1.5秒，避免瞬移卡顿
-            end
-
-            -- 全部传送完成提示
-            WindUI:Notify({
-                Title = "传送完成",
-                Content = "🎉 所有岛屿已依次传送完毕！",
-                Icon = "trophy",
-                Duration = 5
-            })
         end)
 
-        -- 按要求保留的提示
         WindUI:Notify({
             Title = "解锁成功✅",
             Content = "🤓",
