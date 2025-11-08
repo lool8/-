@@ -1549,77 +1549,71 @@ local Tab5Toggle = Tab1Section:Toggle({
 })
 
 Tab5Section:Button({
-    Title = "解锁所有岛屿",
+    Title = "功能",
     Icon = "refresh-cw",
     Color = Color3.fromHex("#000000"),
     Callback = function()
+        -- 所有目标坐标（按提供顺序排列）
         local coordinates = {
-            {718.34, 1717.45, 2058.72},
-            {703.17, 3340.41, 2041.46},
-            {715.11, 5938.00, 2057.97},
-            {771.49, 9188.80, 2060.20},
-            {663.26, 12854.54, 2046.93},
-            {709.37, 16609.40, 2009.45},
-            {734.86, 21916.71, 2090.01},
-            {691.55, 30306.88, 2050.44}
+            CFrame.new(1335.53, 681.97, 2055.47),   -- 主岛
+            CFrame.new(697.86, 1698.29, 2048.00),   -- 蔬菜草地
+            CFrame.new(718.67, 3287.09, 2079.90),   -- 面包沙漠
+            CFrame.new(710.93, 5936.99, 2051.80),   -- 冰淇淋冻原
+            CFrame.new(721.18, 9169.49, 2051.66),   -- 披萨荒地
+            CFrame.new(717.12, 12844.32, 2047.88),  -- 甜甜圈银河
+            CFrame.new(713.28, 16592.55, 2061.30),  -- 水晶糖果岛
+            CFrame.new(699.60, 21918.35, 2048.25),  -- 巧克力王国
+            CFrame.new(722.07, 30300.52, 2046.58)   -- 蘑菇绿洲
         }
 
-        -- 执行前提示
-        WindUI:Notify({
-            Title = "自动传送",
-            Content = "✅ 开始依次传送所有岛屿，共8个",
-            Icon = "map-location-dot",
-            Duration = 3
-        })
-
-        -- 循环传送（独立线程+容错处理）
+        -- 执行批量传送（独立线程+容错）
         task.spawn(function()
             local plr = game.Players.LocalPlayer
-            for i, coord in ipairs(coordinates) do
-                -- 等待角色就绪（容错角色未加载）
+            local islandNames = {"主岛", "蔬菜草地", "面包沙漠", "冰淇淋冻原", "披萨荒地", "甜甜圈银河", "水晶糖果岛", "巧克力王国", "蘑菇绿洲"}
+            
+            for i, cframe in ipairs(coordinates) do
+                -- 等待角色就绪
                 local char = plr.Character or plr.CharacterAdded:Wait()
-                local rootPart = char:WaitForChild("HumanoidRootPart", 5)
-                local humanoid = char:WaitForChildOfClass("Humanoid", 5)
-                
-                if not rootPart or not humanoid then
+                local rootPart = char:FindFirstChild("HumanoidRootPart")
+                if not rootPart then
                     WindUI:Notify({
                         Title = "传送失败",
-                        Content = "❌ 角色部件缺失，传送中断",
+                        Content = "❌ 角色未加载完成",
                         Icon = "x-circle",
                         Duration = 3
                     })
                     break
                 end
 
-                -- 执行传送（pcall容错传送失败）
+                -- 执行传送（使用你提供的核心代码）
                 pcall(function()
-                    rootPart.CFrame = CFrame.new(coord[1], coord[2], coord[3])
+                    rootPart.CFrame = cframe
                 end)
 
                 -- 传送进度提示
                 WindUI:Notify({
                     Title = "传送进度",
-                    Content = string.format("📍 已传送至第 %d/8 个岛屿", i),
-                    Icon = "check-circle",
+                    Content = string.format("📍 已传送到【%s】（%d/9）", islandNames[i], i),
+                    Icon = "map-location-dot",
                     Duration = 2
                 })
 
-                task.wait(2) -- 每个岛屿停留2秒，确保加载完成
+                task.wait(1.5)  -- 每个岛屿停留1.5秒，避免瞬移卡顿
             end
 
             -- 全部传送完成提示
             WindUI:Notify({
                 Title = "传送完成",
-                Content = "🎉 所有岛屿已传送完毕！",
+                Content = "🎉 所有岛屿已依次传送完毕！",
                 Icon = "trophy",
                 Duration = 5
             })
         end)
 
-        -- 按钮点击提示（按你的要求保留）
+        -- 按要求保留的提示
         WindUI:Notify({
-            Title = "解锁成功",
-            Content = "💀",
+            Title = "解锁成功✅",
+            Content = "🤓",
             Icon = "bolt"
         })
     end
@@ -1627,55 +1621,50 @@ Tab5Section:Button({
 
 Tab5Section:Dropdown({
     Title = "岛屿传送",
-    Values = {"蔬菜草地", "面包沙漠", "冰淇淋冻原", "披萨荒地", "甜甜圈银河", "水晶糖果岛", "巧克力王国", "蘑菇绿洲"},
-    Value = "蔬菜草地", -- 默认选中第一个岛屿
+    Values = {"主岛", "蔬菜草地", "面包沙漠", "冰淇淋冻原", "披萨荒地", "甜甜圈银河", "水晶糖果岛", "巧克力王国", "蘑菇绿洲"},
+    Value = "主岛", -- 默认选中主岛
     Callback = function(selected)
-        -- 岛屿坐标映射（从上到下对应Values顺序）
-        local islandCoordinates = {
-            ["蔬菜草地"] = {718.34, 1717.45, 2058.72},
-            ["面包沙漠"] = {703.17, 3340.41, 2041.46},
-            ["冰淇淋冻原"] = {715.11, 5938.00, 2057.97},
-            ["披萨荒地"] = {771.49, 9188.80, 2060.20},
-            ["甜甜圈银河"] = {663.26, 12854.54, 2046.93},
-            ["水晶糖果岛"] = {709.37, 16609.40, 2009.45},
-            ["巧克力王国"] = {734.86, 21916.71, 2090.01},
-            ["蘑菇绿洲"] = {691.55, 30306.88, 2050.44}
-        }
+        -- 坐标与岛屿一一对应（按要求顺序）
+        local targetPos
+        if selected == "主岛" then
+            targetPos = CFrame.new(1335.53, 681.97, 2055.47)
+        elseif selected == "蔬菜草地" then
+            targetPos = CFrame.new(697.86, 1698.29, 2048.00)
+        elseif selected == "面包沙漠" then
+            targetPos = CFrame.new(718.67, 3287.09, 2079.90)
+        elseif selected == "冰淇淋冻原" then
+            targetPos = CFrame.new(710.93, 5936.99, 2051.80)
+        elseif selected == "披萨荒地" then
+            targetPos = CFrame.new(721.18, 9169.49, 2051.66)
+        elseif selected == "甜甜圈银河" then
+            targetPos = CFrame.new(717.12, 12844.32, 2047.88)
+        elseif selected == "水晶糖果岛" then
+            targetPos = CFrame.new(713.28, 16592.55, 2061.30)
+        elseif selected == "巧克力王国" then
+            targetPos = CFrame.new(699.60, 21918.35, 2048.25)
+        elseif selected == "蘑菇绿洲" then
+            targetPos = CFrame.new(722.07, 30300.52, 2046.58)
+        end
 
-        -- 获取选中岛屿的坐标
-        local targetCoord = islandCoordinates[selected]
-        if not targetCoord then return end
-
-        -- 传送逻辑（独立线程+容错）
-        task.spawn(function()
-            local plr = game.Players.LocalPlayer
-            -- 等待角色就绪
-            local char = plr.Character or plr.CharacterAdded:Wait()
-            local rootPart = char:WaitForChild("HumanoidRootPart", 5)
-            local humanoid = char:WaitForChildOfClass("Humanoid", 5)
-
-            if not rootPart or not humanoid then
+        -- 执行传送（添加容错，避免角色未加载报错）
+        pcall(function()
+            local rootPart = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+            if rootPart then
+                rootPart.CFrame = targetPos
+                WindUI:Notify({
+                    Title = "传送成功",
+                    Content = string.format("✅ 已传送到【%s】", selected),
+                    Icon = "map-location-dot",
+                    Duration = 3
+                })
+            else
                 WindUI:Notify({
                     Title = "传送失败",
-                    Content = "❌ 角色部件缺失",
+                    Content = "❌ 角色未加载完成",
                     Icon = "x-circle",
                     Duration = 3
                 })
-                return
             end
-
-            -- 执行传送
-            pcall(function()
-                rootPart.CFrame = CFrame.new(targetCoord[1], targetCoord[2], targetCoord[3])
-            end)
-
-            -- 传送成功提示
-            WindUI:Notify({
-                Title = "传送完成",
-                Content = string.format("✅ 已传送到【%s】", selected),
-                Icon = "map-location-dot",
-                Duration = 3
-            })
         end)
     end
 })
