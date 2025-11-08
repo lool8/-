@@ -1518,7 +1518,7 @@ local Tab5 = MainWindow:Tab({
     Icon = "bolt"  -- 标签页图标
 })
 
-local Tab5Section = Tab1:Section({
+local Tab5Section = Tab5:Section({
     Title = "主要功能",
     TextSize = 18,
     FontWeight = Enum.FontWeight.SemiBold
@@ -1642,7 +1642,9 @@ Tab5Section:Button({
     Icon = "bolt",
     Color = Color3.fromHex("#000000"), 
     Callback = function()
-        脚本
+        local sound = Instance.new("Sound", workspace)
+sound.SoundId = "rbxassetid://7153945201"
+sound:Play()
         WindUI:Notify({
             Title = "播放成功✅",
             Content = "开始播放",
@@ -1713,7 +1715,7 @@ local Tab6 = MainWindow:Tab({
     Icon = "bolt"  -- 标签页图标
 })
 
-local Tab6Section = Tab1:Section({
+local Tab6Section = Tab6:Section({
     Title = "玩家绘制",
     TextSize = 18,
     FontWeight = Enum.FontWeight.SemiBold
@@ -1850,7 +1852,7 @@ local playerHighlight = {
     connections = {} -- 存储事件连接
 }
 
-local Tab6Toggle = Tab1Section:Toggle({
+local Tab6Toggle = Tab6Section:Toggle({
     Title = "玩家边框高亮",
     Desc = "用高亮边框标记所有玩家（队友绿色/默认青色，仅本地可见）",
     Default = false,
@@ -1952,7 +1954,7 @@ local playerBoxESP = {
     connections = {} -- 存储所有事件连接（便于关闭时断开）
 }
 
-local Tab6Toggle = Tab1Section:Toggle({
+local Tab6Toggle = Tab6Section:Toggle({
     Title = "绘制玩家方框",
     Desc = "在玩家周围绘制矩形方框（队友绿色/敌人红色，仅本地可见）",
     Default = false,
@@ -2115,7 +2117,7 @@ local skeletonESP = {
     library = nil -- 存储骨骼库对象
 }
 
-local Tab6Toggle = Tab1Section:Toggle({
+local Tab6Toggle = Tab6Section:Toggle({
     Title = "透视骨骼ESP",
     Desc = "显示玩家骨骼结构（穿透墙壁可见，仅本地）",
     Default = false,
@@ -2198,7 +2200,7 @@ local Tab7 = MainWindow:Tab({
 })
 
 -- 创建音频功能分区
-local Tab7Section = Tab1:Section({
+local Tab7Section = Tab7:Section({
     Title = "趣味音频库",
     TextSize = 18,
     FontWeight = Enum.FontWeight.SemiBold
@@ -2336,13 +2338,13 @@ local Tab9 = MainWindow:Tab({
     Icon = "bolt"  -- 标签页图标
 })
 
-local Tab9Section = Tab5:Section({
+local Tab9Section = Tab9:Section({
     Title = "主要功能",
     TextSize = 18,
     FontWeight = Enum.FontWeight.SemiBold
 })
 
-local Tab9Toggle_AutoEat = Tab5Section:Toggle({
+local Tab9Toggle_AutoEat = Tab9Section:Toggle({
     Title = "自动吃食物",
     Desc = "自动使用食物道具",
     Default = false,
@@ -2376,7 +2378,7 @@ local Tab9Toggle_AutoEat = Tab5Section:Toggle({
 
 
 -- 自动售出
-local Tab9Toggle_AutoSell = Tab5Section:Toggle({
+local Tab9Toggle_AutoSell = Tab9Section:Toggle({
     Title = "自动售出",
     Desc = "原地售出［关了售卖它也能售出］",
     Default = false,
@@ -2407,7 +2409,7 @@ local Tab9Toggle_AutoSell = Tab5Section:Toggle({
     end
 })
 
-local Tab9Toggle = Tab5Section:Toggle({
+local Tab9Toggle_AutoPunch = Tab9Section:Toggle({
     Title = "自动挥拳",
     Desc = "开启后自动持续挥拳",
     Default = false,  -- 默认关闭
@@ -2454,7 +2456,7 @@ local Tab9Toggle = Tab5Section:Toggle({
     end 
 })
 
-local Tab9Toggle = Tab1Section:Toggle({
+local Tab9Toggle_AutoStomp = Tab9Section:Toggle({
     Title = "自动跺脚",
     Desc = "开启后持续触发跺脚技能",
     Default = false,  -- 默认关闭
