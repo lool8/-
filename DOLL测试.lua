@@ -1727,7 +1727,7 @@ local playerESP = {
     connections = {} -- 存储所有事件连接，便于关闭时断开
 }
 
-local Tab6Toggle = Tab6Section:Toggle({
+local Tab6Toggle_NameTag = Tab6Section:Toggle({
     Title = "绘制玩家名字",
     Desc = "在玩家头顶显示名字标签（仅本地可见）",
     Default = false,
@@ -1852,7 +1852,7 @@ local playerHighlight = {
     connections = {} -- 存储事件连接
 }
 
-local Tab6Toggle = Tab6Section:Toggle({
+local Tab6Toggle_Highlight = Tab6Section:Toggle({
     Title = "玩家边框高亮",
     Desc = "用高亮边框标记所有玩家（队友绿色/默认青色，仅本地可见）",
     Default = false,
@@ -1954,7 +1954,7 @@ local playerBoxESP = {
     connections = {} -- 存储所有事件连接（便于关闭时断开）
 }
 
-local Tab6Toggle = Tab6Section:Toggle({
+local Tab6Toggle_Box = Tab6Section:Toggle({
     Title = "绘制玩家方框",
     Desc = "在玩家周围绘制矩形方框（队友绿色/敌人红色，仅本地可见）",
     Default = false,
@@ -2117,7 +2117,7 @@ local skeletonESP = {
     library = nil -- 存储骨骼库对象
 }
 
-local Tab6Toggle = Tab6Section:Toggle({
+local Tab6Toggle_Skeleton = Tab6Section:Toggle({
     Title = "透视骨骼ESP",
     Desc = "显示玩家骨骼结构（穿透墙壁可见，仅本地）",
     Default = false,
@@ -2208,7 +2208,7 @@ local Tab7Section = Tab7:Section({
 
 -- 音频播放通用函数（简化代码）
 local function createSoundButton(title, soundId, icon, colorHex)
-    Tab1Section:Button({
+    Tab7Section:Button({
         Title = title,
         Icon = icon,
         Color = Color3.fromHex(colorHex),
@@ -2254,40 +2254,35 @@ local Tab8 = MainWindow:Tab({
     Icon = "bolt"  -- 标签页图标
 })
 
-local Tab8Section = Tab4:Section({
+local Tab8Section = Tab8:Section({
     Title = "主要功能",
     TextSize = 18,
     FontWeight = Enum.FontWeight.SemiBold
 })
 
--- 获取所有装扮（按钮转开关，点击即触发一次，开关状态仅作提示）
-local Tab8Toggle_GetAllSkins = Tab8Section:Toggle({ -- 修复：变量名唯一+关联正确Section
+local Tab8Toggle_GetAllSkins = Tab8Section:Toggle({
     Title = "获取所有装扮",
     Desc = "点击开启即可触发获取全部装扮",
     Default = false,
     Callback = function(isEnabled)
         if isEnabled then
-            -- 触发四段请求（添加超时容错，避免卡死）
             local remote = game:GetService("ReplicatedStorage"):WaitForChild("Project", 5)
             if not remote then return end
             remote = remote:WaitForChild("RemoteEvent", 5)
             if not remote then return end
             remote = remote:WaitForChild("ControlMessageEvent", 5)
             if not remote then return end
-
             for i = 1, 4 do
                 local args = {2, {2, i}}
-                pcall(function() remote:FireServer(unpack(args)) end) -- 容错：避免单条请求失败
+                pcall(function() remote:FireServer(unpack(args)) end)
             end
-
-            -- 提示并自动关闭开关（避免重复触发）
             WindUI:Notify({
                 Title = "装扮获取",
                 Content = "✅ 已发送所有装扮获取请求",
                 Icon = "tshirt",
                 Duration = 3
             })
-            Tab4Toggle_GetAllSkins:SetValue(false) -- 修复：变量名与定义一致
+            Tab8Toggle_GetAllSkins:SetValue(false) -- 变量名与定义一致
         end
     end
 })
