@@ -1636,7 +1636,13 @@ Tab5Section:Dropdown({
     Values = {"主岛", "蔬菜草地", "面包沙漠", "冰淇淋冻原", "披萨荒地", "甜甜圈银河", "水晶糖果岛", "巧克力王国", "蘑菇绿洲"},
     Value = "主岛", -- 默认选中主岛（仅显示，不触发传送）
     Callback = function(selected)
-        -- 关键修复：新增角色就绪判断+延迟执行，避免初始化误触发
+        -- 关键修复1：过滤初始化触发（脚本启动时无用户操作，直接返回）
+        -- 原理：初始化时无鼠标点击，只有手动选择时才执行后续逻辑
+        if not game:GetService("UserInputService"):IsMouseButtonPressed(Enum.UserInputType.MouseButton1) then
+            return
+        end
+
+        -- 关键修复2：角色加载校验（双重保险）
         local plr = game.Players.LocalPlayer
         local char = plr.Character or plr.CharacterAdded:Wait(5) -- 最多等5秒角色加载
         if not char then
@@ -1649,7 +1655,7 @@ Tab5Section:Dropdown({
             return
         end
 
-        -- 坐标与岛屿一一对应（保留原顺序）
+        -- 坐标与岛屿一一对应（保留原顺序，无修改）
         local targetPos
         if selected == "主岛" then
             targetPos = CFrame.new(1335.53, 681.97, 2055.47)
@@ -1671,11 +1677,10 @@ Tab5Section:Dropdown({
             targetPos = CFrame.new(722.07, 30300.52, 2046.58)
         end
 
-        -- 执行传送（强化容错）
+        -- 执行传送（强化容错，无修改）
         pcall(function()
             local rootPart = char:FindFirstChild("HumanoidRootPart")
             if rootPart and targetPos then
-                -- 额外容错：确保角色不在加载中
                 local humanoid = char:FindFirstChildOfClass("Humanoid")
                 if humanoid and humanoid.Health > 0 then
                     rootPart.CFrame = targetPos
