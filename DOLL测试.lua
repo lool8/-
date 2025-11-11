@@ -108,6 +108,10 @@ Tab2Section:Button({
     Color = Color3.fromHex("#000000"),  -- 按钮颜色
     Callback = function()
         local main = Instance.new("ScreenGui")
+local speeds = 1 -- 新增：局部变量声明
+local nowe = false -- 新增：局部变量声明
+local tpwalking = false -- 新增：局部变量声明
+local Frame = Instance.new("Frame")
 local Frame = Instance.new("Frame")
 local up = Instance.new("TextButton")
 local down = Instance.new("TextButton")
