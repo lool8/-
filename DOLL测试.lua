@@ -2605,7 +2605,7 @@ local Tab11Section = Tab11:Section({
     FontWeight = Enum.FontWeight.SemiBold
 })
 
-Tab1Section:Button({
+Tab11Section:Button({
     Title = "自动刷金币",
     Icon = "bolt",
     Color = Color3.fromHex("#000000"), 
