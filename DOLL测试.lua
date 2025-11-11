@@ -1,5 +1,5 @@
 -- 1. 加载 WindUI 核心库（确保路径与核心库一致）
-local WindUI = loadstring(game:HttpGet("https://raw.github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
+local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/lool8/-/refs/heads/main/DOLLUI.lua"))()
 
 -- 2. 创建主窗口
 local MainWindow = WindUI:CreateWindow({
