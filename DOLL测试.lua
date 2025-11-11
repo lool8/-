@@ -2604,7 +2604,7 @@ local Tab11 = MainWindow:Tab({
     Icon = "bolt"  -- 标签页图标
 })
 
-local Tab11Section = Tab1:Section({
+local Tab11Section = Tab11:Section({
     Title = "刷金币",
     TextSize = 18,
     FontWeight = Enum.FontWeight.SemiBold
@@ -2683,7 +2683,7 @@ local Tab11Toggle = Tab11Section:Toggle({
     end 
 })
 
-Tab1Section:Button({
+Tab11Section:Button({
     Title = "飞车",
     Icon = "bolt",
     Color = Color3.fromHex("#000000"), 
@@ -2697,7 +2697,7 @@ Tab1Section:Button({
     end
 })
 
-local Tab11Section = Tab1:Section({
+local Tab11Section = Tab11:Section({
     Title = "传送",
     TextSize = 18,
     FontWeight = Enum.FontWeight.SemiBold
@@ -2750,7 +2750,7 @@ Tab11Section:Button({
     Icon = "bolt",
     Color = Color3.fromHex("#000000"), 
     Callback = function()
-        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(X: -483.14, Y: -9.17, Z: 293.13)
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new( -483.14,  -9.17,  293.13)
         WindUI:Notify({
             Title = "已传送至绿队✅",
             Content = "小提示✅",
