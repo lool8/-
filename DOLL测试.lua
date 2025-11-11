@@ -2605,6 +2605,53 @@ local Tab11Section = Tab11:Section({
     FontWeight = Enum.FontWeight.SemiBold
 })
 
+Tab1Section:Button({
+    Title = "自动刷金币",
+    Icon = "bolt",
+    Color = Color3.fromHex("#000000"), 
+    Callback = function()
+        local Players = game:GetService("Players")
+local localPlayer = Players.LocalPlayer
+local character = localPlayer.Character or localPlayer.CharacterAdded:Wait()
+local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+
+local positions = {
+    Vector3.new(-59.20, 0.57, 1182.52),
+    Vector3.new(-54.12, 8.71, 1689.17),
+    Vector3.new(-41.68, 3.59, 2519.15),
+    Vector3.new(-53.87, 32.09, 3179.87),
+    Vector3.new(-60.09, 14.87, 4018.43),
+    Vector3.new(-75.24, 20.15, 4773.91),
+    Vector3.new(-61.26, 16.50, 5534.33),
+    Vector3.new(-58.33, 14.65, 6296.06),
+    Vector3.new(-52.90, 13.00, 7157.79),
+    Vector3.new(-48.33, 26.10, 7850.43),
+    Vector3.new(-64.59, 23.17, 8472.87),
+    Vector3.new(-47.24, -333.20, 8726.69),
+    Vector3.new(-57.57, -353.98, 9359.17),
+    Vector3.new(-58.00, -354.70, 9490.83)
+}
+
+for _, pos in ipairs(positions) do
+    local startTime = tick()
+    
+    -- 在该坐标固定1.5秒钟
+    while tick() - startTime < 1.5 do
+        humanoidRootPart.CFrame = CFrame.new(pos)
+        task.wait() -- 每帧传送一次以确保位置固定
+    end
+    
+    -- 可选：短暂等待后再移动到下一个坐标
+    task.wait(0.1)
+end
+        WindUI:Notify({
+            Title = "成功刷完一次✅",
+            Content = "小提示✅",
+            Icon = "bolt"
+        })
+    end
+})
+
 local Players = game:GetService("Players")
 local localPlayer = Players.LocalPlayer
 
@@ -2629,8 +2676,8 @@ local positions = {
 local isTeleporting = false
 
 local Tab11Toggle = Tab11Section:Toggle({
-    Title = "自动传送",
-    Desc = "循环传送所有坐标点",
+    Title = "自动刷金币［自动版］",
+    Desc = "这是凭运气中途可能死亡👀",
     Default = false,
     Callback = function(isEnabled)
         isTeleporting = isEnabled
@@ -2796,5 +2843,4 @@ Tab11Section:Button({
     end
 })
 
--- 5. 快捷键设置：LeftControl 快速打开/关闭窗口
 MainWindow:SetToggleKey(Enum.KeyCode.LeftControl)
