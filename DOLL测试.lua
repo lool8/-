@@ -1012,6 +1012,20 @@ local Tab3Slider_CurrentHealth = Tab3Section:Slider({
 })
 
 Tab3Section:Button({
+    Title = "载人飞行",
+    Icon = "bolt",
+    Color = Color3.fromHex("#000000"), 
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/cytj777i/6669178/main/单一物体飞行载自己最终优化版"))()
+        WindUI:Notify({
+            Title = "开启成功✅",
+            Content = "小提示✅",
+            Icon = "bolt"
+        })
+    end
+})
+
+Tab3Section:Button({
     Title = "铁拳",
     Icon = "click",
     Color = Color3.fromHex("#000000"), 
@@ -1371,7 +1385,7 @@ Tab3Section:Button({
 
 local Tab4 = MainWindow:Tab({
     Title = "预留",
-    Icon = "rbxassetid://78892482588180"
+    Icon = "bolt"
 })
 
 -- 创建功能分区
@@ -2064,7 +2078,7 @@ local Tab6Toggle_Skeleton = Tab6Section:Toggle({
 -- 创建音频标签页
 local Tab7 = MainWindow:Tab({
     Title = "音频播放",
-    Icon = "rbxassetid://78892482588180"
+    Icon = "bolt"
 })
 
 -- 创建音频功能分区
@@ -2448,6 +2462,344 @@ Tab9Section:Button({
         })
     end -- 补全：Callback的end
 }) -- 补全：Button的end
+
+local Tab10 = MainWindow:Tab({
+    Title = "自然灾害",
+    Icon = "bolt"  -- 标签页图标
+})
+
+local Tab10Section = Tab10:Section({
+    Title = "黑洞合集",
+    TextSize = 18,
+    FontWeight = Enum.FontWeight.SemiBold
+})
+
+-- 黑洞V1按钮
+Tab10Section:Button({
+    Title = "黑洞V1",
+    Icon = "refresh-cw",
+    Color = Color3.fromHex("#000000"),
+    Callback = function()
+        local success, err = pcall(function()
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/ke9460394-dot/ugik/refs/heads/main/V1.lua.txt"))()
+        end)
+        if success then
+            WindUI:Notify({
+                Title = "黑洞V1",
+                Content = "✅ 已成功加载黑洞V1",
+                Icon = "black-hole"
+            })
+        else
+            WindUI:Notify({
+                Title = "加载失败",
+                Content = "❌ 黑洞V1加载出错：" .. err,
+                Icon = "x-circle"
+            })
+        end
+    end
+})
+
+-- 黑洞V3按钮
+Tab10Section:Button({
+    Title = "黑洞V3",
+    Icon = "refresh-cw",
+    Color = Color3.fromHex("#000000"),
+    Callback = function()
+        local success, err = pcall(function()
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/ke9460394-dot/ugik/refs/heads/main/V3.txt"))()
+        end)
+        if success then
+            WindUI:Notify({
+                Title = "黑洞V3",
+                Content = "✅ 已成功加载黑洞V3",
+                Icon = "black-hole"
+            })
+        else
+            WindUI:Notify({
+                Title = "加载失败",
+                Content = "❌ 黑洞V3加载出错：" .. err,
+                Icon = "x-circle"
+            })
+        end
+    end
+})
+
+-- 黑洞V4按钮
+Tab10Section:Button({
+    Title = "黑洞V4",
+    Icon = "refresh-cw",
+    Color = Color3.fromHex("#000000"),
+    Callback = function()
+        local success, err = pcall(function()
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/ke9460394-dot/ugik/refs/heads/main/V4.txt"))()
+        end)
+        if success then
+            WindUI:Notify({
+                Title = "黑洞V4",
+                Content = "✅ 已成功加载黑洞V4",
+                Icon = "black-hole"
+            })
+        else
+            WindUI:Notify({
+                Title = "加载失败",
+                Content = "❌ 黑洞V4加载出错：" .. err,
+                Icon = "x-circle"
+            })
+        end
+    end
+})
+
+-- 黑洞V5按钮
+Tab10Section:Button({
+    Title = "黑洞V5",
+    Icon = "refresh-cw",
+    Color = Color3.fromHex("#000000"),
+    Callback = function()
+        local success, err = pcall(function()
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/ke9460394-dot/ugik/refs/heads/main/V5.txt"))()
+        end)
+        if success then
+            WindUI:Notify({
+                Title = "黑洞V5",
+                Content = "✅ 已成功加载黑洞V5",
+                Icon = "black-hole"
+            })
+        else
+            WindUI:Notify({
+                Title = "加载失败",
+                Content = "❌ 黑洞V5加载出错：" .. err,
+                Icon = "x-circle"
+            })
+        end
+    end
+})
+
+-- 黑洞V6按钮
+Tab10Section:Button({
+    Title = "黑洞V6",
+    Icon = "refresh-cw",
+    Color = Color3.fromHex("#000000"),
+    Callback = function()
+        local success, err = pcall(function()
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/ke9460394-dot/ugik/refs/heads/main/V6.txt"))()
+        end)
+        if success then
+            WindUI:Notify({
+                Title = "黑洞V6",
+                Content = "✅ 已成功加载黑洞V6",
+                Icon = "black-hole"
+            })
+        else
+            WindUI:Notify({
+                Title = "加载失败",
+                Content = "❌ 黑洞V6加载出错：" .. err,
+                Icon = "x-circle"
+            })
+        end
+    end
+})
+
+local Tab11 = MainWindow:Tab({
+    Title = "造船寻宝",
+    Icon = "bolt"  -- 标签页图标
+})
+
+local Tab11Section = Tab1:Section({
+    Title = "刷金币",
+    TextSize = 18,
+    FontWeight = Enum.FontWeight.SemiBold
+})
+
+local Players = game:GetService("Players")
+local localPlayer = Players.LocalPlayer
+
+-- 坐标列表
+local positions = {
+    Vector3.new(-59.20, 0.57, 1182.52),
+    Vector3.new(-54.12, 8.71, 1689.17),
+    Vector3.new(-41.68, 3.59, 2519.15),
+    Vector3.new(-53.87, 32.09, 3179.87),
+    Vector3.new(-60.09, 14.87, 4018.43),
+    Vector3.new(-75.24, 20.15, 4773.91),
+    Vector3.new(-61.26, 16.50, 5534.33),
+    Vector3.new(-58.33, 14.65, 6296.06),
+    Vector3.new(-52.90, 13.00, 7157.79),
+    Vector3.new(-48.33, 26.10, 7850.43),
+    Vector3.new(-64.59, 23.17, 8472.87),
+    Vector3.new(-47.24, -333.20, 8726.69),
+    Vector3.new(-57.57, -353.98, 9359.17),
+    Vector3.new(-58.00, -354.70, 9490.83)
+}
+
+local isTeleporting = false
+
+local Tab11Toggle = Tab11Section:Toggle({
+    Title = "自动传送",
+    Desc = "循环传送所有坐标点",
+    Default = false,
+    Callback = function(isEnabled)
+        isTeleporting = isEnabled
+        
+        WindUI:Notify({
+            Title = "自动传送",
+            Content = isEnabled and "✅ 已开启" or "❌ 已关闭",
+            Icon = "bolt",
+            Duration = 3
+        })
+        
+        if isEnabled then
+            -- 开启时启动循环传送
+            task.spawn(function()
+                while isTeleporting do
+                    local character = localPlayer.Character or localPlayer.CharacterAdded:Wait()
+                    local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+                    
+                    -- 循环传送所有坐标
+                    for _, pos in ipairs(positions) do
+                        if not isTeleporting then break end -- 检查是否关闭
+                        
+                        local startTime = tick()
+                        while tick() - startTime < 1.5 and isTeleporting do
+                            humanoidRootPart.CFrame = CFrame.new(pos)
+                            task.wait()
+                        end
+                        
+                        if not isTeleporting then break end -- 再次检查是否关闭
+                        task.wait(0.1)
+                    end
+                    
+                    -- 如果仍然开启，继续下一轮循环
+                    if isTeleporting then
+                        WindUI:Notify({
+                            Title = "自动传送",
+                            Content = "🔁 开始新一轮传送循环",
+                            Icon = "refresh",
+                            Duration = 2
+                        })
+                    end
+                end
+            end)
+        end
+    end 
+})
+
+Tab1Section:Button({
+    Title = "飞车",
+    Icon = "bolt",
+    Color = Color3.fromHex("#000000"), 
+    Callback = function()
+        loadstring(game:HttpGet("https://pastebin.com/raw/63T0fkBm"))()
+        WindUI:Notify({
+            Title = "飞车开启成功✅",
+            Content = "坐上载具能同载具一起飞",
+            Icon = "bolt"
+        })
+    end
+})
+
+local Tab11Section = Tab1:Section({
+    Title = "传送",
+    TextSize = 18,
+    FontWeight = Enum.FontWeight.SemiBold
+})
+
+Tab11Section:Button({
+    Title = "传送至紫队",
+    Icon = "bolt",
+    Color = Color3.fromHex("#000000"), 
+    Callback = function()
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new( 377.18,  -9.17,  647.20)
+        WindUI:Notify({
+            Title = "已传送至紫队✅",
+            Content = "小提示✅",
+            Icon = "bolt"
+        })
+    end
+})
+
+Tab11Section:Button({
+    Title = "传送至黄队",
+    Icon = "bolt",
+    Color = Color3.fromHex("#000000"), 
+    Callback = function()
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new( -483.94,  -9.17,  639.88)
+        WindUI:Notify({
+            Title = "已传送至黄队✅",
+            Content = "小提示✅",
+            Icon = "bolt"
+        })
+    end
+})
+
+Tab11Section:Button({
+    Title = "传送至蓝队",
+    Icon = "bolt",
+    Color = Color3.fromHex("#000000"), 
+    Callback = function()
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new( 375.78,  -9.17,  301.21)
+        WindUI:Notify({
+            Title = "已传送至蓝队✅",
+            Content = "小提示✅",
+            Icon = "bolt"
+        })
+    end
+})
+
+Tab11Section:Button({
+    Title = "传送至绿队",
+    Icon = "bolt",
+    Color = Color3.fromHex("#000000"), 
+    Callback = function()
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(X: -483.14, Y: -9.17, Z: 293.13)
+        WindUI:Notify({
+            Title = "已传送至绿队✅",
+            Content = "小提示✅",
+            Icon = "bolt"
+        })
+    end
+})
+
+Tab11Section:Button({
+    Title = "传送至红队",
+    Icon = "bolt",
+    Color = Color3.fromHex("#000000"), 
+    Callback = function()
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new( 375.27,  -9.17,  -64.94)
+        WindUI:Notify({
+            Title = "已传送至红队✅",
+            Content = "小提示✅",
+            Icon = "bolt"
+        })
+    end
+})
+
+Tab11Section:Button({
+    Title = "传送至黑队",
+    Icon = "bolt",
+    Color = Color3.fromHex("#000000"), 
+    Callback = function()
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new( -483.38,  -9.17,  -69.95)
+        WindUI:Notify({
+            Title = "已传送至黑队✅",
+            Content = "小提示✅",
+            Icon = "bolt"
+        })
+    end
+})
+
+Tab11Section:Button({
+    Title = "传送至白队",
+    Icon = "bolt",
+    Color = Color3.fromHex("#000000"), 
+    Callback = function()
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new( -49.86,  -9.17,  -497.90)
+        WindUI:Notify({
+            Title = "已传送至白队✅",
+            Content = "小提示✅",
+            Icon = "bolt"
+        })
+    end
+})
 
 -- 5. 快捷键设置：LeftControl 快速打开/关闭窗口
 MainWindow:SetToggleKey(Enum.KeyCode.LeftControl)
