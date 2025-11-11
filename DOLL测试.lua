@@ -1,10 +1,5 @@
 -- 1. 加载 WindUI 核心库（确保路径与核心库一致）
-local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
-
-local LP = game.Players.LocalPlayer
-pcall(function()
-    addRainbowTitleToLocalPlayer(LP, "DOLL用户※")
-end)
+local WindUI = loadstring(game:HttpGet("https://raw.github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
 
 -- 2. 创建主窗口
 local MainWindow = WindUI:CreateWindow({
