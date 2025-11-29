@@ -78,7 +78,7 @@ local Tab2 = MainWindow:Tab({
     Icon = "bolt"  -- 标签页图标
 })
 
-local Tab2SectionMain = Tab2:Section({
+local Tab2SectionMain = Tab2:SectionGeneral({
     Title = "主要的"
 })
 
@@ -94,7 +94,7 @@ Tab2SectionMain:Button({
 })
 
 -- 无敌少侠
-Tab2Section:Button({
+Tab2SectionGeneral:Button({
     Title = "无敌少侠",
     Icon = "user-astronaut",
     Color = Color3.fromHex("#000000"),
@@ -104,7 +104,7 @@ Tab2Section:Button({
     end
 })
 
-Tab2Section:Button({
+Tab2SectionGeneral:Button({
     Title = "DOLL飞行",
     Icon = "refresh-cw",
     Color = Color3.fromHex("#000000"),  -- 按钮颜色
@@ -894,7 +894,7 @@ local Tab3SectionGeneral = Tab3:Section({
     FontWeight = Enum.FontWeight.SemiBold
 })
 
-Tab3SectionGeneral:Button({
+Tab3Section:Button({
     Title = "重新加入服务器",
     Icon = "bolt",
     Color = Color3.fromHex("#000000"), 
@@ -908,7 +908,7 @@ Tab3SectionGeneral:Button({
     end
 })
 
-Tab3SectionGeneral:Button({
+Tab3Section:Button({
     Title = "隐身道具",
     Icon = "refresh-cw",
     Color = Color3.fromHex("#000000"), 
@@ -1011,7 +1011,7 @@ local Tab3Slider_CurrentHealth = Tab3Section:Slider({
     end
 })
 
-Tab3SectionGeneral:Button({
+Tab3Section:Button({
     Title = "载人飞行",
     Icon = "bolt",
     Color = Color3.fromHex("#000000"), 
@@ -1025,7 +1025,7 @@ Tab3SectionGeneral:Button({
     end
 })
 
-Tab3SectionGeneral:Button({
+Tab3Section:Button({
     Title = "铁拳",
     Icon = "click",
     Color = Color3.fromHex("#000000"), 
@@ -1039,7 +1039,7 @@ Tab3SectionGeneral:Button({
     end
 })
 
-Tab3SectionGeneral:Button({
+Tab3Section:Button({
     Title = "甩人",
     Icon = "click",
     Color = Color3.fromHex("#000000"), 
@@ -1053,7 +1053,7 @@ Tab3SectionGeneral:Button({
     end
 })
 
-Tab3SectionGeneral:Button({
+Tab3Section:Button({
     Title = "死亡笔记",
     Icon = "click",
     Color = Color3.fromHex("#000000"), 
@@ -1068,7 +1068,7 @@ Tab3SectionGeneral:Button({
 })
 
 
-Tab3SectionGeneral:Button({
+Tab3Section:Button({
     Title = "上墙",
     Icon = "click",
     Color = Color3.fromHex("#000000"), 
@@ -1083,7 +1083,7 @@ Tab3SectionGeneral:Button({
 })
 
 
-Tab3SectionGeneral:Button({
+Tab3Section:Button({
     Title = "飞车",
     Icon = "click",
     Color = Color3.fromHex("#000000"), 
@@ -1097,7 +1097,7 @@ Tab3SectionGeneral:Button({
     end
 })
 
-Tab3SectionGeneral:Button({
+Tab3Section:Button({
     Title = "穿墙",
     Icon = "click",
     Color = Color3.fromHex("#000000"), 
@@ -1111,7 +1111,7 @@ Tab3SectionGeneral:Button({
     end
 })
 
-Tab3SectionGeneral:Button({
+Tab3Section:Button({
     Title = "点击传送工具",
     Icon = "click",
     Color = Color3.fromHex("#000000"), 
@@ -1125,7 +1125,7 @@ Tab3SectionGeneral:Button({
     end
 })
 
-Tab3SectionGeneral:Button({
+Tab3Section:Button({
     Title = "无敌",
     Icon = "click",
     Color = Color3.fromHex("#000000"), 
@@ -1139,7 +1139,7 @@ Tab3SectionGeneral:Button({
     end
 })
 
-Tab3SectionGeneral:Button({
+Tab3Section:Button({
     Title = "隐身",
     Icon = "click",
     Color = Color3.fromHex("#000000"), 
@@ -1153,7 +1153,7 @@ Tab3SectionGeneral:Button({
     end
 })
 
-Tab3SectionGeneral:Button({
+Tab3Section:Button({
     Title = "旋转",
     Icon = "click",
     Color = Color3.fromHex("#000000"), 
@@ -1167,7 +1167,7 @@ Tab3SectionGeneral:Button({
     end
 })
 
-Tab3SectionGeneral:Button({
+Tab3Section:Button({
     Title = "fps显示",
     Icon = "click",
     Color = Color3.fromHex("#000000"), 
@@ -1181,7 +1181,7 @@ Tab3SectionGeneral:Button({
     end
 })
 
-Tab3SectionGeneral:Button({
+Tab3Section:Button({
     Title = "动画中心",
     Icon = "click",
     Color = Color3.fromHex("#000000"), 
@@ -1195,7 +1195,7 @@ Tab3SectionGeneral:Button({
     end
 })
 
-Tab3SectionGeneral:Button({
+Tab3Section:Button({
     Title = "义勇军进行曲",
     Icon = "click",
     Color = Color3.fromHex("#000000"), 
@@ -1212,7 +1212,7 @@ Tab3SectionGeneral:Button({
     end
 })
 
-Tab3SectionGeneral:Button({
+Tab3Section:Button({
     Title = "工具",
     Icon = "click",
     Color = Color3.fromHex("#000000"), 
@@ -1226,7 +1226,7 @@ Tab3SectionGeneral:Button({
     end
 })
 
-Tab3SectionGeneral:Button({
+Tab3Section:Button({
     Title = "YI指令",
     Icon = "click",
     Color = Color3.fromHex("#000000"), 
@@ -1241,7 +1241,7 @@ Tab3SectionGeneral:Button({
     end
 })
 
-Tab3SectionGeneral:Button({
+Tab3Section:Button({
     Title = "键盘",
     Icon = "click",
     Color = Color3.fromHex("#000000"), 
@@ -1255,7 +1255,7 @@ Tab3SectionGeneral:Button({
     end
 })
 
-Tab3SectionGeneral:Button({
+Tab3Section:Button({
     Title = "替身",
     Icon = "click",
     Color = Color3.fromHex("#000000"), 
@@ -1269,7 +1269,7 @@ Tab3SectionGeneral:Button({
     end
 })
 
-Tab3SectionGeneral:Button({
+Tab3Section:Button({
     Title = "反挂机",
     Icon = "click",
     Color = Color3.fromHex("#000000"), 
@@ -1283,7 +1283,7 @@ Tab3SectionGeneral:Button({
     end
 })
 
-Tab3SectionGeneral:Button({
+Tab3Section:Button({
     Title = "阿尔宙斯自瞄",
     Icon = "click",
     Color = Color3.fromHex("#000000"), 
@@ -1297,7 +1297,7 @@ Tab3SectionGeneral:Button({
     end
 })
 
-Tab3SectionGeneral:Button({
+Tab3Section:Button({
     Title = "光影V4",
     Icon = "click",
     Color = Color3.fromHex("#000000"), 
@@ -1311,7 +1311,7 @@ Tab3SectionGeneral:Button({
     end
 })
 
-Tab3SectionGeneral:Button({
+Tab3Section:Button({
     Title = "鼠标［手机不建议使用］",
     Icon = "click",
     Color = Color3.fromHex("#000000"), 
@@ -1325,7 +1325,7 @@ Tab3SectionGeneral:Button({
     end
 })
 
-Tab3SectionGeneral:Button({
+Tab3Section:Button({
     Title = "子弹追踪",
     Icon = "click",
     Color = Color3.fromHex("#000000"), 
@@ -1339,7 +1339,7 @@ Tab3SectionGeneral:Button({
     end
 })
 
-Tab3SectionGeneral:Button({
+Tab3Section:Button({
     Title = "伪名说话",
     Icon = "click",
     Color = Color3.fromHex("#000000"), 
@@ -1353,7 +1353,7 @@ Tab3SectionGeneral:Button({
     end
 })
 
-Tab3SectionGeneral:Button({
+Tab3Section:Button({
     Title = "跟踪玩家",
     Icon = "click",
     Color = Color3.fromHex("#000000"), 
@@ -1367,7 +1367,7 @@ Tab3SectionGeneral:Button({
     end
 })
 
-Tab3SectionGeneral:Button({
+Tab3Section:Button({
     Title = "紫砂",
     Icon = "click",
     Color = Color3.fromHex("3B82F6"), 
