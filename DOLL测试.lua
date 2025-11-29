@@ -114,7 +114,6 @@ local speeds = 1 -- 新增：局部变量声明
 local nowe = false -- 新增：局部变量声明
 local tpwalking = false -- 新增：局部变量声明
 local Frame = Instance.new("Frame")
-local Frame = Instance.new("Frame")
 local up = Instance.new("TextButton")
 local down = Instance.new("TextButton")
 local onof = Instance.new("TextButton")
@@ -4050,7 +4049,7 @@ local Tab14 = MainWindow:Tab({
     Icon = "shield"
 })
 
-local Tab14Section = Tab4:Section({
+local Tab14Section = Tab14:Section({
     Title = "主要功能",
     TextSize = 18,
     FontWeight = Enum.FontWeight.SemiBold
@@ -4174,7 +4173,7 @@ Tab14Section:Toggle({
     end 
 })
 
-local Tab14Section = Tab5:Section({
+local Tab14Section = Tab14:Section({
     Title = "收集功能",
     TextSize = 18,
     FontWeight = Enum.FontWeight.SemiBold
@@ -4300,7 +4299,7 @@ Tab14Section:Toggle({
     end 
 })
 
-local Tab14Section = Tab6:Section({
+local Tab14Section = Tab14:Section({
     Title = "自动购买",
     TextSize = 18,
     FontWeight = Enum.FontWeight.SemiBold
@@ -4452,7 +4451,7 @@ Tab14Section:Toggle({
     end 
 })
 
-local Tab14Section = Tab7:Section({
+local Tab14Section = Tab14:Section({
     Title = "其他功能",
     TextSize = 18,
     FontWeight = Enum.FontWeight.SemiBold
@@ -5563,12 +5562,7 @@ Tab16Section:Button({
     end
 })
 
-local Tab16 = MainWindow:Tab({
-    Title = "战争大亨［自瞄功能］",
-    Icon = "crosshair"
-})
-
-local Tab16Section = Tab12:Section({
+local Tab16Section = Tab16:Section({
     Title = "自瞄设置",
     TextSize = 18,
     FontWeight = Enum.FontWeight.SemiBold
