@@ -3002,7 +3002,7 @@ local Tab13 = MainWindow:Tab({
     Icon = "bolt"
 })
 
-local Tab13SectionMain = Tab13Section:({
+local Tab13SectionMain = Tab13:Section({
     Title = "实用功能",
     TextSize = 18,
     FontWeight = Enum.FontWeight.SemiBold
@@ -4999,8 +4999,9 @@ Tab15Section2:Toggle({
                         end
                     end
                     for _, animal in ipairs(workspace.animals:GetChildren()) do
-                        local HitPart = animal:FindFirstChild("HumanoidRootPart") or animal:FindFirstChild("Head")
-                        if HitPart and scp:FindFirstChildWhichIsA("Humanoid") and scp.Humanoid.Health > 0 then
+    local HitPart = animal:FindFirstChild("HumanoidRootPart") or animal:FindFirstChild("Head")
+    local humanoid = animal:FindFirstChildWhichIsA("Humanoid")
+    if HitPart and humanoid and humanoid.Health > 0 then
                             game.ReplicatedStorage.remotes.shoot:FireServer(HitPart.CFrame + Vector3.new(0, 0.5, 0), HitPart.CFrame)
                         end
                     end
@@ -5693,12 +5694,9 @@ Tab16Section:Dropdown({
     end
 })
 
-local Tab16 = MainWindow:Tab({
-    Title = "战争大亨［攻击功能］",
-    Icon = "sword"
-})
+local Tab16_Attack = MainWindow:Tab({ Title = "战争大亨［攻击功能］", Icon = "sword" })
 
-local Tab16Section = Tab16:Section({
+local Tab16Section = Tab16_Attack:Section({
     Title = "攻击设置",
     TextSize = 18,
     FontWeight = Enum.FontWeight.SemiBold
