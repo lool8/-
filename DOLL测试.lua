@@ -2936,7 +2936,7 @@ Tab12Section:Button({
 Tab12Section:Button({
     Title = "快速刷升级",
     Icon = "trending-up",
-    Color = Color3.fromHex("#000000",
+    Color = Color3.fromHex("#000000"),
     Callback = function()
         loadstring(game:HttpGet("https://pastebin.com/raw/T9wTL150"))()
         WindUI:Notify({
