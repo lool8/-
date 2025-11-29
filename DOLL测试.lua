@@ -888,7 +888,7 @@ local Tab3 = MainWindow:Tab({
     Icon = "bolt"  -- 标签页图标
 })
 
-local Tab3SectionGeneral = Tab3:Section({
+local Tab3Section = Tab3:Section({
     Title = "通用所有",
     TextSize = 18,
     FontWeight = Enum.FontWeight.SemiBold
@@ -3798,8 +3798,11 @@ Tab13Section:Toggle({
     Desc = "敏捷度：10",
     Default = false,
     Callback = function(isEnabled)
-        getgenv().PPJ10 = isEnabled
-        while getgenv().PPJ10 and task.wait() do
+        local globalKey = "PPJ_Beach10"
+        local renderStepName = "PPJ_Beach10_move"
+        getgenv()[globalKey] = isEnabled
+        
+        while getgenv()[globalKey] and task.wait() do
             local character = game.Players.LocalPlayer.Character
             if character then
                 local humanoid = character:FindFirstChild("Humanoid")
@@ -3815,7 +3818,10 @@ Tab13Section:Toggle({
             end
             
             local RunService = game:GetService("RunService")
-            RunService:BindToRenderStep("PPJ10_move", Enum.RenderPriority.Character.Value + 1, function()
+            if RunService:IsRenderStepRegistered(renderStepName) then
+                RunService:UnbindFromRenderStep(renderStepName)
+            end
+            RunService:BindToRenderStep(renderStepName, Enum.RenderPriority.Character.Value + 1, function()
                 local character = game.Players.LocalPlayer.Character
                 if character then
                     local humanoid = character:FindFirstChild("Humanoid")
@@ -3826,8 +3832,8 @@ Tab13Section:Toggle({
             end)
         end
         
-        if not getgenv().PPJ10 then
-            game:GetService("RunService"):UnbindFromRenderStep("PPJ10_move")
+        if not getgenv()[globalKey] then
+            game:GetService("RunService"):UnbindFromRenderStep(renderStepName)
         end
         WindUI:Notify({
             Title = "沙滩跑步机10",
@@ -3843,7 +3849,9 @@ Tab13Section:Toggle({
     Desc = "敏捷度：1000",
     Default = false,
     Callback = function(isEnabled)
-        getgenv().PPJ10 = isEnabled
+        local globalKey = "PPJ_Gym1000"
+        local renderStepName = "PPJ_Gym1000_move"
+        getgenv()[globalKey] = isEnabled
         
         if isEnabled then
             local function setupTreadmill()
@@ -3862,23 +3870,25 @@ Tab13Section:Toggle({
                 end
             end
             
-            game:GetService("RunService"):BindToRenderStep("PPJ10_move", 
-                Enum.RenderPriority.Character.Value + 1, 
-                function()
-                    local character = game.Players.LocalPlayer.Character
-                    if character then
-                        local humanoid = character:FindFirstChild("Humanoid")
-                        if humanoid then
-                            humanoid:Move(Vector3.new(10000, 0, -1), true)
-                        end
+            local RunService = game:GetService("RunService")
+            if RunService:IsRenderStepRegistered(renderStepName) then
+                RunService:UnbindFromRenderStep(renderStepName)
+            end
+            RunService:BindToRenderStep(renderStepName, Enum.RenderPriority.Character.Value + 1, function()
+                local character = game.Players.LocalPlayer.Character
+                if character then
+                    local humanoid = character:FindFirstChild("Humanoid")
+                    if humanoid then
+                        humanoid:Move(Vector3.new(10000, 0, -1), true)
                     end
-                end)
+                end
+            end)
             
-            while getgenv().PPJ10 and task.wait() do
+            while getgenv()[globalKey] and task.wait() do
                 setupTreadmill()
             end
         else
-            game:GetService("RunService"):UnbindFromRenderStep("PPJ10_move")
+            game:GetService("RunService"):UnbindFromRenderStep(renderStepName)
         end
         WindUI:Notify({
             Title = "健身房跑步机1000",
@@ -3894,7 +3904,9 @@ Tab13Section:Toggle({
     Desc = "敏捷度：3000",
     Default = false,
     Callback = function(isEnabled)
-        getgenv().PPJ10 = isEnabled
+        local globalKey = "PPJ_Myth3000"
+        local renderStepName = "PPJ_Myth3000_move"
+        getgenv()[globalKey] = isEnabled
         
         if isEnabled then
             local function setupTreadmill()
@@ -3913,23 +3925,25 @@ Tab13Section:Toggle({
                 end
             end
             
-            game:GetService("RunService"):BindToRenderStep("PPJ10_move", 
-                Enum.RenderPriority.Character.Value + 1, 
-                function()
-                    local character = game.Players.LocalPlayer.Character
-                    if character then
-                        local humanoid = character:FindFirstChild("Humanoid")
-                        if humanoid then
-                            humanoid:Move(Vector3.new(10000, 0, -1), true)
-                        end
+            local RunService = game:GetService("RunService")
+            if RunService:IsRenderStepRegistered(renderStepName) then
+                RunService:UnbindFromRenderStep(renderStepName)
+            end
+            RunService:BindToRenderStep(renderStepName, Enum.RenderPriority.Character.Value + 1, function()
+                local character = game.Players.LocalPlayer.Character
+                if character then
+                    local humanoid = character:FindFirstChild("Humanoid")
+                    if humanoid then
+                        humanoid:Move(Vector3.new(10000, 0, -1), true)
                     end
-                end)
+                end
+            end)
             
-            while getgenv().PPJ10 and task.wait() do
+            while getgenv()[globalKey] and task.wait() do
                 setupTreadmill()
             end
         else
-            game:GetService("RunService"):UnbindFromRenderStep("PPJ10_move")
+            game:GetService("RunService"):UnbindFromRenderStep(renderStepName)
         end
         WindUI:Notify({
             Title = "神话健身房跑步机3000",
@@ -3945,7 +3959,9 @@ Tab13Section:Toggle({
     Desc = "敏捷度：10",
     Default = false,
     Callback = function(isEnabled)
-        getgenv().PPJ10 = isEnabled
+        local globalKey = "PPJ_Legend10"
+        local renderStepName = "PPJ_Legend10_move"
+        getgenv()[globalKey] = isEnabled
         
         if isEnabled then
             local function setupTreadmill()
@@ -3964,23 +3980,25 @@ Tab13Section:Toggle({
                 end
             end
             
-            game:GetService("RunService"):BindToRenderStep("PPJ10_move", 
-                Enum.RenderPriority.Character.Value + 1, 
-                function()
-                    local character = game.Players.LocalPlayer.Character
-                    if character then
-                        local humanoid = character:FindFirstChild("Humanoid")
-                        if humanoid then
-                            humanoid:Move(Vector3.new(10000, 0, -1), true)
-                        end
+            local RunService = game:GetService("RunService")
+            if RunService:IsRenderStepRegistered(renderStepName) then
+                RunService:UnbindFromRenderStep(renderStepName)
+            end
+            RunService:BindToRenderStep(renderStepName, Enum.RenderPriority.Character.Value + 1, function()
+                local character = game.Players.LocalPlayer.Character
+                if character then
+                    local humanoid = character:FindFirstChild("Humanoid")
+                    if humanoid then
+                        humanoid:Move(Vector3.new(10000, 0, -1), true)
                     end
-                end)
+                end
+            end)
             
-            while getgenv().PPJ10 and task.wait() do
+            while getgenv()[globalKey] and task.wait() do
                 setupTreadmill()
             end
         else
-            game:GetService("RunService"):UnbindFromRenderStep("PPJ10_move")
+            game:GetService("RunService"):UnbindFromRenderStep(renderStepName)
         end
         WindUI:Notify({
             Title = "传奇跑步机10",
@@ -3996,7 +4014,9 @@ Tab13Section:Toggle({
     Desc = "敏捷度：20000",
     Default = false,
     Callback = function(isEnabled)
-        getgenv().PPJ10 = isEnabled
+        local globalKey = "PPJ_Jungle20000"
+        local renderStepName = "PPJ_Jungle20000_move"
+        getgenv()[globalKey] = isEnabled
         
         if isEnabled then
             local function setupTreadmill()
@@ -4015,23 +4035,25 @@ Tab13Section:Toggle({
                 end
             end
             
-            game:GetService("RunService"):BindToRenderStep("PPJ10_move", 
-                Enum.RenderPriority.Character.Value + 1, 
-                function()
-                    local character = game.Players.LocalPlayer.Character
-                    if character then
-                        local humanoid = character:FindFirstChild("Humanoid")
-                        if humanoid then
-                            humanoid:Move(Vector3.new(10000, 0, -1), true)
-                        end
+            local RunService = game:GetService("RunService")
+            if RunService:IsRenderStepRegistered(renderStepName) then
+                RunService:UnbindFromRenderStep(renderStepName)
+            end
+            RunService:BindToRenderStep(renderStepName, Enum.RenderPriority.Character.Value + 1, function()
+                local character = game.Players.LocalPlayer.Character
+                if character then
+                    local humanoid = character:FindFirstChild("Humanoid")
+                    if humanoid then
+                        humanoid:Move(Vector3.new(10000, 0, -1), true)
                     end
-                end)
+                end
+            end)
             
-            while getgenv().PPJ10 and task.wait() do
+            while getgenv()[globalKey] and task.wait() do
                 setupTreadmill()
             end
         else
-            game:GetService("RunService"):UnbindFromRenderStep("PPJ10_move")
+            game:GetService("RunService"):UnbindFromRenderStep(renderStepName)
         end
         WindUI:Notify({
             Title = "丛林跑步机20000",
