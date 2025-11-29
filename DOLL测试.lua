@@ -1,3 +1,5 @@
+local oldpos = OAO.Character.HumanoidRootPart.CFrame
+local ExcludedBases = ExcludedBases or {} -- 兼容已有值，避免覆盖
 local PunchLoop = task.spawn(function() ... end)
 local Interstellar = getgenv().Interstellar
 -- 1. 加载 WindUI 核心库
