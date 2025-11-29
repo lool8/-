@@ -1,25 +1,25 @@
-getgenv().Interstellar = getgenv().Interstellar or {}
+local PunchLoop = task.spawn(function() ... end)
 local Interstellar = getgenv().Interstellar
--- 1. 加载 WindUI 核心库（确保路径与核心库一致）
+-- 1. 加载 WindUI 核心库
 local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/lool8/-/refs/heads/main/DOLLUI.lua"))()
 
 -- 2. 创建主窗口
 local MainWindow = WindUI:CreateWindow({
-    Title = "DOLL脚本",  -- 窗口标题
-    Author = "欢迎使用我的DOLL脚本※Q群:1058549962",
-    Folder = "CharacterControl",  -- 配置存储文件夹
-    Size = UDim2.fromOffset(500, 380),  -- 窗口大小
-    Theme = "Dark",  -- 初始主题（可选：Dark/Light/Emerald等）
-    SideBarWidth = 180,  -- 侧边栏宽度
-    Acrylic = true,  -- 启用亚克力透明效果
-    OpenButton = {  -- 窗口打开按钮配置
-        Title = "打开DOLL脚本",
-        Icon = "user-gear",  -- 按钮图标（Lucide图标库）
-        Color = ColorSequence.new({  -- 彩虹渐变按钮
-            ColorSequenceKeypoint.new(0, Color3.fromHex("FF6B6B")),
-            ColorSequenceKeypoint.new(0.5, Color3.fromHex("4ECDC4")),
-            ColorSequenceKeypoint.new(1, Color3.fromHex("FFD166"))
-        })
+    Title = "DOLL※༒", 
+    Author = "༼DOLL༽ | ᐁQ群:1058549962ᐁ",
+    Folder = "CharacterControl",
+    Size = UDim2.fromOffset(400, 300),
+    Theme = "Dark",  -- 使用预设的暗色主题
+    SideBarWidth = 200,
+    Acrylic = true,
+    BlurRadius = 10,
+    BackgroundImage = "rbxassetid://107548824953725",
+    TitleBarGradient = {
+        ColorSequence.new({
+            ColorSequenceKeypoint.new(0, Color3.fromHex("#4facfe")),
+            ColorSequenceKeypoint.new(1, Color3.fromHex("#00f2fe"))
+        }),
+        Rotation = 135
     }
 })
 
@@ -78,7 +78,7 @@ local Tab2 = MainWindow:Tab({
     Icon = "bolt"  -- 标签页图标
 })
 
-local Tab2Section = Tab2:Section({
+local Tab2SectionMain = Tab2:Section({
     Title = "主要的"
 })
 
@@ -888,7 +888,7 @@ local Tab3 = MainWindow:Tab({
     Icon = "bolt"  -- 标签页图标
 })
 
-local Tab3Section = Tab3:Section({
+local Tab3SectionGeneral = Tab3:Section({
     Title = "通用所有",
     TextSize = 18,
     FontWeight = Enum.FontWeight.SemiBold
@@ -3004,7 +3004,7 @@ local Tab13 = MainWindow:Tab({
     Icon = "bolt"
 })
 
-local Tab13Section = Tab13:Section({
+local Tab13SectionMain = Tab13Section:({
     Title = "实用功能",
     TextSize = 18,
     FontWeight = Enum.FontWeight.SemiBold
@@ -3302,7 +3302,7 @@ Tab13Section:Button({
     end
 })
 
-local Tab13Section = Tab13:Section({
+local Tab13Sectionteleport = Tab13:Section({
     Title = "传送功能",
     TextSize = 18,
     FontWeight = Enum.FontWeight.SemiBold
@@ -3428,7 +3428,7 @@ Tab13Section:Button({
     end
 })
 
-local Tab13Section = Tab13:Section({
+local Tab13SectionAuto = Tab13:Section({
     Title = "［自动锻炼］建议把体型调成2",
     TextSize = 18,
     FontWeight = Enum.FontWeight.SemiBold
