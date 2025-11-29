@@ -1,10 +1,12 @@
+getgenv().Interstellar = getgenv().Interstellar or {}
+local Interstellar = getgenv().Interstellar
 -- 1. 加载 WindUI 核心库（确保路径与核心库一致）
 local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/lool8/-/refs/heads/main/DOLLUI.lua"))()
 
 -- 2. 创建主窗口
 local MainWindow = WindUI:CreateWindow({
     Title = "DOLL脚本",  -- 窗口标题
-    Author = "欢迎使用我的DOLL脚本※作者Q:3829174015",  -- 作者标识
+    Author = "欢迎使用我的DOLL脚本※Q群:1058549962",
     Folder = "CharacterControl",  -- 配置存储文件夹
     Size = UDim2.fromOffset(500, 380),  -- 窗口大小
     Theme = "Dark",  -- 初始主题（可选：Dark/Light/Emerald等）
@@ -2844,6 +2846,3071 @@ Tab11Section:Button({
             Content = "小提示✅",
             Icon = "bolt"
         })
+    end
+})
+
+local Tab12 = MainWindow:Tab({
+    Title = "极速传奇",
+    Icon = "bolt"
+})
+
+local Tab12Section = Tab12:Section({
+    Title = "自动功能",
+    TextSize = 18,
+    FontWeight = Enum.FontWeight.SemiBold
+})
+
+local isRunning = false
+local loopConnection = nil
+
+local Tab12Toggle = Tab12Section:Toggle({
+    Title = "自动收集所有颜色的球和钻石",
+    Desc = "自动收集蓝球、红球、钻石、橙球、黄球",
+    Default = false,
+    Callback = function(isEnabled)
+        if isEnabled then
+            if not isRunning then
+                isRunning = true
+                loopConnection = task.spawn(function()
+                    while isRunning do
+                        local orbsToCollect = {
+                            "Blue Orb",
+                            "Red Orb", 
+                            "Gem",
+                            "Orange Orb",
+                            "Yellow Orb"
+                        }
+                        
+                        for _, orbName in ipairs(orbsToCollect) do
+                            if not isRunning then break end
+                            
+                            local args = {
+                                "collectOrb",
+                                orbName,
+                                "City"
+                            }
+                            game:GetService("ReplicatedStorage"):WaitForChild("rEvents"):WaitForChild("orbEvent"):FireServer(unpack(args))
+                            task.wait(0.0)
+                        end
+                        task.wait(1)
+                    end
+                end)
+            end
+            WindUI:Notify({
+                Title = "自动收集",
+                Content = "✅ 已开启自动收集功能",
+                Icon = "bolt",
+                Duration = 3
+            })
+        else
+            isRunning = false
+            if loopConnection then
+                task.cancel(loopConnection)
+                loopConnection = nil
+            end
+            WindUI:Notify({
+                Title = "自动收集",
+                Content = "❌ 已关闭自动收集功能",
+                Icon = "bolt",
+                Duration = 3
+            })
+        end
+    end 
+})
+
+Tab12Section:Button({
+    Title = "解锁所有通行证",
+    Icon = "unlock",
+    Color = Color3.fromHex("#000000"),
+    Callback = function()
+        for i, v in ipairs(game:GetService("ReplicatedStorage").gamepassIds:GetChildren()) do
+            v.Parent = game.Players.LocalPlayer.ownedGamepasses
+        end
+        WindUI:Notify({
+                Title = "通行证解锁",
+                Content = "✅ 所有通行证已解锁",
+                Icon = "unlock"
+            })
+    end
+})
+
+Tab12Section:Button({
+    Title = "快速刷升级",
+    Icon = "trending-up",
+    Color = Color3.fromHex("#000000",
+    Callback = function()
+        loadstring(game:HttpGet("https://pastebin.com/raw/T9wTL150"))()
+        WindUI:Notify({
+                Title = "刷级脚本",
+                Content = "✅ 已加载外部刷级脚本",
+                Icon = "trending-up"
+            })
+    end
+})
+
+-- 如果需要滑块功能可以这样添加
+local Tab12Slider = Tab1Section:Slider({
+    Title = "收集间隔时间",
+    Desc = "设置自动收集的时间间隔",
+    Step = 0.1,
+    Value = {
+        Min = 0.1,
+        Max = 5.0,
+        Default = 1.0
+    },
+    Callback = function(value)
+        -- 这里可以添加调整收集间隔的逻辑
+        WindUI:Notify({
+            Title = "间隔设置",
+            Content = "收集间隔已设置为: " .. value .. "秒",
+            Icon = "clock",
+            Duration = 3
+        })
+    end
+})
+
+-- 下拉菜单示例
+Tab12Section:Dropdown({
+    Title = "收集模式",
+    Values = {"快速模式", "普通模式", "安全模式"},
+    Value = "普通模式",
+    Callback = function(selected)
+        if selected == "快速模式" then
+            -- 快速模式逻辑
+            WindUI:Notify({
+                Title = "收集模式",
+                Content = "✅ 已切换到快速模式",
+                Icon = "zap"
+            })
+        elseif selected == "普通模式" then
+            -- 普通模式逻辑
+            WindUI:Notify({
+                Title = "收集模式",
+                Content = "✅ 已切换到普通模式",
+                Icon = "settings"
+            })
+        elseif selected == "安全模式" then
+            -- 安全模式逻辑
+            WindUI:Notify({
+                Title = "收集模式",
+                Content = "✅ 已切换到安全模式",
+                Icon = "shield"
+            })
+        end
+    end
+})
+
+local Tab13 = MainWindow:Tab({
+    Title = "力量传奇［主要功能］",
+    Icon = "bolt"
+})
+
+local Tab13Section = Tab13:Section({
+    Title = "实用功能",
+    TextSize = 18,
+    FontWeight = Enum.FontWeight.SemiBold
+})
+
+Tab13Section:Toggle({
+    Title = "自动比赛开关",
+    Desc = "自动参加比赛",
+    Default = false,
+    Callback = function(isEnabled)
+        while isEnabled do
+            task.wait(2)
+            game:GetService("ReplicatedStorage").rEvents.brawlEvent:FireServer("joinBrawl")
+        end
+        WindUI:Notify({
+            Title = "自动比赛",
+            Content = isEnabled and "✅ 已开启" or "❌ 已关闭",
+            Icon = "trophy",
+            Duration = 3
+        })
+    end 
+})
+
+Tab13Section:Toggle({
+    Title = "自动举哑铃",
+    Desc = "自动进行哑铃训练",
+    Default = false,
+    Callback = function(isEnabled)
+        local part = Instance.new('Part', workspace)
+        part.Size = Vector3.new(500, 20, 530.1)
+        part.Position = Vector3.new(0, 100000, 133.15)
+        part.CanCollide = true
+        part.Anchored = true
+        
+        while isEnabled do
+            task.wait()
+            local character = game.Players.LocalPlayer.Character
+            if character then
+                local rootPart = character:FindFirstChild("HumanoidRootPart")
+                if rootPart then
+                    rootPart.CFrame = part.CFrame + Vector3.new(0, 50, 0)
+                end
+                
+                for _,v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
+                    if v:IsA("Tool") and v.Name == "Weight" then
+                        v.Parent = character
+                    end
+                end
+                
+                game:GetService("Players").LocalPlayer.muscleEvent:FireServer("rep")
+            end
+        end
+        
+        if not isEnabled and part then
+            part:Destroy()
+        end
+        WindUI:Notify({
+            Title = "自动举哑铃",
+            Content = isEnabled and "✅ 已开启" or "❌ 已关闭",
+            Icon = "dumbbell",
+            Duration = 3
+        })
+    end 
+})
+
+Tab13Section:Toggle({
+    Title = "自动俯卧撑",
+    Desc = "自动进行俯卧撑训练",
+    Default = false,
+    Callback = function(isEnabled)
+        local part = Instance.new('Part', workspace)
+        part.Size = Vector3.new(500, 20, 530.1)
+        part.Position = Vector3.new(0, 100000, 133.15)
+        part.CanCollide = true
+        part.Anchored = true
+        
+        while isEnabled do
+            task.wait()
+            local character = game.Players.LocalPlayer.Character
+            if character then
+                local rootPart = character:FindFirstChild("HumanoidRootPart")
+                if rootPart then
+                    rootPart.CFrame = part.CFrame + Vector3.new(0, 50, 0)
+                end
+                
+                for _,v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
+                    if v:IsA("Tool") and v.Name == "Pushups" then
+                        v.Parent = character
+                    end
+                end
+                
+                game:GetService("Players").LocalPlayer.muscleEvent:FireServer("rep")
+            end
+        end
+        
+        if not isEnabled and part then
+            part:Destroy()
+        end
+        WindUI:Notify({
+            Title = "自动俯卧撑",
+            Content = isEnabled and "✅ 已开启" or "❌ 已关闭",
+            Icon = "activity",
+            Duration = 3
+        })
+    end 
+})
+
+Tab13Section:Toggle({
+    Title = "自动仰卧起坐",
+    Desc = "自动进行仰卧起坐训练",
+    Default = false,
+    Callback = function(isEnabled)
+        local part = Instance.new('Part', workspace)
+        part.Size = Vector3.new(500, 20, 530.1)
+        part.Position = Vector3.new(0, 100000, 133.15)
+        part.CanCollide = true
+        part.Anchored = true
+        
+        while isEnabled do
+            task.wait()
+            local character = game.Players.LocalPlayer.Character
+            if character then
+                local rootPart = character:FindFirstChild("HumanoidRootPart")
+                if rootPart then
+                    rootPart.CFrame = part.CFrame + Vector3.new(0, 50, 0)
+                end
+                
+                for _,v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
+                    if v:IsA("Tool") and v.Name == "Situps" then
+                        v.Parent = character
+                    end
+                end
+                
+                game:GetService("Players").LocalPlayer.muscleEvent:FireServer("rep")
+            end
+        end
+        
+        if not isEnabled and part then
+            part:Destroy()
+        end
+        WindUI:Notify({
+            Title = "自动仰卧起坐",
+            Content = isEnabled and "✅ 已开启" or "❌ 已关闭",
+            Icon = "user",
+            Duration = 3
+        })
+    end 
+})
+
+Tab13Section:Toggle({
+    Title = "自动倒立身体",
+    Desc = "自动进行倒立训练",
+    Default = false,
+    Callback = function(isEnabled)
+        local part = Instance.new('Part', workspace)
+        part.Size = Vector3.new(500, 20, 530.1)
+        part.Position = Vector3.new(0, 100000, 133.15)
+        part.CanCollide = true
+        part.Anchored = true
+        
+        while isEnabled do
+            task.wait()
+            local character = game.Players.LocalPlayer.Character
+            if character then
+                local rootPart = character:FindFirstChild("HumanoidRootPart")
+                if rootPart then
+                    rootPart.CFrame = part.CFrame + Vector3.new(0, 50, 0)
+                end
+                
+                for _,v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
+                    if v:IsA("Tool") and v.Name == "Handstands" then
+                        v.Parent = character
+                    end
+                end
+                
+                game:GetService("Players").LocalPlayer.muscleEvent:FireServer("rep")
+            end
+        end
+        
+        if not isEnabled and part then
+            part:Destroy()
+        end
+        WindUI:Notify({
+            Title = "自动倒立身体",
+            Content = isEnabled and "✅ 已开启" or "❌ 已关闭",
+            Icon = "rotate-ccw",
+            Duration = 3
+        })
+    end 
+})
+
+Tab13Section:Toggle({
+    Title = "自动锻炼",
+    Desc = "自动进行综合锻炼",
+    Default = false,
+    Callback = function(isEnabled)
+        local part = Instance.new('Part', workspace)
+        part.Size = Vector3.new(500, 20, 530.1)
+        part.Position = Vector3.new(0, 100000, 133.15)
+        part.CanCollide = true
+        part.Anchored = true
+        
+        while isEnabled do
+            task.wait()
+            local character = game.Players.LocalPlayer.Character
+            if character then
+                local rootPart = character:FindFirstChild("HumanoidRootPart")
+                if rootPart then
+                    rootPart.CFrame = part.CFrame + Vector3.new(0, 50, 0)
+                end
+                
+                for _,v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
+                    if v:IsA("Tool") and (v.Name == "Handstands" or v.Name == "Situps" or v.Name == "Pushups" or v.Name == "Weight") then
+                        local numberValue = v:FindFirstChildOfClass("NumberValue")
+                        if numberValue then
+                            numberValue.Value = 0
+                        end
+                        character:WaitForChild("Humanoid"):EquipTool(v)
+                        game:GetService("Players").LocalPlayer.muscleEvent:FireServer("rep")
+                    end
+                end
+            end
+        end
+        
+        if not isEnabled and part then
+            part:Destroy()
+        end
+        WindUI:Notify({
+            Title = "自动锻炼",
+            Content = isEnabled and "✅ 已开启" or "❌ 已关闭",
+            Icon = "zap",
+            Duration = 3
+        })
+    end 
+})
+
+Tab13Section:Toggle({
+    Title = "自动重生",
+    Desc = "自动进行重生",
+    Default = false,
+    Callback = function(isEnabled)
+        while isEnabled do
+            task.wait()
+            game:GetService("ReplicatedStorage").rEvents.rebirthRemote:InvokeServer("rebirthRequest")
+        end
+        WindUI:Notify({
+            Title = "自动重生",
+            Content = isEnabled and "✅ 已开启" or "❌ 已关闭",
+            Icon = "refresh-cw",
+            Duration = 3
+        })
+    end 
+})
+
+Tab13Section:Button({
+    Title = "收集宝石",
+    Icon = "gem",
+    Color = Color3.fromHex("#000000"),
+    Callback = function()
+        local jk = {}
+        for _, v in pairs(game:GetService("ReplicatedStorage").chestRewards:GetDescendants()) do
+            if v.Name ~= "Light Karma Chest" and v.Name ~= "Evil Karma Chest" then
+                table.insert(jk, v.Name)
+            end
+        end
+        for i = 1, #jk do
+            task.wait(2)
+            game:GetService("ReplicatedStorage").rEvents.checkChestRemote:InvokeServer(jk[i])
+        end
+        WindUI:Notify({
+            Title = "收集宝石",
+            Content = "✅ 宝石收集完成",
+            Icon = "gem"
+        })
+    end
+})
+
+Tab13Section:Button({
+    Title = "传送到幸运抽奖区域",
+    Icon = "gift",
+    Color = Color3.fromHex("#000000"),
+    Callback = function()
+        local character = game.Players.LocalPlayer.Character
+        if character then
+            local rootPart = character:FindFirstChild("HumanoidRootPart")
+            if rootPart then
+                rootPart.CFrame = CFrame.new(-2606, -2, 5753)
+            end
+        end
+        WindUI:Notify({
+            Title = "传送",
+            Content = "✅ 已传送到幸运抽奖区域",
+            Icon = "map-pin"
+        })
+    end
+})
+
+local Tab13Section = Tab13:Section({
+    Title = "传送功能",
+    TextSize = 18,
+    FontWeight = Enum.FontWeight.SemiBold
+})
+
+Tab13Section:Button({
+    Title = "传送到肌肉之王健身房",
+    Icon = "building",
+    Color = Color3.fromHex("#000000"),
+    Callback = function()
+        local character = game.Players.LocalPlayer.Character
+        if character then
+            local rootPart = character:FindFirstChild("HumanoidRootPart")
+            if rootPart then
+                rootPart.CFrame = CFrame.new(-8554, 22, -5642)
+            end
+        end
+        WindUI:Notify({
+            Title = "传送",
+            Content = "✅ 已传送到肌肉之王健身房",
+            Icon = "map-pin"
+        })
+    end
+})
+
+Tab13Section:Button({
+    Title = "传送到传说健身房",
+    Icon = "castle",
+    Color = Color3.fromHex("#000000"),
+    Callback = function()
+        local character = game.Players.LocalPlayer.Character
+        if character then
+            local rootPart = character:FindFirstChild("HumanoidRootPart")
+            if rootPart then
+                rootPart.CFrame = CFrame.new(4676, 997, -3915)
+            end
+        end
+        WindUI:Notify({
+            Title = "传送",
+            Content = "✅ 已传送到传说健身房",
+            Icon = "map-pin"
+        })
+    end
+})
+
+Tab13Section:Button({
+    Title = "传送到永恒健身房",
+    Icon = "infinity",
+    Color = Color3.fromHex("#000000"),
+    Callback = function()
+        local character = game.Players.LocalPlayer.Character
+        if character then
+            local rootPart = character:FindFirstChild("HumanoidRootPart")
+            if rootPart then
+                rootPart.CFrame = CFrame.new(-6686, 13, -1284)
+            end
+        end
+        WindUI:Notify({
+            Title = "传送",
+            Content = "✅ 已传送到永恒健身房",
+            Icon = "map-pin"
+        })
+    end
+})
+
+Tab13Section:Button({
+    Title = "传送到神话健身房",
+    Icon = "sparkles",
+    Color = Color3.fromHex("#000000"),
+    Callback = function()
+        local character = game.Players.LocalPlayer.Character
+        if character then
+            local rootPart = character:FindFirstChild("HumanoidRootPart")
+            if rootPart then
+                rootPart.CFrame = CFrame.new(2177, 13, 1070)
+            end
+        end
+        WindUI:Notify({
+            Title = "传送",
+            Content = "✅ 已传送到神话健身房",
+            Icon = "map-pin"
+        })
+    end
+})
+
+Tab13Section:Button({
+    Title = "传送到冰霜健身房",
+    Icon = "snowflake",
+    Color = Color3.fromHex("#000000"),
+    Callback = function()
+        local character = game.Players.LocalPlayer.Character
+        if character then
+            local rootPart = character:FindFirstChild("HumanoidRootPart")
+            if rootPart then
+                rootPart.CFrame = CFrame.new(-2543, 13, -410)
+            end
+        end
+        WindUI:Notify({
+            Title = "传送",
+            Content = "✅ 已传送到冰霜健身房",
+            Icon = "map-pin"
+        })
+    end
+})
+
+Tab13Section:Button({
+    Title = "传送到丛林健身房",
+    Icon = "tree-pine",
+    Color = Color3.fromHex("#000000"),
+    Callback = function()
+        local character = game.Players.LocalPlayer.Character
+        if character then
+            local rootPart = character:FindFirstChild("HumanoidRootPart")
+            if rootPart then
+                rootPart.CFrame = CFrame.new(-8760.79, 46.58, 2394.51)
+            end
+        end
+        WindUI:Notify({
+            Title = "传送",
+            Content = "✅ 已传送到丛林健身房",
+            Icon = "map-pin"
+        })
+    end
+})
+
+local Tab13Section = Tab13:Section({
+    Title = "［自动锻炼］建议把体型调成2",
+    TextSize = 18,
+    FontWeight = Enum.FontWeight.SemiBold
+})
+
+Tab13Section:Toggle({
+    Title = "自动打石头0",
+    Desc = "耐久度要求：无",
+    Default = false,
+    Callback = function(isEnabled)
+        getgenv().rock = isEnabled
+        while getgenv().rock do
+            wait()
+            for i,v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
+                if v:IsA("Tool") and v.Name == "Punch" then
+                    game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):EquipTool(v)
+                end
+            end
+            for i,h in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+                if h:IsA("Tool") and h.Name == "Punch" then
+                    h:Activate()
+                end
+            end
+            game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame = CFrame.new(7.60643005, 4.02632904, 2104.54004, -0.23040159, -8.53662385e-08, -0.973095655, -4.68743764e-08, 1, -7.66279342e-08, 0.973095655, 2.79580536e-08, -0.23040159)
+        end
+        if not getgenv().rock then
+            game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):UnequipTools()
+        end
+        WindUI:Notify({
+            Title = "自动打石头0",
+            Content = isEnabled and "✅ 已开启" or "❌ 已关闭",
+            Icon = "hammer",
+            Duration = 3
+        })
+    end 
+})
+
+Tab13Section:Toggle({
+    Title = "自动打石头10",
+    Desc = "耐久度要求：10",
+    Default = false,
+    Callback = function(isEnabled)
+        if game.Players.LocalPlayer.Durability.Value >= 10 then
+            getgenv().rock = isEnabled
+            while getgenv().rock do
+                wait()
+                for i,v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
+                    if v:IsA("Tool") and v.Name == "Punch" then
+                        game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):EquipTool(v)
+                    end
+                end
+                for i,h in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+                    if h:IsA("Tool") and h.Name == "Punch" then
+                        h:Activate()
+                    end
+                end
+                game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame = CFrame.new(-157.680908, 3.72453046, 434.871185, 0.923298299, -1.81774684e-09, -0.384083599, 3.45247031e-09, 1, 3.56670582e-09, 0.384083599, -4.61917082e-09, 0.923298299)
+            end
+            if not getgenv().rock then
+                game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):UnequipTools()
+            end
+        else
+            WindUI:Notify({
+                Title = "自动打石头10",
+                Content = "❌ 耐久度不足10",
+                Icon = "alert-triangle",
+                Duration = 3
+            })
+        end
+        WindUI:Notify({
+            Title = "自动打石头10",
+            Content = isEnabled and "✅ 已开启" or "❌ 已关闭",
+            Icon = "hammer",
+            Duration = 3
+        })
+    end 
+})
+
+local Tab13Section = Tab13:Section({
+    Title = "自动打石头功能",
+    TextSize = 18,
+    FontWeight = Enum.FontWeight.SemiBold
+})
+
+Tab13Section:Toggle({
+    Title = "自动打石头100",
+    Desc = "耐久度要求：100",
+    Default = false,
+    Callback = function(isEnabled)
+        if game.Players.LocalPlayer.Durability.Value >= 100 then
+            getgenv().rock = isEnabled
+            while getgenv().rock do
+                wait()
+                for i,v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
+                    if v:IsA("Tool") and v.Name == "Punch" then
+                        game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):EquipTool(v)
+                    end
+                end
+                for i,h in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+                    if h:IsA("Tool") and h.Name == "Punch" then
+                        h:Activate()
+                    end
+                end
+                game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame = CFrame.new(162.233673, 3.66615629, -164.686783, -0.921312928, -1.80826774e-07, -0.38882193, -9.13036544e-08, 1, -2.48719346e-07, 0.38882193, -1.93647494e-07, -0.921312928)
+            end
+            if not getgenv().rock then
+                game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):UnequipTools()
+            end
+        else
+            WindUI:Notify({
+                Title = "自动打石头100",
+                Content = "❌ 耐久度不足100",
+                Icon = "alert-triangle",
+                Duration = 3
+            })
+        end
+        WindUI:Notify({
+            Title = "自动打石头100",
+            Content = isEnabled and "✅ 已开启" or "❌ 已关闭",
+            Icon = "hammer",
+            Duration = 3
+        })
+    end 
+})
+
+Tab13Section:Toggle({
+    Title = "自动打石头5000",
+    Desc = "耐久度要求：100",
+    Default = false,
+    Callback = function(isEnabled)
+        if game.Players.LocalPlayer.Durability.Value >= 100 then
+            getgenv().rock = isEnabled
+            while getgenv().rock do
+                wait()
+                for _,v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
+                    if v:IsA("Tool") and v.Name == "Punch" then
+                        game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):EquipTool(v)
+                    end
+                end
+                for _,h in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+                    if h:IsA("Tool") and h.Name == "Punch" then
+                        h:Activate()
+                    end
+                end
+                game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame = CFrame.new(283.42, 3.71, -590.84, -0.921312928, -1.80826774e-07, -0.38882193, -9.13036544e-08, 1, -2.48719346e-07, 0.38882193, -1.93647494e-07, -0.921312928)
+            end
+            if not getgenv().rock then
+                game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):UnequipTools()
+            end
+        else
+            WindUI:Notify({
+                Title = "自动打石头5000",
+                Content = "❌ 耐久度不足100",
+                Icon = "alert-triangle",
+                Duration = 3
+            })
+        end
+        WindUI:Notify({
+            Title = "自动打石头5000",
+            Content = isEnabled and "✅ 已开启" or "❌ 已关闭",
+            Icon = "hammer",
+            Duration = 3
+        })
+    end 
+})
+
+Tab13Section:Toggle({
+    Title = "自动打石头150000",
+    Desc = "耐久度要求：100",
+    Default = false,
+    Callback = function(isEnabled)
+        if game.Players.LocalPlayer.Durability.Value >= 100 then
+            getgenv().rock = isEnabled
+            while getgenv().rock do
+                wait()
+                for _,v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
+                    if v:IsA("Tool") and v.Name == "Punch" then
+                        game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):EquipTool(v)
+                    end
+                end
+                for _,h in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+                    if h:IsA("Tool") and h.Name == "Punch" then
+                        h:Activate()
+                    end
+                end
+                game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame = CFrame.new(-2585.99, 17.38, -249.59)
+            end
+            if not getgenv().rock then
+                game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):UnequipTools()
+            end
+        else
+            WindUI:Notify({
+                Title = "自动打石头150000",
+                Content = "❌ 耐久度不足100",
+                Icon = "alert-triangle",
+                Duration = 3
+            })
+        end
+        WindUI:Notify({
+            Title = "自动打石头150000",
+            Content = isEnabled and "✅ 已开启" or "❌ 已关闭",
+            Icon = "hammer",
+            Duration = 3
+        })
+    end 
+})
+
+Tab13Section:Toggle({
+    Title = "自动打石头400000",
+    Desc = "耐久度要求：100",
+    Default = false,
+    Callback = function(isEnabled)
+        if game.Players.LocalPlayer.Durability.Value >= 100 then
+            getgenv().rock = isEnabled
+            while getgenv().rock do
+                wait()
+                for _,v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
+                    if v:IsA("Tool") and v.Name == "Punch" then
+                        game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):EquipTool(v)
+                    end
+                end
+                for _,h in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+                    if h:IsA("Tool") and h.Name == "Punch" then
+                        h:Activate()
+                    end
+                end
+                game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame = CFrame.new(2220.94, 12.67, 1252.67)
+            end
+            if not getgenv().rock then
+                game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):UnequipTools()
+            end
+        else
+            WindUI:Notify({
+                Title = "自动打石头400000",
+                Content = "❌ 耐久度不足100",
+                Icon = "alert-triangle",
+                Duration = 3
+            })
+        end
+        WindUI:Notify({
+            Title = "自动打石头400000",
+            Content = isEnabled and "✅ 已开启" or "❌ 已关闭",
+            Icon = "hammer",
+            Duration = 3
+        })
+    end 
+})
+
+Tab13Section:Toggle({
+    Title = "自动打石头500万",
+    Desc = "耐久度要求：100",
+    Default = false,
+    Callback = function(isEnabled)
+        if game.Players.LocalPlayer.Durability.Value >= 100 then
+            getgenv().rock = isEnabled
+            while getgenv().rock do
+                task.wait()
+                for _, tool in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
+                    if tool:IsA("Tool") and tool.Name == "Punch" then
+                        game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):EquipTool(tool)
+                    end
+                end
+                
+                for _, tool in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+                    if tool:IsA("Tool") and tool.Name == "Punch" then
+                        tool:Activate()
+                    end
+                end
+                
+                local character = game.Players.LocalPlayer.Character
+                if character then
+                    local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
+                    if humanoidRootPart then
+                        humanoidRootPart.CFrame = CFrame.new(-8919.20, 40.01, -6014.81)
+                    end
+                end
+            end
+            
+            if not getgenv().rock then
+                game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):UnequipTools()
+            end
+        else
+            WindUI:Notify({
+                Title = "自动打石头500万",
+                Content = "❌ 耐久度不足100",
+                Icon = "alert-triangle",
+                Duration = 3
+            })
+        end
+        WindUI:Notify({
+            Title = "自动打石头500万",
+            Content = isEnabled and "✅ 已开启" or "❌ 已关闭",
+            Icon = "hammer",
+            Duration = 3
+        })
+    end 
+})
+
+Tab13Section:Toggle({
+    Title = "自动打石头1000万",
+    Desc = "耐久度要求：100",
+    Default = false,
+    Callback = function(isEnabled)
+        if game.Players.LocalPlayer.Durability.Value >= 100 then
+            getgenv().rock = isEnabled
+            while getgenv().rock and task.wait() do
+                local character = game.Players.LocalPlayer.Character
+                local backpack = game.Players.LocalPlayer.Backpack
+                
+                for _, tool in ipairs(backpack:GetChildren()) do
+                    if tool:IsA("Tool") and tool.Name == "Punch" then
+                        if character then
+                            local humanoid = character:FindFirstChildOfClass("Humanoid")
+                            if humanoid then
+                                humanoid:EquipTool(tool)
+                            end
+                        end
+                    end
+                end
+                
+                if character then
+                    for _, tool in ipairs(character:GetChildren()) do
+                        if tool:IsA("Tool") and tool.Name == "Punch" then
+                            tool:Activate()
+                        end
+                    end
+                    
+                    local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
+                    if humanoidRootPart then
+                        humanoidRootPart.CFrame = CFrame.new(-7689.18, 61.99, 2869.29)
+                    end
+                end
+            end
+            
+            if not getgenv().rock then
+                local character = game.Players.LocalPlayer.Character
+                if character then
+                    local humanoid = character:FindFirstChildOfClass("Humanoid")
+                    if humanoid then
+                        humanoid:UnequipTools()
+                    end
+                end
+            end
+        else
+            WindUI:Notify({
+                Title = "自动打石头1000万",
+                Content = "❌ 耐久度不足100",
+                Icon = "alert-triangle",
+                Duration = 3
+            })
+        end
+        WindUI:Notify({
+            Title = "自动打石头1000万",
+            Content = isEnabled and "✅ 已开启" or "❌ 已关闭",
+            Icon = "hammer",
+            Duration = 3
+        })
+    end 
+})
+
+local Tab3Section = Tab3:Section({
+    Title = "［跑步机］建议把体型调成1再跑",
+    TextSize = 18,
+    FontWeight = Enum.FontWeight.SemiBold
+})
+
+Tab13Section:Toggle({
+    Title = "沙滩跑步机10",
+    Desc = "敏捷度：10",
+    Default = false,
+    Callback = function(isEnabled)
+        getgenv().PPJ10 = isEnabled
+        while getgenv().PPJ10 and task.wait() do
+            local character = game.Players.LocalPlayer.Character
+            if character then
+                local humanoid = character:FindFirstChild("Humanoid")
+                local rootPart = character:FindFirstChild("HumanoidRootPart")
+                
+                if humanoid then
+                    humanoid.WalkSpeed = 10
+                end
+                
+                if rootPart then
+                    rootPart.CFrame = CFrame.new(238.671112, 5.40315914, 387.713165, -0.0160072874, -2.90710176e-08, -0.99987185, -3.3434191e-09, 1, -2.90212157e-08, 0.99987185, 2.87843993e-09, -0.0160072874)
+                end
+            end
+            
+            local RunService = game:GetService("RunService")
+            RunService:BindToRenderStep("PPJ10_move", Enum.RenderPriority.Character.Value + 1, function()
+                local character = game.Players.LocalPlayer.Character
+                if character then
+                    local humanoid = character:FindFirstChild("Humanoid")
+                    if humanoid then
+                        humanoid:Move(Vector3.new(10000, 0, -1), true)
+                    end
+                end
+            end)
+        end
+        
+        if not getgenv().PPJ10 then
+            game:GetService("RunService"):UnbindFromRenderStep("PPJ10_move")
+        end
+        WindUI:Notify({
+            Title = "沙滩跑步机10",
+            Content = isEnabled and "✅ 已开启" or "❌ 已关闭",
+            Icon = "activity",
+            Duration = 3
+        })
+    end 
+})
+
+Tab13Section:Toggle({
+    Title = "健身房跑步机1000",
+    Desc = "敏捷度：1000",
+    Default = false,
+    Callback = function(isEnabled)
+        getgenv().PPJ10 = isEnabled
+        
+        if isEnabled then
+            local function setupTreadmill()
+                local character = game.Players.LocalPlayer.Character
+                if character then
+                    local humanoid = character:FindFirstChild("Humanoid")
+                    local rootPart = character:FindFirstChild("HumanoidRootPart")
+                    
+                    if humanoid then
+                        humanoid.WalkSpeed = 10
+                    end
+                    
+                    if rootPart then
+                        rootPart.CFrame = CFrame.new(-394.19, 13.23, -262.74)
+                    end
+                end
+            end
+            
+            game:GetService("RunService"):BindToRenderStep("PPJ10_move", 
+                Enum.RenderPriority.Character.Value + 1, 
+                function()
+                    local character = game.Players.LocalPlayer.Character
+                    if character then
+                        local humanoid = character:FindFirstChild("Humanoid")
+                        if humanoid then
+                            humanoid:Move(Vector3.new(10000, 0, -1), true)
+                        end
+                    end
+                end)
+            
+            while getgenv().PPJ10 and task.wait() do
+                setupTreadmill()
+            end
+        else
+            game:GetService("RunService"):UnbindFromRenderStep("PPJ10_move")
+        end
+        WindUI:Notify({
+            Title = "健身房跑步机1000",
+            Content = isEnabled and "✅ 已开启" or "❌ 已关闭",
+            Icon = "activity",
+            Duration = 3
+        })
+    end 
+})
+
+Tab13Section:Toggle({
+    Title = "神话健身房跑步机3000",
+    Desc = "敏捷度：3000",
+    Default = false,
+    Callback = function(isEnabled)
+        getgenv().PPJ10 = isEnabled
+        
+        if isEnabled then
+            local function setupTreadmill()
+                local character = game.Players.LocalPlayer.Character
+                if character then
+                    local humanoid = character:FindFirstChild("Humanoid")
+                    local rootPart = character:FindFirstChild("HumanoidRootPart")
+                    
+                    if humanoid then
+                        humanoid.WalkSpeed = 10
+                    end
+                    
+                    if rootPart then
+                        rootPart.CFrame = CFrame.new(2659.45, 21.64, 951.18)
+                    end
+                end
+            end
+            
+            game:GetService("RunService"):BindToRenderStep("PPJ10_move", 
+                Enum.RenderPriority.Character.Value + 1, 
+                function()
+                    local character = game.Players.LocalPlayer.Character
+                    if character then
+                        local humanoid = character:FindFirstChild("Humanoid")
+                        if humanoid then
+                            humanoid:Move(Vector3.new(10000, 0, -1), true)
+                        end
+                    end
+                end)
+            
+            while getgenv().PPJ10 and task.wait() do
+                setupTreadmill()
+            end
+        else
+            game:GetService("RunService"):UnbindFromRenderStep("PPJ10_move")
+        end
+        WindUI:Notify({
+            Title = "神话健身房跑步机3000",
+            Content = isEnabled and "✅ 已开启" or "❌ 已关闭",
+            Icon = "activity",
+            Duration = 3
+        })
+    end 
+})
+
+Tab13Section:Toggle({
+    Title = "传奇跑步机10",
+    Desc = "敏捷度：10",
+    Default = false,
+    Callback = function(isEnabled)
+        getgenv().PPJ10 = isEnabled
+        
+        if isEnabled then
+            local function setupTreadmill()
+                local character = game.Players.LocalPlayer.Character
+                if character then
+                    local humanoid = character:FindFirstChild("Humanoid")
+                    local rootPart = character:FindFirstChild("HumanoidRootPart")
+                    
+                    if humanoid then
+                        humanoid.WalkSpeed = 10
+                    end
+                    
+                    if rootPart then
+                        rootPart.CFrame = CFrame.new(4362.67, 999.36, -3650.33)
+                    end
+                end
+            end
+            
+            game:GetService("RunService"):BindToRenderStep("PPJ10_move", 
+                Enum.RenderPriority.Character.Value + 1, 
+                function()
+                    local character = game.Players.LocalPlayer.Character
+                    if character then
+                        local humanoid = character:FindFirstChild("Humanoid")
+                        if humanoid then
+                            humanoid:Move(Vector3.new(10000, 0, -1), true)
+                        end
+                    end
+                end)
+            
+            while getgenv().PPJ10 and task.wait() do
+                setupTreadmill()
+            end
+        else
+            game:GetService("RunService"):UnbindFromRenderStep("PPJ10_move")
+        end
+        WindUI:Notify({
+            Title = "传奇跑步机10",
+            Content = isEnabled and "✅ 已开启" or "❌ 已关闭",
+            Icon = "activity",
+            Duration = 3
+        })
+    end 
+})
+
+Tab13Section:Toggle({
+    Title = "丛林跑步机20000",
+    Desc = "敏捷度：20000",
+    Default = false,
+    Callback = function(isEnabled)
+        getgenv().PPJ10 = isEnabled
+        
+        if isEnabled then
+            local function setupTreadmill()
+                local character = game.Players.LocalPlayer.Character
+                if character then
+                    local humanoid = character:FindFirstChild("Humanoid")
+                    local rootPart = character:FindFirstChild("HumanoidRootPart")
+                    
+                    if humanoid then
+                        humanoid.WalkSpeed = 10
+                    end
+                    
+                    if rootPart then
+                        rootPart.CFrame = CFrame.new(-8133.48, 27.98, 2814.74)
+                    end
+                end
+            end
+            
+            game:GetService("RunService"):BindToRenderStep("PPJ10_move", 
+                Enum.RenderPriority.Character.Value + 1, 
+                function()
+                    local character = game.Players.LocalPlayer.Character
+                    if character then
+                        local humanoid = character:FindFirstChild("Humanoid")
+                        if humanoid then
+                            humanoid:Move(Vector3.new(10000, 0, -1), true)
+                        end
+                    end
+                end)
+            
+            while getgenv().PPJ10 and task.wait() do
+                setupTreadmill()
+            end
+        else
+            game:GetService("RunService"):UnbindFromRenderStep("PPJ10_move")
+        end
+        WindUI:Notify({
+            Title = "丛林跑步机20000",
+            Content = isEnabled and "✅ 已开启" or "❌ 已关闭",
+            Icon = "activity",
+            Duration = 3
+        })
+    end 
+})
+
+local Tab14 = MainWindow:Tab({
+    Title = "忍者传奇",
+    Icon = "shield"
+})
+
+local Tab14Section = Tab4:Section({
+    Title = "主要功能",
+    TextSize = 18,
+    FontWeight = Enum.FontWeight.SemiBold
+})
+
+Tab14Section:Button({
+    Title = "解锁所有岛屿",
+    Icon = "map",
+    Color = Color3.fromHex("#000000"),
+    Callback = function()
+        local islandCoordinates = {
+            {Name = "附魔岛", CFrame = CFrame.new(51.17238235473633, 766.1807861328125, -138.44842529296875)},
+            {Name = "星界岛", CFrame = CFrame.new(207.2932891845703, 2013.88037109375, 237.36672973632812)},
+            {Name = "神秘岛", CFrame = CFrame.new(171.97178649902344, 4047.380859375, 42.0699577331543)},
+            {Name = "太空岛", CFrame = CFrame.new(148.83824157714844, 5657.18505859375, 73.5014877319336)},
+            {Name = "冻土岛", CFrame = CFrame.new(139.28330993652344, 9285.18359375, 77.36406707763672)},
+            {Name = "永恒岛", CFrame = CFrame.new(149.34817504882812, 13680.037109375, 73.3861312866211)},
+            {Name = "沙暴岛", CFrame = CFrame.new(133.37144470214844, 17686.328125, 72.00334167480469)},
+            {Name = "雷暴岛", CFrame = CFrame.new(143.19349670410156, 24070.021484375, 78.05432891845703)},
+            {Name = "远古炼狱岛", CFrame = CFrame.new(141.27163696289062, 28256.294921875, 69.3790283203125)},
+            {Name = "午夜暗影岛", CFrame = CFrame.new(132.74267578125, 33206.98046875, 57.495574951171875)},
+            {Name = "神秘灵魂岛", CFrame = CFrame.new(137.76148986816406, 39317.5703125, 61.06639862060547)},
+            {Name = "冬季奇迹岛", CFrame = CFrame.new(137.2720184326172, 46010.5546875, 55.941951751708984)},
+            {Name = "黄金大师岛", CFrame = CFrame.new(128.32339477539062, 52607.765625, 56.69411849975586)},
+            {Name = "龙传奇岛", CFrame = CFrame.new(146.35226440429688, 59594.6796875, 77.53300476074219)},
+            {Name = "赛博传奇岛", CFrame = CFrame.new(137.3321075439453, 66669.1640625, 72.21722412109375)},
+            {Name = "天岚超能岛", CFrame = CFrame.new(135.48077392578125, 70271.15625, 57.02311325073242)},
+            {Name = "混沌传奇岛", CFrame = CFrame.new(148.58590698242188, 74442.8515625, 69.3177719116211)},
+            {Name = "灵魂融合岛", CFrame = CFrame.new(136.9700927734375, 79746.984375, 58.54051971435547)},
+            {Name = "黑暗元素岛", CFrame = CFrame.new(141.697265625, 83198.984375, 72.73107147216797)},
+            {Name = "内心和平岛", CFrame = CFrame.new(135.3157501220703, 87051.0625, 66.78429412841797)},
+            {Name = "炽烈漩涡岛", CFrame = CFrame.new(135.08216857910156, 91246.0703125, 69.56692504882812)}
+        }
+
+        local localPlayer = game.Players.LocalPlayer
+        local character = localPlayer.Character or localPlayer.CharacterAdded:Wait()
+        local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+
+        for i, island in ipairs(islandCoordinates) do
+            humanoidRootPart.CFrame = island.CFrame
+            WindUI:Notify({
+                Title = "解锁岛屿",
+                Content = "已传送到：" .. island.Name .. "（" .. i .. "/" .. #islandCoordinates .. "）",
+                Icon = "map-pin",
+                Duration = 2
+            })
+            task.wait(2)
+        end
+
+        WindUI:Notify({
+            Title = "解锁完成",
+            Content = "✅ 所有岛屿已全部解锁并传送完毕！",
+            Icon = "check-circle",
+            Duration = 4
+        })
+    end
+})
+
+Tab14Section:Toggle({
+    Title = "自动挥舞",
+    Desc = "自动挥舞武器",
+    Default = false,
+    Callback = function(isEnabled)
+        Interstellar = Interstellar or {}
+        Interstellar.swing = isEnabled
+        if Interstellar.swing then
+            for _, v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
+                if v:FindFirstChild("attackKatanaScript") then
+                    game.Players.LocalPlayer.Character.Humanoid:EquipTool(v)
+                    while Interstellar.swing do
+                        game.Players.LocalPlayer.ninjaEvent:FireServer("swingKatana")
+                        task.wait()
+                    end
+                end
+            end
+        end
+        WindUI:Notify({
+            Title = "自动挥舞",
+            Content = isEnabled and "✅ 已开启" or "❌ 已关闭",
+            Icon = "sword",
+            Duration = 3
+        })
+    end 
+})
+
+Tab14Section:Toggle({
+    Title = "自动售卖",
+    Desc = "自动售卖物品",
+    Default = false,
+    Callback = function(isEnabled)
+        Interstellar = Interstellar or {}
+        Interstellar.sell = isEnabled
+        local localPlayer = game.Players.LocalPlayer
+        while Interstellar.sell do
+            local sellArea = workspace:FindFirstChild("sellAreaCircles")
+            if not sellArea then 
+                task.wait(1)
+                continue 
+            end
+            local targetCircle = nil
+            for _, circle in pairs(sellArea:GetChildren()) do
+                if circle:FindFirstChild("circleInner") then
+                    targetCircle = circle.circleInner
+                    break
+                end
+            end
+            local character = localPlayer.Character
+            local humanoidRootPart = character and character:FindFirstChild("HumanoidRootPart")
+            if targetCircle and humanoidRootPart then
+                firetouchinterest(targetCircle, humanoidRootPart, 0)
+                firetouchinterest(targetCircle, humanoidRootPart, 1)
+            end
+            task.wait()
+        end
+        WindUI:Notify({
+            Title = "自动售卖",
+            Content = isEnabled and "✅ 已开启" or "❌ 已关闭",
+            Icon = "shopping-bag",
+            Duration = 3
+        })
+    end 
+})
+
+local Tab14Section = Tab5:Section({
+    Title = "收集功能",
+    TextSize = 18,
+    FontWeight = Enum.FontWeight.SemiBold
+})
+
+Tab14Section:Button({
+    Title = "收集所有宝箱",
+    Icon = "treasure-chest",
+    Color = Color3.fromHex("#000000"),
+    Callback = function()
+        getgenv().collectChest = true
+        local localPlayer = game.Players.LocalPlayer
+        local character = localPlayer.Character or localPlayer.CharacterAdded:Wait()
+        local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+
+        for _, v in next, workspace:GetChildren() do
+            while getgenv().collectChest and v and v.Parent and v.Name:find("Chest") do
+                local circleInner = v:FindFirstChild("circleInner")
+                if circleInner then
+                    firetouchinterest(circleInner.CFrame, humanoidRootPart, 0)
+                    firetouchinterest(circleInner.CFrame, humanoidRootPart, 1)
+                end
+                task.wait(0.5)
+            end
+        end
+        getgenv().collectChest = false
+        WindUI:Notify({
+            Title = "收集宝箱",
+            Content = "✅ 宝箱收集完成",
+            Icon = "treasure-chest"
+        })
+    end
+})
+
+Tab14Section:Toggle({
+    Title = "吸所有环",
+    Desc = "自动收集环",
+    Default = false,
+    Callback = function(isEnabled)
+        Interstellar = Interstellar or {}
+        Interstellar.hoops = isEnabled
+        if Interstellar.hoops then
+            while Interstellar.hoops do
+                for i, v in ipairs(workspace.Hoops:GetChildren()) do
+                    if v.Name == "Hoop" then
+                        v.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
+                    end
+                end
+                wait()
+                for i, v in ipairs(workspace.Hoops.Hoop:GetChildren()) do
+                    if v.Name == "touchPart" then
+                        v.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
+                    end
+                end
+            end
+        end
+        WindUI:Notify({
+            Title = "吸所有环",
+            Content = isEnabled and "✅ 已开启" or "❌ 已关闭",
+            Icon = "circle",
+            Duration = 3
+        })
+    end 
+})
+
+Tab14Section:Toggle({
+    Title = "收集气",
+    Desc = "自动收集气",
+    Default = false,
+    Callback = function(isEnabled)
+        Interstellar = Interstellar or {}
+        Interstellar.spawnedCoins = isEnabled
+        local localPlayer = game.Players.LocalPlayer
+        while Interstellar.spawnedCoins do
+            local character = localPlayer.Character or localPlayer.CharacterAdded:Wait()
+            local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+            local valley = game.Workspace:FindFirstChild("spawnedCoins") and game.Workspace.spawnedCoins:FindFirstChild("Valley")
+            if not valley then 
+                task.wait(2)
+                continue 
+            end
+
+            for i, v in pairs(valley:GetChildren()) do
+                if v.Name == "Blue Chi Crate" then
+                    humanoidRootPart.CFrame = CFrame.new(v.Position)
+                    task.wait(2)
+                end
+            end
+            task.wait()
+        end
+        WindUI:Notify({
+            Title = "收集气",
+            Content = isEnabled and "✅ 已开启" or "❌ 已关闭",
+            Icon = "wind",
+            Duration = 3
+        })
+    end 
+})
+
+Tab14Section:Toggle({
+    Title = "收集金币",
+    Desc = "自动收集金币",
+    Default = false,
+    Callback = function(isEnabled)
+        Interstellar = Interstellar or {}
+        Interstellar.spawnedCoins = isEnabled
+        if Interstellar.spawnedCoins then
+            while Interstellar.spawnedCoins do
+                for i, v in pairs(game.Workspace.spawnedCoins.Valley:GetChildren()) do
+                    if v.Name == "Purple Coin Crate" then
+                        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(v.Position)
+                        wait(2)
+                    end
+                end
+            end
+        end
+        WindUI:Notify({
+            Title = "收集金币",
+            Content = isEnabled and "✅ 已开启" or "❌ 已关闭",
+            Icon = "coin",
+            Duration = 3
+        })
+    end 
+})
+
+local Tab14Section = Tab6:Section({
+    Title = "自动购买",
+    TextSize = 18,
+    FontWeight = Enum.FontWeight.SemiBold
+})
+
+Tab14Section:Toggle({
+    Title = "自动买剑",
+    Desc = "自动购买所有剑",
+    Default = false,
+    Callback = function(isEnabled)
+        Interstellar = Interstellar or {}
+        Interstellar.buy = isEnabled
+        if isEnabled then
+            while Interstellar.buy do
+                local buyType = "buyAllSwords"
+                local targetIslands = {
+                    "Ground", "Astral Island", "Space Island", 
+                    "Tundra Island", "Eternal Island", "Sandstorm", 
+                    "Thunderstorm", "Ancient Inferno Island", 
+                    "Midnight Shadow Island", "Mythical Souls Island", 
+                    "Winter Wonder Island"
+                }
+                for i = 1, #targetIslands do
+                    game:GetService("Players").LocalPlayer.ninjaEvent:FireServer(buyType, targetIslands[i])
+                    wait()
+                end
+            end
+        end
+        WindUI:Notify({
+            Title = "自动买剑",
+            Content = isEnabled and "✅ 已开启" or "❌ 已关闭",
+            Icon = "sword",
+            Duration = 3
+        })
+    end 
+})
+
+Tab14Section:Toggle({
+    Title = "自动买背包",
+    Desc = "自动购买所有背包",
+    Default = false,
+    Callback = function(isEnabled)
+        Interstellar = Interstellar or {}
+        Interstellar.buy = isEnabled
+        if Interstellar.buy then
+            while Interstellar.buy do
+                local buyType = "buyAllBelts"
+                local targetIslands = {
+                    "Ground", "Astral Island", "Space Island", 
+                    "Tundra Island", "Eternal Island", "Sandstorm", 
+                    "Thunderstorm", "Ancient Inferno Island", 
+                    "Midnight Shadow Island", "Mythical Souls Island", 
+                    "Winter Wonder Island"
+                }
+                for i = 1, #targetIslands do
+                    game:GetService("Players").LocalPlayer.ninjaEvent:FireServer(buyType, targetIslands[i])
+                    wait()
+                end
+            end
+        end
+        WindUI:Notify({
+            Title = "自动买背包",
+            Content = isEnabled and "✅ 已开启" or "❌ 已关闭",
+            Icon = "backpack",
+            Duration = 3
+        })
+    end 
+})
+
+Tab14Section:Toggle({
+    Title = "自动买技能",
+    Desc = "自动购买所有技能",
+    Default = false,
+    Callback = function(isEnabled)
+        Interstellar = Interstellar or {}
+        Interstellar.buy = isEnabled
+        if Interstellar.buy then
+            while Interstellar.buy do
+                local buyType = "buyAllSkills"
+                local targetIslands = {
+                    "Ground", "Astral Island", "Space Island", 
+                    "Tundra Island", "Eternal Island", "Sandstorm", 
+                    "Thunderstorm", "Ancient Inferno Island", 
+                    "Midnight Shadow Island", "Mythical Souls Island", 
+                    "Winter Wonder Island"
+                }
+                for i = 1, #targetIslands do
+                    game:GetService("Players").LocalPlayer.ninjaEvent:FireServer(buyType, targetIslands[i])
+                    wait()
+                end
+            end
+        end
+        WindUI:Notify({
+            Title = "自动买技能",
+            Content = isEnabled and "✅ 已开启" or "❌ 已关闭",
+            Icon = "zap",
+            Duration = 3
+        })
+    end 
+})
+
+Tab14Section:Toggle({
+    Title = "自动买阶级",
+    Desc = "自动购买阶级",
+    Default = false,
+    Callback = function(isEnabled)
+        Interstellar = Interstellar or {}
+        Interstellar.buy = isEnabled
+        if Interstellar.buy then
+            while Interstellar.buy do
+                local buyType = "buyRank"
+                local ranksFolder = game:GetService("ReplicatedStorage"):FindFirstChild("Ranks")
+                local groundRanks = ranksFolder and ranksFolder:FindFirstChild("Ground")
+                local targetRanks = groundRanks and groundRanks:GetChildren() or {}
+                
+                for i = 1, #targetRanks do
+                    game:GetService("Players").LocalPlayer.ninjaEvent:FireServer(buyType, targetRanks[i])
+                    task.wait()
+                end
+                task.wait(1)
+            end
+        end
+        WindUI:Notify({
+            Title = "自动买阶级",
+            Content = isEnabled and "✅ 已开启" or "❌ 已关闭",
+            Icon = "award",
+            Duration = 3
+        })
+    end 
+})
+
+Tab14Section:Toggle({
+    Title = "自动购买苦无",
+    Desc = "自动购买苦无",
+    Default = false,
+    Callback = function(isEnabled)
+        Interstellar = Interstellar or {}
+        Interstellar.buy = isEnabled
+        while Interstellar.buy do
+            wait()
+            game:GetService("Players").LocalPlayer.ninjaEvent:FireServer("buyAllShurikens", "Blazing Vortex Island")
+        end
+        WindUI:Notify({
+            Title = "自动购买苦无",
+            Content = isEnabled and "✅ 已开启" or "❌ 已关闭",
+            Icon = "target",
+            Duration = 3
+        })
+    end 
+})
+
+local Tab14Section = Tab7:Section({
+    Title = "其他功能",
+    TextSize = 18,
+    FontWeight = Enum.FontWeight.SemiBold
+})
+
+Tab14Section:Toggle({
+    Title = "吸全部玩家",
+    Desc = "将其他玩家吸引到身边",
+    Default = false,
+    Callback = function(isEnabled)
+        Interstellar = Interstellar or {}
+        Interstellar.attractPlayers = isEnabled
+        if isEnabled then
+            while Interstellar.attractPlayers do
+                for i, v in next, game:GetService('Players'):GetPlayers() do
+                    if v.Name ~= game:GetService('Players').LocalPlayer.Name then
+                        local localPlayerRoot = game:GetService('Players').LocalPlayer.Character.HumanoidRootPart
+                        local localPlayerPosition = localPlayerRoot.Position
+                        local direction = localPlayerRoot.CFrame.lookVector
+                        local newPosition = localPlayerPosition + direction * 3
+
+                        v.Character.HumanoidRootPart.CFrame = CFrame.new(newPosition, localPlayerPosition + direction * 4)
+                        wait()
+                    end
+                end
+            end
+        end
+        WindUI:Notify({
+            Title = "吸全部玩家",
+            Content = isEnabled and "✅ 已开启" or "❌ 已关闭",
+            Icon = "users",
+            Duration = 3
+        })
+    end 
+})
+
+Tab14Section:Toggle({
+    Title = "靠近自动攻击",
+    Desc = "必开功能",
+    Default = false,
+    Callback = function(isEnabled)
+        if isEnabled then
+            -- 开启逻辑
+        else
+            if getgenv().configs then
+                local Disable = getgenv().configs.Disable
+                if Disable then
+                    Disable:Fire()
+                    Disable:Destroy()
+                end
+                if getgenv().configs.connections then
+                    for _, connection in pairs(getgenv().configs.connections) do
+                        connection:Disconnect()
+                    end
+                    table.clear(getgenv().configs.connections)
+                end
+            end
+            Run = false
+        end
+        WindUI:Notify({
+            Title = "靠近自动攻击",
+            Content = isEnabled and "✅ 已开启" or "❌ 已关闭",
+            Icon = "target",
+            Duration = 3
+        })
+    end 
+})
+
+Tab14Section:Button({
+    Title = "获取所有元素",
+    Icon = "atom",
+    Color = Color3.fromHex("#000000"),
+    Callback = function()
+        for i, v in pairs(game:GetService("ReplicatedStorage").Elements:GetChildren()) do
+            local allelement = v.Name
+            game.ReplicatedStorage.rEvents.elementMasteryEvent:FireServer(allelement)
+        end
+        WindUI:Notify({
+            Title = "获取元素",
+            Content = "✅ 已获取所有元素",
+            Icon = "atom"
+        })
+    end
+})
+
+Tab14Section:Button({
+    Title = "解锁全部通行证",
+    Icon = "unlock",
+    Color = Color3.fromHex("#000000"),
+    Callback = function()
+        local gamepassIds = game:GetService("ReplicatedStorage").gamepassIds
+        local ownedGamepasses = game.Players.LocalPlayer.ownedGamepasses
+        
+        gamepassIds["+2 Pet Slots"].Parent = ownedGamepasses
+        gamepassIds["+3 Pet Slots"].Parent = ownedGamepasses
+        gamepassIds["+4 Pet Slots"].Parent = ownedGamepasses
+        gamepassIds["+100 Capacity"].Parent = ownedGamepasses
+        gamepassIds["+200 Capacity"].Parent = ownedGamepasses
+        gamepassIds["+20 Capacity"].Parent = ownedGamepasses
+        gamepassIds["+60 Capacity"].Parent = ownedGamepasses
+        gamepassIds["Infinite Ammo"].Parent = ownedGamepasses
+        gamepassIds["Infinite Ninjitsu"].Parent = ownedGamepasses
+        gamepassIds["Permanent Islands Unlock"].Parent = ownedGamepasses
+        gamepassIds["x2 Coins"].Parent = ownedGamepasses
+        gamepassIds["x2 Damage"].Parent = ownedGamepasses
+        gamepassIds["x2 Health"].Parent = ownedGamepasses
+        gamepassIds["x2 Ninjitsu"].Parent = ownedGamepasses
+        gamepassIds["x2 Speed"].Parent = ownedGamepasses
+        gamepassIds["Faster Sword"].Parent = ownedGamepasses
+        gamepassIds["x3 Pet Clones"].Parent = ownedGamepasses
+        
+        WindUI:Notify({
+            Title = "解锁通行证",
+            Content = "✅ 已解锁全部通行证",
+            Icon = "unlock"
+        })
+    end
+})
+
+Tab14Section:Button({
+    Title = "最大跳跃次数",
+    Icon = "arrow-up",
+    Color = Color3.fromHex("#000000"),
+    Callback = function()
+        local localPlayer = game.Players.LocalPlayer
+        local multiJumpCount = localPlayer:FindFirstChild("multiJumpCount")
+        if multiJumpCount and multiJumpCount:IsA("ValueBase") then
+            multiJumpCount.Value = 50
+        end
+        WindUI:Notify({
+            Title = "跳跃次数",
+            Content = "✅ 已设置最大跳跃次数",
+            Icon = "arrow-up"
+        })
+    end
+})
+
+local Tab15 = MainWindow:Tab({
+    Title = "生存7天",
+    Icon = "shield"
+})
+
+local Tab15Section = Tab15:Section({
+    Title = "透视功能",
+    TextSize = 18,
+    FontWeight = Enum.FontWeight.SemiBold
+})
+
+local ESPName = {
+    "ScpESPFloder",
+    "AnimalESPFloder",
+}
+for _,v in next,ESPName do
+    local ESPFloder = Instance.new("Folder")
+    ESPFloder.Parent = workspace
+    ESPFloder.Name = v
+end
+
+local function ESPMonster(Text, Adornee, Color)
+    if not Adornee:FindFirstChild("ROLESPBillboardGui") then
+        local ROLESPBillboardGui = Instance.new("BillboardGui")
+        ROLESPBillboardGui.Parent = workspace.ScpESPFloder
+        ROLESPBillboardGui.Adornee = Adornee
+        ROLESPBillboardGui.Size = UDim2.new(0, 20, 0, 20)
+        ROLESPBillboardGui.StudsOffset = Vector3.new(0, 3, 0)
+        ROLESPBillboardGui.AlwaysOnTop = true
+        local ROLESPTextLabel = Instance.new("TextLabel")
+        ROLESPTextLabel.Parent = ROLESPBillboardGui
+        ROLESPTextLabel.Size = UDim2.new(1, 0, 1, 0)
+        ROLESPTextLabel.BackgroundTransparency = 1
+        ROLESPTextLabel.Text = Text
+        ROLESPTextLabel.TextColor3 = Color
+        ROLESPTextLabel.TextStrokeTransparency = 0.5
+        ROLESPTextLabel.TextScaled = true
+    end
+end
+
+local function ESPAnimal(Text, Adornee, Color)
+    if not Adornee:FindFirstChild("ROLESPBillboardGui") then
+        local ROLESPBillboardGui = Instance.new("BillboardGui")
+        ROLESPBillboardGui.Parent = workspace.AnimalESPFloder
+        ROLESPBillboardGui.Adornee = Adornee
+        ROLESPBillboardGui.Size = UDim2.new(0, 20, 0, 20)
+        ROLESPBillboardGui.StudsOffset = Vector3.new(0, 3, 0)
+        ROLESPBillboardGui.AlwaysOnTop = true
+        local ROLESPTextLabel = Instance.new("TextLabel")
+        ROLESPTextLabel.Parent = ROLESPBillboardGui
+        ROLESPTextLabel.Size = UDim2.new(1, 0, 1, 0)
+        ROLESPTextLabel.BackgroundTransparency = 1
+        ROLESPTextLabel.Text = Text
+        ROLESPTextLabel.TextColor3 = Color
+        ROLESPTextLabel.TextStrokeTransparency = 0.5
+        ROLESPTextLabel.TextScaled = true
+    end
+end
+
+local OAO = game.Players.LocalPlayer
+local QWQ = game.ReplicatedStorage
+local OvO = {
+    instantlycutofftree = false,
+    AutoCollectScraps = false,
+    AutoCollectDirt = false,
+    AutoCollectHarvt = false,
+    KillAll = false,
+    KillAura = false,
+    AutoTpPine = false,
+    AutoHeli = false
+}
+
+local function findClosestPine()
+    local closestPine = nil
+    local shortestDistance = math.huge
+    for _, v in next, workspace.trees:GetChildren() do
+        if v.Name:find("Pine") and v.PrimaryPart then
+            local distance = (v.PrimaryPart.Position - OAO.Character.HumanoidRootPart.Position).Magnitude
+            if distance < shortestDistance then
+                closestPine = v
+                shortestDistance = distance
+            end
+        end
+    end
+    return closestPine
+end
+
+game:GetService("Players").LocalPlayer.Idled:Connect(function()
+    game:GetService("VirtualUser"):Button2Down(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
+    task.wait(1)
+    game:GetService("VirtualUser"):Button2Up(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
+    game:GetService("VirtualUser"):CaptureController()
+    game:GetService("VirtualUser"):ClickButton2(Vector2.new())
+end)
+
+local animalConnection
+local scpConnection
+
+Tab15Section:Toggle({
+    Title = "动物透视",
+    Desc = "显示动物位置",
+    Default = false,
+    Callback = function(isEnabled)
+        if isEnabled then
+            if animalConnection then animalConnection:Disconnect() end
+            for _, v in next, workspace.animals:GetChildren() do
+                ESPAnimal(v.Name, v, Color3.new(1, 0, 0))
+            end
+            animalConnection = workspace.animals.ChildAdded:Connect(function(v)
+                ESPAnimal(v.Name, v, Color3.new(1, 0, 0))
+            end)
+        else
+            if animalConnection then animalConnection:Disconnect() end
+            workspace.AnimalESPFloder:ClearAllChildren()
+        end
+        WindUI:Notify({
+            Title = "动物透视",
+            Content = isEnabled and "✅ 已开启" or "❌ 已关闭",
+            Icon = "eye",
+            Duration = 3
+        })
+    end 
+})
+
+Tab15Section:Toggle({
+    Title = "怪物透视",
+    Desc = "显示怪物位置",
+    Default = false,
+    Callback = function(isEnabled)
+        if isEnabled then
+            if scpConnection then scpConnection:Disconnect() end
+            for _, v in next, workspace.scps:GetChildren() do
+                ESPMonster("怪物", v, Color3.new(0, 0, 1))
+            end
+            scpConnection = workspace.scps.ChildAdded:Connect(function(v)
+                ESPMonster("怪物", v, Color3.new(0, 0, 1))
+            end)
+        else
+            if scpConnection then scpConnection:Disconnect() end
+            workspace.ScpESPFloder:ClearAllChildren()
+        end
+        WindUI:Notify({
+            Title = "怪物透视",
+            Content = isEnabled and "✅ 已开启" or "❌ 已关闭",
+            Icon = "eye",
+            Duration = 3
+        })
+    end 
+})
+
+local Tab15Section2 = Tab15:Section({
+    Title = "自动功能",
+    TextSize = 18,
+    FontWeight = Enum.FontWeight.SemiBold
+})
+
+Tab15Section2:Toggle({
+    Title = "秒砍树",
+    Desc = "快速砍树",
+    Default = false,
+    Callback = function(isEnabled)
+        OvO.instantlycutofftree = isEnabled
+        spawn(function()
+            while OvO.instantlycutofftree do wait()
+                QWQ.remotes.swing_axe:FireServer()
+                for _,v in next,workspace.logs:GetChildren() do
+                    if v.Name == "log" then
+                        fireproximityprompt(v.main.ProximityPrompt)
+                    end
+                end
+            end
+        end)
+        WindUI:Notify({
+            Title = "秒砍树",
+            Content = isEnabled and "✅ 已开启" or "❌ 已关闭",
+            Icon = "tree",
+            Duration = 3
+        })
+    end 
+})
+
+Tab15Section2:Toggle({
+    Title = "自动钓鱼",
+    Desc = "自动钓鱼功能",
+    Default = false,
+    Callback = function(isEnabled)
+        OvO.AutoCast = isEnabled
+        spawn(function()
+            while OvO.AutoCast do wait()
+                game:GetService("ReplicatedStorage").remotes.cast:FireServer()
+                task.wait(0.2)
+                for i = 1,8 do
+                    game:GetService("ReplicatedStorage").remotes.hit_fish:FireServer()
+                end
+            end
+        end)
+        WindUI:Notify({
+            Title = "自动钓鱼",
+            Content = isEnabled and "✅ 已开启" or "❌ 已关闭",
+            Icon = "fish",
+            Duration = 3
+        })
+    end 
+})
+
+Tab15Section2:Button({
+    Title = "秒吃食物",
+    Icon = "utensils",
+    Color = Color3.fromHex("#000000"),
+    Callback = function()
+        for _,v in pairs(OAO.Backpack:GetChildren()) do
+            if v:FindFirstChild("eat") and OAO.Character.hunger.Value < 30 then
+                for i = 1, 20 do
+                    v.Parent = OAO.Character
+                    OAO.Character[v.Name].eat:FireServer()
+                end
+            end
+        end
+        WindUI:Notify({
+            Title = "秒吃食物",
+            Content = "✅ 已快速进食",
+            Icon = "utensils"
+        })
+    end
+})
+
+Tab15Section2:Toggle({
+    Title = "自动收集材料",
+    Desc = "收集废料材料",
+    Default = false,
+    Callback = function(isEnabled)
+        OvO.AutoCollectScraps = isEnabled
+        spawn(function()
+            while OvO.AutoCollectScraps do wait()
+                local oldcf = OAO.Character.HumanoidRootPart.CFrame
+                for _, v in pairs(workspace.scraps:GetChildren()) do
+                    local material = v:FindFirstChild("defaultMaterial10")
+                    if material and OvO.AutoCollectScraps then
+                        local prompt = material:FindFirstChild("ProximityPrompt")
+                        if prompt and OvO.AutoCollectScraps then
+                            OAO.Character.HumanoidRootPart.CFrame = material.CFrame + Vector3.new(0, 3, 0)
+                            wait(0.2)
+                            fireproximityprompt(prompt)
+                            wait(0.2) 
+                            OAO.Character.HumanoidRootPart.CFrame = oldcf
+                        end
+                    end
+                end
+            end
+        end)
+        WindUI:Notify({
+            Title = "自动收集材料",
+            Content = isEnabled and "✅ 已开启" or "❌ 已关闭",
+            Icon = "package",
+            Duration = 3
+        })
+    end 
+})
+
+Tab15Section2:Button({
+    Title = "传送回出生点",
+    Icon = "home",
+    Color = Color3.fromHex("#000000"),
+    Callback = function()
+        OAO.Character.HumanoidRootPart.CFrame = CFrame.new(57,42,416)
+        WindUI:Notify({
+            Title = "传送",
+            Content = "✅ 已传送回出生点",
+            Icon = "home"
+        })
+    end
+})
+
+Tab15Section2:Toggle({
+    Title = "自动收集成熟品",
+    Desc = "收集成熟作物",
+    Default = false,
+    Callback = function(isEnabled)
+        OvO.AutoCollectHarvt = isEnabled
+        if OvO.AutoCollectHarvt then
+            oldpos = OAO.Character.HumanoidRootPart.CFrame
+            spawn(function()
+                while OvO.AutoCollectHarvt do wait()
+                    for _,v in next,workspace.harvest:GetChildren() do
+                        OAO.Character.HumanoidRootPart.CFrame = v.main.CFrame
+                        fireproximityprompt(v.main.ProximityPrompt)
+                    end
+                end
+            end)
+        else
+            OAO.Character.HumanoidRootPart.CFrame = oldpos
+        end
+        WindUI:Notify({
+            Title = "自动收集成熟品",
+            Content = isEnabled and "✅ 已开启" or "❌ 已关闭",
+            Icon = "package",
+            Duration = 3
+        })
+    end 
+})
+
+Tab15Section2:Toggle({
+    Title = "自动收集生鹿肉",
+    Desc = "收集鹿肉",
+    Default = false,
+    Callback = function(isEnabled)
+        OvO.AutoCollectHarvt = isEnabled
+        if OvO.AutoCollectHarvt then
+            oldpos = OAO.Character.HumanoidRootPart.CFrame
+            spawn(function()
+                while OvO.AutoCollectHarvt do wait()
+                    for _,v in next,workspace.interact:GetChildren() do
+                        if v.Name == "deer" then
+                            OAO.Character.HumanoidRootPart.CFrame = v["lungs,heart,intestines"].CFrame
+                            fireproximityprompt(v["lungs,heart,intestines"].ProximityPrompt)
+                        end
+                    end
+                end
+            end)
+        else
+            OAO.Character.HumanoidRootPart.CFrame = oldpos
+        end
+        WindUI:Notify({
+            Title = "自动收集生鹿肉",
+            Content = isEnabled and "✅ 已开启" or "❌ 已关闭",
+            Icon = "package",
+            Duration = 3
+        })
+    end 
+})
+
+Tab15Section2:Toggle({
+    Title = "自动收集包菜",
+    Desc = "收集包菜",
+    Default = false,
+    Callback = function(isEnabled)
+        OvO.AutoCollectDirt = isEnabled
+        if OvO.AutoCollectDirt then
+            oldpos = OAO.Character.HumanoidRootPart.CFrame
+            spawn(function()
+                while OvO.AutoCollectDirt do wait()
+                    OAO.Character.HumanoidRootPart.CFrame = workspace.builds["Cabbage Farm"].dirt.CFrame
+                    fireproximityprompt(workspace.builds["Cabbage Farm"].dirt.ProximityPrompt)
+                end
+            end)
+        else
+            OAO.Character.HumanoidRootPart.CFrame = oldpos
+        end
+        WindUI:Notify({
+            Title = "自动收集包菜",
+            Content = isEnabled and "✅ 已开启" or "❌ 已关闭",
+            Icon = "package",
+            Duration = 3
+        })
+    end 
+})
+
+Tab15Section2:Toggle({
+    Title = "枪械光环",
+    Desc = "自动攻击敌人",
+    Default = false,
+    Callback = function(isEnabled)
+        OvO.KillAll = isEnabled
+        spawn(function()
+            while OvO.KillAll do wait()
+                for _,v in next,workspace.scps:GetChildren() do
+                    if v:FindFirstChild("HumanoidRootPart") then
+                        local args = {
+                            [1] = CFrame.new(v.HumanoidRootPart.Position.X, v.HumanoidRootPart.Position.Y, v.HumanoidRootPart.Position.Z) * CFrame.Angles(0, 0, 0),
+                            [2] = CFrame.new(v.HumanoidRootPart.Position.X, v.HumanoidRootPart.Position.Y, v.HumanoidRootPart.Position.Z) * CFrame.Angles(0, 0, 0),
+                        }
+                        game:GetService("ReplicatedStorage").remotes.shoot:FireServer(unpack(args))
+                        game:GetService("ReplicatedStorage").remotes.reload:FireServer()
+                    end
+                end
+                for _,v in next,workspace.animals:GetChildren() do
+                    if v:FindFirstChild("HumanoidRootPart") then
+                        local args = {
+                            [1] = CFrame.new(v.HumanoidRootPart.Position.X, v.HumanoidRootPart.Position.Y, v.HumanoidRootPart.Position.Z) * CFrame.Angles(0, 0, 0),
+                            [2] = CFrame.new(v.HumanoidRootPart.Position.X, v.HumanoidRootPart.Position.Y, v.HumanoidRootPart.Position.Z) * CFrame.Angles(0, 0, 0),
+                        }
+                        game:GetService("ReplicatedStorage").remotes.shoot:FireServer(unpack(args))
+                        game:GetService("ReplicatedStorage").remotes.reload:FireServer()
+                    end
+                end
+            end
+        end)
+        WindUI:Notify({
+            Title = "枪械光环",
+            Content = isEnabled and "✅ 已开启" or "❌ 已关闭",
+            Icon = "target",
+            Duration = 3
+        })
+    end 
+})
+
+Tab15Section2:Toggle({
+    Title = "子弹追踪(锁头)",
+    Desc = "精准锁定目标",
+    Default = false,
+    Callback = function(isEnabled)
+        OvO.KillAura = isEnabled
+        spawn(function()
+            while OvO.KillAura do wait()
+                if OAO.Character.HumanoidRootPart then
+                    for _, scp in ipairs(workspace.scps:GetChildren()) do
+                        local HitPart = scp:FindFirstChild("HumanoidRootPart") or scp:FindFirstChild("Head")
+                        if HitPart and scp:FindFirstChildWhichIsA("Humanoid") and scp.Humanoid.Health > 0 then
+                            game.ReplicatedStorage.remotes.shoot:FireServer(HitPart.CFrame + Vector3.new(0, 0.5, 0), HitPart.CFrame)
+                        end
+                    end
+                    for _, animal in ipairs(workspace.animals:GetChildren()) do
+                        local HitPart = animal:FindFirstChild("HumanoidRootPart") or animal:FindFirstChild("Head")
+                        if HitPart and scp:FindFirstChildWhichIsA("Humanoid") and scp.Humanoid.Health > 0 then
+                            game.ReplicatedStorage.remotes.shoot:FireServer(HitPart.CFrame + Vector3.new(0, 0.5, 0), HitPart.CFrame)
+                        end
+                    end
+                end
+            end
+        end)
+        WindUI:Notify({
+            Title = "子弹追踪",
+            Content = isEnabled and "✅ 已开启" or "❌ 已关闭",
+            Icon = "crosshair",
+            Duration = 3
+        })
+    end 
+})
+
+Tab15Section2:Toggle({
+    Title = "自动传送最近的木头",
+    Desc = "自动传送到松树",
+    Default = false,
+    Callback = function(isEnabled)
+        OvO.AutoTpPine = isEnabled
+        spawn(function()
+            while OvO.AutoTpPine do wait()
+                local closestPine = findClosestPine()
+                if closestPine then
+                    local targetPosition = closestPine.PrimaryPart.Position
+                    OAO.Character.HumanoidRootPart.CFrame = CFrame.new(Vector3.new(targetPosition.X, targetPosition.Y - 30, targetPosition.Z))
+                    OAO.Character.HumanoidRootPart.Anchored = OvO.AutoTpPine
+                end
+            end
+        end)
+        WindUI:Notify({
+            Title = "自动传送木头",
+            Content = isEnabled and "✅ 已开启" or "❌ 已关闭",
+            Icon = "tree-pine",
+            Duration = 3
+        })
+    end 
+})
+
+Tab15Section2:Toggle({
+    Title = "开启无限模式",
+    Desc = "无限模式开关",
+    Default = false,
+    Callback = function(isEnabled)
+        workspace.infinite.Value = isEnabled
+        WindUI:Notify({
+            Title = "无限模式",
+            Content = isEnabled and "✅ 已开启" or "❌ 已关闭",
+            Icon = "infinity",
+            Duration = 3
+        })
+    end 
+})
+
+Tab15Section2:Toggle({
+    Title = "开启雨天",
+    Desc = "雨天效果开关",
+    Default = false,
+    Callback = function(isEnabled)
+        workspace.raining.Value = isEnabled
+        WindUI:Notify({
+            Title = "雨天效果",
+            Content = isEnabled and "✅ 已开启" or "❌ 已关闭",
+            Icon = "cloud-rain",
+            Duration = 3
+        })
+    end 
+})
+
+Tab15Section2:Toggle({
+    Title = "自动拾取飞机残骸",
+    Desc = "拾取直升机残骸",
+    Default = false,
+    Callback = function(isEnabled)
+        OvO.AutoHeli = isEnabled
+        spawn(function()
+            while OvO.AutoHeli do wait()
+                for _,v in next,workspace.interact:GetChildren() do
+                    if v.Name == "heli" then
+                        fireproximityprompt(v.Body.ProximityPrompt)
+                    end
+                end
+            end
+        end)
+        WindUI:Notify({
+            Title = "自动拾取飞机残骸",
+            Content = isEnabled and "✅ 已开启" or "❌ 已关闭",
+            Icon = "helicopter",
+            Duration = 3
+        })
+    end 
+})
+
+local Tab16 = MainWindow:Tab({
+    Title = "战争大亨",
+    Icon = "shield"
+})
+
+local Tab16Section = Tab16:Section({
+    Title = "传送功能",
+    TextSize = 18,
+    FontWeight = Enum.FontWeight.SemiBold
+})
+
+Tab16Section:Button({
+    Title = "当前玩家基地: " .. game.Players.LocalPlayer.Team.Name,
+    Icon = "map-pin",
+    Color = Color3.fromHex("#000000"),
+    Callback = function()
+        WindUI:Notify({
+            Title = "基地信息",
+            Content = "当前基地: " .. game.Players.LocalPlayer.Team.Name,
+            Icon = "map-pin",
+            Duration = 3
+        })
+    end
+})
+
+local Positions = {
+    ["Alpha"] = CFrame.new(-1197, 65, -4790),
+    ["Bravo"] = CFrame.new(-220, 65, -4919),
+    ["Charlie"] = CFrame.new(797, 65, -4740),
+    ["Delta"] = CFrame.new(2044, 65, -3984),
+    ["Echo"] = CFrame.new(2742, 65, -3031),
+    ["Foxtrot"] = CFrame.new(3045, 65, -1788),
+    ["Golf"] = CFrame.new(3376, 65, -562),
+    ["Hotel"] = CFrame.new(3290, 65, 587),
+    ["Juliet"] = CFrame.new(2955, 65, 1804),
+    ["Kilo"] = CFrame.new(2569, 65, 2926),
+    ["Lima"] = CFrame.new(989, 65, 3419),
+    ["Omega"] = CFrame.new(-319, 65, 3932),
+    ["Romeo"] = CFrame.new(-1479, 65, 3722),
+    ["Sierra"] = CFrame.new(-2528, 65, 2549),
+    ["Tango"] = CFrame.new(-3018, 65, 1503),
+    ["Victor"] = CFrame.new(-3587, 65, 634),
+    ["Yankee"] = CFrame.new(-3957, 65, -287),
+    ["Zulu"] = CFrame.new(-4049, 65, -1334)
+}
+
+Tab16Section:Dropdown({
+    Title = "传送基地",
+    Values = {"Alpha", "Bravo", "Charlie", "Delta", "Echo", "Foxtrot", "Golf", "Hotel", "Juliet", "Kilo", "Lima", "Omega", "Romeo", "Sierra", "Tango", "Victor", "Yankee", "Zulu"},
+    Value = "Alpha",
+    Callback = function(selected)
+        local LP = game.Players.LocalPlayer
+        if LP.Character and LP.Character:FindFirstChild("HumanoidRootPart") then
+            LP.Character.HumanoidRootPart.CFrame = Positions[selected]
+            WindUI:Notify({
+                Title = "传送",
+                Content = "已传送到 " .. selected .. " 基地",
+                Icon = "map-pin",
+                Duration = 3
+            })
+        end
+    end
+})
+
+local Tab16Section2 = Tab16:Section({
+    Title = "自动功能",
+    TextSize = 18,
+    FontWeight = Enum.FontWeight.SemiBold
+})
+
+local function GetAvailableBases()
+    local bases = {}
+    if not ExcludedBases then
+        ExcludedBases = {}
+    end
+    if not workspace:FindFirstChild("Tycoon") or not workspace.Tycoon:FindFirstChild("Tycoons") then
+        return bases
+    end
+    
+    local tycoons = workspace.Tycoon.Tycoons:GetChildren()
+    for _, tycoon in ipairs(tycoons) do
+        if not table.find(ExcludedBases, tycoon.Name) then
+            table.insert(bases, tycoon.Name)
+        end
+    end
+    
+    return bases
+end
+
+local basesDropdown = Tab16Section2:Dropdown({
+    Title = "基地白名单{排除列表}",
+    Values = GetAvailableBases(),
+    Multi = true,
+    Default = {},
+    Callback = function(selected)
+        ExcludedBases = selected
+    end
+})
+
+Tab16Section2:Button({
+    Title = "刷新基地列表",
+    Icon = "refresh-cw",
+    Color = Color3.fromHex("#000000"),
+    Callback = function()
+        basesDropdown:Refresh(GetAvailableBases())
+        WindUI:Notify({
+            Title = "刷新",
+            Content = "基地列表已刷新",
+            Icon = "refresh-cw",
+            Duration = 3
+        })
+    end
+})
+
+Tab16Section2:Toggle({
+    Title = "自动箱子",
+    Desc = "自动收集箱子",
+    Default = false,
+    Callback = function(isEnabled)
+        getgenv().auto = isEnabled
+        WindUI:Notify({
+            Title = "自动箱子",
+            Content = isEnabled and "✅ 已开启" or "❌ 已关闭",
+            Icon = "package",
+            Duration = 3
+        })
+    end
+})
+
+Tab16Section2:Toggle({
+    Title = "自动升级",
+    Desc = "自动升级基地",
+    Default = false,
+    Callback = function(isEnabled)
+        getgenv().autoTeleport = isEnabled
+        WindUI:Notify({
+            Title = "自动升级",
+            Content = isEnabled and "✅ 已开启" or "❌ 已关闭",
+            Icon = "trending-up",
+            Duration = 3
+        })
+    end
+})
+
+Tab16Section2:Button({
+    Title = "自动重生",
+    Icon = "refresh-cw",
+    Color = Color3.fromHex("#000000"),
+    Callback = function()
+        WindUI:Notify({
+            Title = "自动重生",
+            Content = "功能开发中...",
+            Icon = "refresh-cw",
+            Duration = 3
+        })
+    end
+})
+
+Tab16Section2:Button({
+    Title = "自动空投",
+    Icon = "package",
+    Color = Color3.fromHex("#000000"),
+    Callback = function()
+        WindUI:Notify({
+            Title = "自动空投",
+            Content = "功能开发中...",
+            Icon = "package",
+            Duration = 3
+        })
+    end
+})
+
+local Tab16Section = Tab16:Section({
+    Title = "ESP设置",
+    TextSize = 18,
+    FontWeight = Enum.FontWeight.SemiBold
+})
+
+Tab16Section:Toggle({
+    Title = "透视开启",
+    Desc = "启用透视功能",
+    Default = false,
+    Callback = function(isEnabled)
+        getgenv().ESPEnabled = isEnabled
+        WindUI:Notify({
+            Title = "透视功能",
+            Content = isEnabled and "✅ 已开启" or "❌ 已关闭",
+            Icon = "eye",
+            Duration = 3
+        })
+    end
+})
+
+Tab16Section:Toggle({
+    Title = "模型透视",
+    Desc = "显示玩家骨架",
+    Default = false,
+    Callback = function(isEnabled)
+        getgenv().ShowSkeleton = isEnabled
+        WindUI:Notify({
+            Title = "模型透视",
+            Content = isEnabled and "✅ 已开启" or "❌ 已关闭",
+            Icon = "user",
+            Duration = 3
+        })
+    end
+})
+
+Tab16Section:Toggle({
+    Title = "方框透视",
+    Desc = "显示玩家方框",
+    Default = false,
+    Callback = function(isEnabled)
+        getgenv().ShowBox = isEnabled
+        WindUI:Notify({
+            Title = "方框透视",
+            Content = isEnabled and "✅ 已开启" or "❌ 已关闭",
+            Icon = "square",
+            Duration = 3
+        })
+    end
+})
+
+Tab16Section:Toggle({
+    Title = "射线透视",
+    Desc = "显示玩家射线",
+    Default = false,
+    Callback = function(isEnabled)
+        getgenv().ShowTracer = isEnabled
+        WindUI:Notify({
+            Title = "射线透视",
+            Content = isEnabled and "✅ 已开启" or "❌ 已关闭",
+            Icon = "crosshair",
+            Duration = 3
+        })
+    end
+})
+
+Tab16Section:Toggle({
+    Title = "名字透视",
+    Desc = "显示玩家名字",
+    Default = false,
+    Callback = function(isEnabled)
+        getgenv().ShowName = isEnabled
+        WindUI:Notify({
+            Title = "名字透视",
+            Content = isEnabled and "✅ 已开启" or "❌ 已关闭",
+            Icon = "tag",
+            Duration = 3
+        })
+    end
+})
+
+local Tab16Section = Tab16:Section({
+    Title = "游戏辅助",
+    TextSize = 18,
+    FontWeight = Enum.FontWeight.SemiBold
+})
+
+local blockFDMG = false
+local oldNamecall = nil
+local isHookActive = false
+
+local function initHook()
+    if isHookActive then return end
+    
+    oldNamecall = hookmetamethod(game, "__namecall", function(self, ...)
+        if blockFDMG and getnamecallmethod() == "FireServer" and tostring(self) == "FDMG" then
+            return nil
+        end
+        return oldNamecall(self, ...)
+    end)
+    
+    isHookActive = true
+end
+
+local function removeHook()
+    if not isHookActive or not oldNamecall then return end
+    
+    hookmetamethod(game, "__namecall", oldNamecall)
+    oldNamecall = nil
+    isHookActive = false
+end
+
+Tab16Section:Toggle({
+    Title = "坠落无伤害",
+    Desc = "防止坠落伤害",
+    Default = false,
+    Callback = function(isEnabled)
+        blockFDMG = isEnabled
+        
+        if isEnabled then
+            if not isHookActive then
+                initHook()
+            end
+        else
+            if isHookActive then
+                removeHook()
+            end
+        end
+        WindUI:Notify({
+            Title = "坠落无伤害",
+            Content = isEnabled and "✅ 已开启" or "❌ 已关闭",
+            Icon = "shield",
+            Duration = 3
+        })
+    end
+})
+
+Tab16Section:Button({
+    Title = "删除所有门",
+    Icon = "trash-2",
+    Color = Color3.fromHex("#000000"),
+    Callback = function()
+        for k,v in pairs(workspace.Tycoon.Tycoons:GetChildren()) do
+            for x,y in pairs(v.PurchasedObjects:GetChildren()) do
+                if(y.Name:find("Door") or y.Name:find("Gate")) then 
+                    y:destroy()
+                end
+            end
+        end
+        WindUI:Notify({
+            Title = "删除门",
+            Content = "✅ 所有门已删除",
+            Icon = "trash-2"
+        })
+    end
+})
+
+Tab16Section:Toggle({
+    Title = "无CD状态",
+    Desc = "技能无冷却",
+    Default = false,
+    Callback = function(isEnabled)
+        if isEnabled then
+            local ContextActions = workspace[game.Players.LocalPlayer.Name].ContextActions
+            local ContextMain = require(ContextActions.ContextMain)
+            
+            ContextMain:New({
+                RobPlayerLength = 0.1,
+                FixWallLength = 0.1,
+                CrackSafeLength = 0.1,
+                RobSafeLength = 0.1,
+                RobRegisterLength = 0.1,
+                PickCellLength = 0.1,
+                SkinAnimalLength = 0.1
+            }, 200, {
+                "Get out of my shop! Outlaws are not welcome here!",
+                "Hey, scoundrel! Get out before I call the sheriff!",
+                "You're an outlaw! We don't serve your type here!"
+            }, {
+                "This here's a bandit camp! Get out!",
+                "Get lost, cowboy!",
+                "Are you an outlaw? Didn't think so! Scram!"
+            })
+        end
+        WindUI:Notify({
+            Title = "无CD状态",
+            Content = isEnabled and "✅ 已开启" or "❌ 已关闭",
+            Icon = "zap",
+            Duration = 3
+        })
+    end
+})
+
+local deathPosition = nil
+local deathOrientation = nil
+
+local function setupDeathTracking()
+    local player = game.Players.LocalPlayer
+    
+    player.CharacterAdded:Connect(function(character)
+        local humanoid = character:WaitForChild("Humanoid")
+        
+        humanoid.Died:Connect(function()
+            local rootPart = character:FindFirstChild("HumanoidRootPart")
+            if rootPart then
+                deathPosition = rootPart.Position
+                deathOrientation = rootPart.CFrame - rootPart.Position
+            end
+        end)
+    end)
+    
+    if player.Character then
+        local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
+        if humanoid then
+            humanoid.Died:Connect(function()
+                local rootPart = player.Character:FindFirstChild("HumanoidRootPart")
+                if rootPart then
+                    deathPosition = rootPart.Position
+                    deathOrientation = rootPart.CFrame - rootPart.Position
+                end
+            end)
+        end
+    end
+end
+
+setupDeathTracking()
+
+Tab16Section:Button({
+    Title = "原地重生",
+    Icon = "rotate-cw",
+    Color = Color3.fromHex("#000000"),
+    Callback = function()
+        if not deathPosition then
+            WindUI:Notify({
+                Title = "原地重生",
+                Content = "❌ 未找到死亡位置",
+                Icon = "rotate-cw",
+                Duration = 3
+            })
+            return
+        end
+        
+        local player = game.Players.LocalPlayer
+        local character = player.Character
+        
+        if character then
+            local humanoid = character:FindFirstChildOfClass("Humanoid")
+            if humanoid and humanoid.Health > 0 then
+                WindUI:Notify({
+                    Title = "原地重生",
+                    Content = "❌ 角色仍然存活",
+                    Icon = "rotate-cw",
+                    Duration = 3
+                })
+                return
+            end
+        end
+        
+        local connection
+        connection = player.CharacterAdded:Connect(function(newCharacter)
+            local newRootPart = newCharacter:WaitForChild("HumanoidRootPart", 5)
+            local newHumanoid = newCharacter:WaitForChild("Humanoid", 5)
+            
+            if newRootPart and newHumanoid then
+                task.wait(0.5)
+                newRootPart.CFrame = CFrame.new(deathPosition) * deathOrientation
+                deathPosition = nil
+                deathOrientation = nil
+                
+                if connection then
+                    connection:Disconnect()
+                end
+                
+                WindUI:Notify({
+                    Title = "原地重生",
+                    Content = "✅ 已在死亡位置重生",
+                    Icon = "rotate-cw",
+                    Duration = 3
+                })
+            end
+        end)
+        
+        if not character then
+            local currentTeam = player.Team
+            player.Team = nil
+            task.wait(0.1)
+            player.Team = currentTeam
+        else
+            player:LoadCharacter()
+        end
+    end
+})
+
+local Tab16 = MainWindow:Tab({
+    Title = "战争大亨［自瞄功能］",
+    Icon = "crosshair"
+})
+
+local Tab16Section = Tab12:Section({
+    Title = "自瞄设置",
+    TextSize = 18,
+    FontWeight = Enum.FontWeight.SemiBold
+})
+
+local autoAimEnabled = false
+local fovVisible = false
+local ignoreCover = false
+local aimTarget = "敌对"
+local aimPosition = "Head"
+local fov = 50
+local maxDistance = 50
+
+Tab16Section:Toggle({
+    Title = "玩家自瞄",
+    Desc = "启用自动瞄准",
+    Default = false,
+    Callback = function(isEnabled)
+        autoAimEnabled = isEnabled
+        WindUI:Notify({
+            Title = "玩家自瞄",
+            Content = isEnabled and "✅ 已开启" or "❌ 已关闭",
+            Icon = "crosshair",
+            Duration = 3
+        })
+    end
+})
+
+Tab16Section:Toggle({
+    Title = "显示范围",
+    Desc = "显示自瞄范围",
+    Default = false,
+    Callback = function(isEnabled)
+        fovVisible = isEnabled
+        WindUI:Notify({
+            Title = "显示范围",
+            Content = isEnabled and "✅ 已开启" or "❌ 已关闭",
+            Icon = "circle",
+            Duration = 3
+        })
+    end
+})
+
+Tab16Section:Toggle({
+    Title = "掩体不瞄",
+    Desc = "忽略掩体后目标",
+    Default = false,
+    Callback = function(isEnabled)
+        ignoreCover = isEnabled
+        WindUI:Notify({
+            Title = "掩体不瞄",
+            Content = isEnabled and "✅ 已开启" or "❌ 已关闭",
+            Icon = "eye-off",
+            Duration = 3
+        })
+    end
+})
+
+Tab16Section:Slider({
+    Title = "自瞄范围",
+    Desc = "设置自瞄视野范围",
+    Step = 1,
+    Value = {
+        Min = 1,
+        Max = 200,
+        Default = 50
+    },
+    Callback = function(value)
+        fov = tonumber(value)
+        WindUI:Notify({
+            Title = "自瞄范围",
+            Content = "范围设置为: " .. value,
+            Icon = "maximize",
+            Duration = 3
+        })
+    end
+})
+
+Tab16Section:Slider({
+    Title = "自瞄距离",
+    Desc = "设置最大瞄准距离",
+    Step = 1,
+    Value = {
+        Min = 1,
+        Max = 1200,
+        Default = 50
+    },
+    Callback = function(value)
+        maxDistance = tonumber(value)
+        WindUI:Notify({
+            Title = "自瞄距离",
+            Content = "距离设置为: " .. value .. "米",
+            Icon = "ruler",
+            Duration = 3
+        })
+    end
+})
+
+Tab16Section:Dropdown({
+    Title = "选择自瞄目标",
+    Values = {"敌对", "全部"},
+    Value = "敌对",
+    Callback = function(selected)
+        aimTarget = selected
+        WindUI:Notify({
+            Title = "自瞄目标",
+            Content = "目标设置为: " .. selected,
+            Icon = "target",
+            Duration = 3
+        })
+    end
+})
+
+Tab16Section:Dropdown({
+    Title = "选择自瞄位置",
+    Values = {"头部", "躯干"},
+    Value = "头部",
+    Callback = function(selected)
+        if selected == "头部" then
+            aimPosition = "Head"
+        elseif selected == "躯干" then
+            aimPosition = "Torso"
+        end
+        WindUI:Notify({
+            Title = "自瞄位置",
+            Content = "位置设置为: " .. selected,
+            Icon = "user",
+            Duration = 3
+        })
+    end
+})
+
+local Tab16 = MainWindow:Tab({
+    Title = "战争大亨［攻击功能］",
+    Icon = "sword"
+})
+
+local Tab16Section = Tab16:Section({
+    Title = "攻击设置",
+    TextSize = 18,
+    FontWeight = Enum.FontWeight.SemiBold
+})
+
+local C_NPlayers = {}
+
+Tab16Section:Dropdown({
+    Title = "不攻击的玩家(多选)",
+    Values = {},
+    Multi = true,
+    Default = {},
+    Callback = function(selected)
+        C_NPlayers = selected
+    end
+})
+
+Tab16Section:Button({
+    Title = "刷新玩家列表",
+    Icon = "refresh-cw",
+    Color = Color3.fromHex("#000000"),
+    Callback = function()
+        local PlayerList = {}
+        for _, player in ipairs(game.Players:GetPlayers()) do
+            if player ~= game.Players.LocalPlayer then
+                table.insert(PlayerList, player.Name)
+            end
+        end
+        WindUI:Notify({
+            Title = "刷新列表",
+            Content = "玩家列表已刷新",
+            Icon = "refresh-cw",
+            Duration = 3
+        })
+    end
+})
+
+Tab16Section:Button({
+    Title = "获取RPG",
+    Icon = "rocket",
+    Color = Color3.fromHex("#000000"),
+    Callback = function()
+        local Players = game:GetService("Players")
+        local localPlayer = Players.LocalPlayer
+        local TycoonsFolder = workspace.Tycoon.Tycoons
+        local savedPosition
+        
+        local function findNearestTeleportPosition()
+            local character = localPlayer.Character or localPlayer.CharacterAdded:Wait()
+            local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+            local playerPosition = humanoidRootPart.Position
+            local closestDistance = math.huge
+            local closestCFrame = nil
+            
+            for _, tycoonModel in ipairs(TycoonsFolder:GetChildren()) do
+                if tycoonModel:IsA("Model") then
+                    local purchasedObjects = tycoonModel:FindFirstChild("PurchasedObjects")
+                    if purchasedObjects then
+                        local rpgGiver = purchasedObjects:FindFirstChild("RPG Giver")
+                        if rpgGiver then
+                            local prompt = rpgGiver:FindFirstChild("Prompt")
+                            if prompt and prompt:IsA("BasePart") then
+                                local distance = (playerPosition - prompt.Position).Magnitude
+                                if distance < closestDistance then
+                                    closestDistance = distance
+                                    closestCFrame = prompt.CFrame
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+            
+            return closestCFrame
+        end
+        
+        local function teleportPlayer()
+            local character = localPlayer.Character
+            if not character then
+                return
+            end
+            
+            local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
+            if humanoidRootPart then
+                savedPosition = humanoidRootPart.CFrame
+            end
+            
+            local targetCFrame = findNearestTeleportPosition()
+            if targetCFrame then
+                humanoidRootPart.CFrame = targetCFrame
+                
+                spawn(function()
+                    while task.wait(0.5) do
+                        if not character.Parent then
+                            break
+                        end
+                        
+                        local backpack = localPlayer:FindFirstChild("Backpack")
+                        if backpack and backpack:FindFirstChild("RPG") then
+                            humanoidRootPart.CFrame = savedPosition
+                            WindUI:Notify({
+                                Title = "获取RPG",
+                                Content = "✅ RPG获取成功",
+                                Icon = "rocket"
+                            })
+                            break
+                        end
+                    end
+                end)
+            else
+                WindUI:Notify({
+                    Title = "获取RPG",
+                    Content = "❌ 未能找到附近的RPG",
+                    Icon = "rocket",
+                    Duration = 3
+                })
+            end
+        end
+        
+        teleportPlayer()
+    end
+})
+
+local loopActive = false
+local rpgAttackThread = nil
+
+Tab16Section:Toggle({
+    Title = "RPG轰炸",
+    Desc = "自动RPG攻击",
+    Default = false,
+    Callback = function(isEnabled)
+        loopActive = isEnabled
+        
+        if isEnabled then
+            if rpgAttackThread then
+                coroutine.close(rpgAttackThread)
+                rpgAttackThread = nil
+            end
+            
+            rpgAttackThread = coroutine.create(function()
+                -- RPG攻击逻辑
+            end)
+            
+            coroutine.resume(rpgAttackThread)
+            WindUI:Notify({
+                Title = "RPG轰炸",
+                Content = "✅ 已开启",
+                Icon = "bomb",
+                Duration = 3
+            })
+        else
+            if rpgAttackThread then
+                coroutine.close(rpgAttackThread)
+                rpgAttackThread = nil
+            end
+            WindUI:Notify({
+                Title = "RPG轰炸",
+                Content = "❌ 已关闭",
+                Icon = "bomb",
+                Duration = 3
+            })
+        end
+    end
+})
+
+local shieldAttackActive = false
+local shieldAttackThread = nil
+
+Tab16Section:Toggle({
+    Title = "护盾攻击",
+    Desc = "攻击敌方护盾",
+    Default = false,
+    Callback = function(isEnabled)
+        shieldAttackActive = isEnabled
+        
+        if isEnabled then
+            if shieldAttackThread then
+                coroutine.close(shieldAttackThread)
+                shieldAttackThread = nil
+            end
+            
+            shieldAttackThread = coroutine.create(function()
+                -- 护盾攻击逻辑
+            end)
+            
+            coroutine.resume(shieldAttackThread)
+            WindUI:Notify({
+                Title = "护盾攻击",
+                Content = "✅ 已开启",
+                Icon = "shield",
+                Duration = 3
+            })
+        else
+            if shieldAttackThread then
+                coroutine.close(shieldAttackThread)
+                shieldAttackThread = nil
+            end
+            WindUI:Notify({
+                Title = "护盾攻击",
+                Content = "❌ 已关闭",
+                Icon = "shield",
+                Duration = 3
+            })
+        end
     end
 })
 
