@@ -78,12 +78,12 @@ local Tab2 = MainWindow:Tab({
     Icon = "bolt"  -- 标签页图标
 })
 
-local Tab2SectionMain = Tab2:SectionGeneral({
+local Tab2SectionMain = Tab2:Section({
     Title = "主要的"
 })
 
 -- 防摔落
-Tab2SectionMain:Button({
+Tab2Section:Button({
     Title = "防摔落",
     Icon = "shield-virus",
     Color = Color3.fromHex("#000000"),
@@ -94,7 +94,7 @@ Tab2SectionMain:Button({
 })
 
 -- 无敌少侠
-Tab2SectionGeneral:Button({
+Tab2Section:Button({
     Title = "无敌少侠",
     Icon = "user-astronaut",
     Color = Color3.fromHex("#000000"),
@@ -104,7 +104,7 @@ Tab2SectionGeneral:Button({
     end
 })
 
-Tab2SectionGeneral:Button({
+Tab2Section:Button({
     Title = "DOLL飞行",
     Icon = "refresh-cw",
     Color = Color3.fromHex("#000000"),  -- 按钮颜色
@@ -3002,7 +3002,7 @@ local Tab13 = MainWindow:Tab({
     Icon = "bolt"
 })
 
-local Tab13SectionMain = Tab13Section:({
+local Tab13SectionMain = Tab13Section:Section({
     Title = "实用功能",
     TextSize = 18,
     FontWeight = Enum.FontWeight.SemiBold
