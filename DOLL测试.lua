@@ -1,91 +1,3 @@
-local Players = game:GetService("Players")
-local Player = Players.LocalPlayer
-local Mouse = Player:GetMouse()
-local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Parent = Player.PlayerGui
-ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-
--- 主面板（黑色背景+彩色边框）
-local MainFrame = Instance.new("Frame")
-MainFrame.Name = "LegendPanel"
-MainFrame.Size = UDim2.new(0, 220, 0, 180)
-MainFrame.Position = UDim2.new(0.5, -110, 0.3, 0)
-MainFrame.BackgroundColor3 = Color3.new(0, 0, 0) -- 黑色背景
-MainFrame.BackgroundTransparency = 0.1
-MainFrame.BorderSizePixel = 3
-MainFrame.ZIndex = 10
-MainFrame.Parent = ScreenGui
-
--- 彩色边框渐变（循环变色）
-local TweenService = game:GetService("TweenService")
-local function loopBorderColor()
-    local colors = {Color3.new(1,0,0), Color3.new(1,1,0), Color3.new(0,1,0), Color3.new(0,1,1), Color3.new(0,0,1), Color3.new(1,0,1)}
-    for i = 1, #colors do
-        local nextColor = colors[i%#colors + 1]
-        TweenService:Create(MainFrame, TweenInfo.new(1.5), {BorderColor3 = nextColor}):Play()
-        task.wait(1.5)
-    end
-end
-task.spawn(loopBorderColor)
-
--- 文字列表
-local legends = {"1.力量传奇", "2.强壮传奇", "3.凹凸世界自由丛林","4.战争大亨","5.极速传奇","6.忍者传奇","7.造船寻宝","8.活到7天","9.自然灾害"}
-for i, text in ipairs(legends) do
-    local TextLabel = Instance.new("TextLabel")
-    TextLabel.Size = UDim2.new(1, -20, 0, 0)  -- 高度设为0，靠AutomaticSize控制
-    TextLabel.Position = UDim2.new(0, 10, 0, (i-1)*50 + 10)
-    TextLabel.BackgroundTransparency = 1
-    TextLabel.Text = text
-    TextLabel.TextColor3 = Color3.new(1,1,1)
-    
-    -- 自动调整大小
-    TextLabel.AutomaticSize = Enum.AutomaticSize.Y  -- 高度自动
-    TextLabel.TextWrapped = true
-    TextLabel.TextScaled = true  -- 或者用 TextLabel.TextSize 固定大小
-    
-    TextLabel.ZIndex = 11
-    TextLabel.Parent = MainFrame
-end
-
--- 关闭按钮
-local CloseBtn = Instance.new("TextButton")
-CloseBtn.Name = "CloseBtn"
-CloseBtn.Size = UDim2.new(0, 30, 0, 30)
-CloseBtn.Position = UDim2.new(1, -35, 0, 5)
-CloseBtn.BackgroundColor3 = Color3.new(0.8,0,0)
-CloseBtn.Text = "×"
-CloseBtn.TextColor3 = Color3.new(1,1,1)
-CloseBtn.TextScaled = true
-CloseBtn.ZIndex = 11
-CloseBtn.Parent = MainFrame
-CloseBtn.MouseButton1Click:Connect(function()
-    ScreenGui:Destroy()
-end)
-
--- 拖动功能
-local isDragging = false
-local offset = Vector2.new()
-MainFrame.InputBegan:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 then
-        isDragging = true
-        offset = Vector2.new(input.Position.X - MainFrame.Position.X.Offset, input.Position.Y - MainFrame.Position.Y.Offset)
-        MainFrame.Draggable = false -- 禁用自带拖拽，用自定义逻辑
-    end
-end)
-Mouse.Move:Connect(function()
-    if isDragging then
-        local newPos = UDim2.new(0, Mouse.X - offset.X, 0, Mouse.Y - offset.Y)
-        -- 限制面板不超出屏幕
-        newPos.X.Offset = math.clamp(newPos.X.Offset, 0, Mouse.ViewSizeX - MainFrame.AbsoluteSize.X)
-        newPos.Y.Offset = math.clamp(newPos.Y.Offset, 0, Mouse.ViewSizeY - MainFrame.AbsoluteSize.Y)
-        MainFrame.Position = newPos
-    end
-end)
-MainFrame.InputEnded:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 then
-        isDragging = false
-    end
-end)
 -- 1. 加载 WindUI 核心库
 local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/lool8/-/refs/heads/main/DOLLUI.lua"))()
 
@@ -326,14 +238,14 @@ mini2.TextSize = 40
 mini2.Position = UDim2.new(0, 44, -1, 57)
 mini2.Visible = false
 
-speeds = 1
+local speeds = 1
 
 local speaker = game:GetService("Players").LocalPlayer
 
 local chr = game.Players.LocalPlayer.Character
 local hum = chr and chr:FindFirstChildWhichIsA("Humanoid")
 
-nowe = false
+local nowe = false
 
 game:GetService("StarterGui"):SetCore("SendNotification", { 
 	Title = "DOLL脚本";
@@ -1855,7 +1767,7 @@ Tab3Section:Button({
 })
 
 local autoInteract = false
-local Tab3Togglehu = Tab3Section:Toggle({
+local Tab3Toggle = Tab3Section:Toggle({
     Title = "自动互动",
     Desc = "自动触发所有交互提示",
     Default = false,
@@ -1989,36 +1901,24 @@ local Tab3Toggleren = Tab3Section:Toggle({
     end
 })
 
-local Cam1 = false
-local Tab3Toggleesy = Tab3Section:Toggle({
-    Title = "解锁最大视野",
-    Desc = "突破视野距离限制",
-    Default = false,
-    Callback = function(enabled)
-        Cam1 = enabled
-        WindUI:Notify({
-            Title = "视野设置",
-            Content = enabled and "✅ 已解锁最大视野" or "❌ 已恢复默认视野",
-            Icon = "bolt",
-            Duration = 3
-        })
-        if Cam1 then
-            Cam2()
-        end
-    end
-})
-function Cam2()
+-- 先定义函数
+local function Cam2()
     while Cam1 do
         wait(0.1)
         local localPlayer = game:GetService("Players").LocalPlayer
         localPlayer.CameraMaxZoomDistance = 9000000000
     end
-    while not Cam1 do
-        wait(0.1)
-        local localPlayer = game:GetService("Players").LocalPlayer
-        localPlayer.CameraMaxZoomDistance = 32
-    end
 end
+
+-- 再使用函数
+local Tab3Toggleesy = Tab3Section:Toggle({
+    Title = "解锁最大视野",
+    Callback = function(enabled)
+        Cam1 = enabled
+        if Cam1 then
+            Cam2()
+        end
+    end
 })
 
 Tab3Section:Button({
