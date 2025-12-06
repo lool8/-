@@ -1109,7 +1109,7 @@ end
 })
  
 -- 循环传送玩家过来（Toggle）
-local Tab3Toggle = Tab3Section:Toggle({
+local Tab3Toggleplay = Tab3Section:Toggle({
 Title = "循环传送玩家过来",
 Desc = "持续将目标玩家传送到身边",
 Default = false,
@@ -1137,7 +1137,7 @@ end
 })
  
 -- 吸全部玩家（Toggle）
-local Tab3Toggle = Tab3Section:Toggle({
+local Tab3Togglewj = Tab3Section:Toggle({
 Title = "吸全部玩家",
 Desc = "将所有玩家吸附到身边",
 Default = false,
@@ -1172,7 +1172,7 @@ end
 })
  
 -- 查看玩家（Toggle）
-local Tab3Toggle = Tab3Section:Toggle({
+local Tab3Togglewan = Tab3Section:Toggle({
 Title = "查看玩家",
 Desc = "切换视角到目标玩家",
 Default = false,
@@ -1441,7 +1441,7 @@ end
 })
  
 -- 循环甩飞（Toggle）
-local Tab3Toggle = Tab3Section:Toggle({
+local Tab3Togglejia = Tab3Section:Toggle({
 Title = "循环甩飞",
 Desc = "持续甩飞目标玩家",
 Default = false,
@@ -1622,7 +1622,7 @@ end
 })
  
 -- 开启指定自瞄目标（Toggle）
-local Tab3Toggle = Tab3Section:Toggle({
+local Tab3Togglesuo = Tab3Section:Toggle({
 Title = "开启指定自瞄目标",
 Desc = "锁定目标玩家自瞄",
 Default = false,
@@ -1649,7 +1649,7 @@ end)
 end
 })
 
-local Tab3Toggle = Tab3Section:Toggle({
+local Tab3Togglejian = Tab3Section:Toggle({
     Title = "七彩建筑",
     Desc = "建筑部件随机变色变材质",
     Default = false,
@@ -1698,7 +1698,7 @@ local Tab3Toggle = Tab3Section:Toggle({
     end
 })
 
-local Tab3Toggle = Tab3Section:Toggle({
+local Tab3Togglekill = Tab3Section:Toggle({
     Title = "靠近自动攻击",
     Desc = "需要拿起武器，靠近目标自动攻击",
     Default = false,
@@ -1855,7 +1855,7 @@ Tab3Section:Button({
 })
 
 local autoInteract = false
-local Tab3Toggle = Tab3Section:Toggle({
+local Tab3Togglehu = Tab3Section:Toggle({
     Title = "自动互动",
     Desc = "自动触发所有交互提示",
     Default = false,
@@ -1936,7 +1936,7 @@ Tab3Section:Button({
     end
 })
 
-local Tab3Toggle = Tab3Section:Toggle({
+local Tab3Togglebei = Tab3Section:Toggle({
     Title = "获取所有玩家背包",
     Desc = "自动获取其他玩家的工具",
     Default = false,
@@ -1964,7 +1964,7 @@ local Tab3Toggle = Tab3Section:Toggle({
     end
 })
 
-local Tab3Toggle = Tab3Section:Toggle({
+local Tab3Toggleren = Tab3Section:Toggle({
     Title = "人物不可见状态(隐身)",
     Desc = "隐藏自身模型，无法被看见",
     Default = false,
@@ -1990,7 +1990,7 @@ local Tab3Toggle = Tab3Section:Toggle({
 })
 
 local Cam1 = false
-local Tab3Toggle = Tab3Section:Toggle({
+local Tab3Toggleesy = Tab3Section:Toggle({
     Title = "解锁最大视野",
     Desc = "突破视野距离限制",
     Default = false,
@@ -2061,7 +2061,7 @@ Tab3Section:Dropdown({
     end
 })
 
-local Tab3Toggle = Tab3Section:Toggle({
+local Tab3Togglekiller = Tab3Section:Toggle({
     Title = "开启杀戮光环",
     Desc = "自动攻击范围内目标",
     Default = false,
@@ -2222,7 +2222,7 @@ Tab3Section:Button({
 
 local autoInteract = false -- 全局变量存储状态
 
-local Tab3Toggle = Tab3Section:Toggle({
+local Tab3Togglehudong = Tab3Section:Toggle({
     Title = "自动互动",
     Desc = "自动触发所有近距离交互提示",
     Default = false,
