@@ -2019,6 +2019,7 @@ function Cam2()
         localPlayer.CameraMaxZoomDistance = 32
     end
 end
+})
 
 Tab3Section:Button({
     Title = "锁定视野",
