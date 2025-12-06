@@ -1766,7 +1766,6 @@ Tab3Section:Button({
     end
 })
 
-local autoInteract = false
 local Tab3Toggle = Tab3Section:Toggle({
     Title = "自动互动",
     Desc = "自动触发所有交互提示",
