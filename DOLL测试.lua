@@ -1,13 +1,11 @@
--- 1. 加载 WindUI 核心库
 local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/lool8/-/refs/heads/main/DOLLUI.lua"))()
 
--- 2. 创建主窗口
 local MainWindow = WindUI:CreateWindow({
     Title = "DOLL※༒/通用", 
     Author = "༼DOLL༽ | ᐁQ群:1058549962ᐁ",
     Folder = "CharacterControl",
     Size = UDim2.fromOffset(400, 300),
-    Theme = "Dark",  -- 使用预设的暗色主题
+    Theme = "Dark",  
     SideBarWidth = 200,
     Acrylic = true,
     BlurRadius = 10,
@@ -21,53 +19,73 @@ local MainWindow = WindUI:CreateWindow({
     }
 })
 
--- 4. 创建侧边栏标签页：视角设置
 local Tab1 = MainWindow:Tab({
     Title = "视角设置",
     Icon = "camera"
 })
 
--- 4.1 视角控制分组
 local Tab1Section = Tab1:Section({
     Title = "视角参数"
 })
 
--- 4.1.1 滑动条：视角距离
-Tab1Section:S1ider({
-    Title = "视角距离",
+Tab1Section:Slider({
+    Title = "视野角度",
     Value = {
-        Min = 0,
-        Max = 120,
-        Default = 30
+        Min = 10,     
+        Max = 120,    
+        Default = 70  
     },
     Callback = function(value)
         local camera = game.Workspace.CurrentCamera
         if camera then
-            camera.FieldOfView = tonumber(value)  -- 调节视角FOV
+            camera.FieldOfView = tonumber(value) 
         end
     end
 })
 
--- 4.1.2 下拉菜单：视角模式
+
 Tab1Section:Dropdown({
     Title = "视角模式",
-    Values = {"第三人称", "第一人称", "自由视角"},  -- 可选选项
-    Value = "自由视角",  -- 默认选项
+    Values = {"第三人称", "第一人称", "自由视角"},
+    Value = "第三人称",  
     Callback = function(selected)
+        
+        local player = game.Players.LocalPlayer
+        local character = player.Character
+        if not character then
+            player.CharacterAdded:Wait()
+            character = player.Character
+        end
+        
         local camera = game.Workspace.CurrentCamera
-        local humanoid = game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+        local humanoid = character:FindFirstChildOfClass("Humanoid")
+        
         if not camera or not humanoid then return end
         
-        -- 根据选择切换视角模式
+        
         if selected == "第一人称" then
-            camera.CameraType = Enum.CameraType.Attach
-            humanoid.CameraOffset = Vector3.new(0, 1.5, 0)
+            camera.CameraType = Enum.CameraType.Scriptable
+            
+            humanoid.CameraOffset = Vector3.new(0, 0, 0)
+            
         elseif selected == "第三人称" then
             camera.CameraType = Enum.CameraType.Custom
             humanoid.CameraOffset = Vector3.new(0, 0, 0)
+            
         elseif selected == "自由视角" then
             camera.CameraType = Enum.CameraType.Free
         end
+    end
+})
+
+Tab1Section:Slider({
+    Title = "相机距离",
+    Value = {
+        Min = 5,
+        Max = 50,
+        Default = 15
+    },
+    Callback = function(value)
     end
 })
 
