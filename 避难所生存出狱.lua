@@ -1,3 +1,4 @@
+--作者:凉皮
 local character = game.Players.LocalPlayer.Character
 local hrp = character.HumanoidRootPart
 local speed = 6
