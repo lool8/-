@@ -1,7 +1,7 @@
 --作者:凉皮
 local character = game.Players.LocalPlayer.Character
 local hrp = character.HumanoidRootPart
-local speed = 20
+local speed = 14
 
 local target1 = CFrame.new(3.83, 517.48, 165.80)
 local target2 = CFrame.new(-3.16, 517.48, 428.53)
